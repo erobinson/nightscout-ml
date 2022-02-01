@@ -15,12 +15,11 @@ from datetime import datetime, timedelta
 configuration = nightscout_python_client.Configuration()
 configuration.host = "erjr-nightscout.herokuapp.com/api/v1"
 api_instance = nightscout_python_client.EntriesApi(nightscout_python_client.ApiClient(configuration))
-# folder = 'data'
 
 class GetSgvs():
     output_folder = 'data'
 
-    def get_sgvs_for_day_and_write_to_file(self, start_date, end_date, count):
+    def get_sgvs_for_date_range_and_write_to_file(self, start_date, end_date, count):
 
         api_response = api_instance.entries_spec_get("sgv", findDateLte=end_date.isoformat(), findDateGte=start_date.isoformat(), count=count)
         
@@ -38,7 +37,13 @@ class GetSgvs():
 
         for date in rrule.rrule(rrule.DAILY, dtstart=start_date, until=now):
             end_date = date + timedelta(days=1)
-            self.get_sgvs_for_day_and_write_to_file(date, end_date, 300)
+            self.get_sgvs_for_date_range_and_write_to_file(date, end_date, 300)
+    
+    def get_all_sgvs_last_x_days(self, number_of_days):
+        now = self.get_today_without_time()
+        start_date = now - timedelta(days=number_of_days)
+        count = number_of_days * 289
+        self.get_sgvs_for_date_range_and_write_to_file(start_date, now, count)
 
     def get_today_without_time(self):
         now = datetime.now()
@@ -49,8 +54,8 @@ try:
     count = 300
     number_of_days = 5
     GetSgvs().get_sgvs_day_to_day(number_of_days)
+    GetSgvs().get_all_sgvs_last_x_days(number_of_days)
 
-    
     
 except ApiException as e:
     print("Exception when calling EntriesApi->entries_get: %s\n" % e)
