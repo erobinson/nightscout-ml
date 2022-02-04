@@ -5,7 +5,7 @@ import numpy as np
 class LabelData(NightscoutMlBase):
     data: pandas.DataFrame
     label_cols = []
-    feature_cols = []
+    feature_cols = ['sgv']
     temp_cols = []
 
     def label_sgv_data(self, file):
@@ -45,7 +45,7 @@ class LabelData(NightscoutMlBase):
         block = self.data[self.temp_cols]
         self.data['min_value'] = block[self.temp_cols].min(axis=1)
         label = 'low_in_last_hour'
-        self.data[label] = np.where(self.data['min_value'] < 70, True, False)
+        self.data[label] = np.where(self.data['min_value'] < 70, 1, 0)
         self.feature_cols.append(label)
         self.data.drop(columns=['min_value'])
         
@@ -75,11 +75,11 @@ class LabelData(NightscoutMlBase):
             self.data['max_value'] = block[columns].max(axis=1)
             for k in [50, 60, 70]:
                 label = '30_min_block_{}_below_{}'.format(i, k)
-                self.data[label] = np.where(self.data['min_value'] < k, True, False)
+                self.data[label] = np.where(self.data['min_value'] < k, 1, 0)
                 self.label_cols.append(label)
             for k in [120, 140, 160, 180, 200, 220, 240, 260, 280, 300]:
-                label = '30_min_block_{}_below_{}'.format(i, k)
-                self.data[label] = np.where(self.data['min_value'] < k, True, False)
+                label = '30_min_block_{}_above_{}'.format(i, k)
+                self.data[label] = np.where(self.data['min_value'] < k, 1, 0)
                 self.label_cols.append(label)
 
         low_values = self.data[((self.data['sgv_in_5']<50) | (self.data['sgv_in_10']<50) | (self.data['sgv_in_15']<50) | (self.data['sgv_in_20']<50) | (self.data['sgv_in_25']<50) | (self.data['sgv_in_30']<50))]

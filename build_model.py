@@ -20,9 +20,11 @@ class BuildModel(NightscoutMlBase):
         
         train, test = train_test_split(df, test_size=0.2)
 
-        x_train = train.drop(columns=label_cols, axis=1).values
+        label_cols = ['30_min_block_0_above_120', '30_min_block_0_above_160']
+
+        x_train = train[feature_cols].values
         y_train = train[label_cols].values
-        x_test = test.drop(columns=label_cols).values
+        x_test = test[feature_cols].values
         y_test = test[label_cols].values
 
         x_train_tf = tf.convert_to_tensor(x_train)
@@ -32,18 +34,20 @@ class BuildModel(NightscoutMlBase):
 
         model = models.Sequential()
         model.add(layers.Dense(x_train.shape[1], input_dim=x_train.shape[1], kernel_initializer='he_uniform', activation='relu'))
-        model.add(layers.Dense(10))
-        model.add(layers.Dense(10))
+        # model.add(layers.Dense(5))
         model.add(layers.Dense(y_train.shape[1], activation='sigmoid'))
-        model.compile(loss='binary_crossentropy', optimizer='adam')
+        model.compile(loss=losses.BinaryCrossentropy(), optimizer='adam')
 
         predictions = model(x_train_tf[:1]).numpy()
         print(predictions)
 
-        model.fit(x_train_tf, y_train_tf, epochs=2)
+        model.fit(x_train_tf, y_train_tf, epochs=5)
 
-        model.summary()
+        # model.summary()
 
-        model.evaluate(x_test_tf,  y_test_tf, verbose=5)
-        result = model.predict([[160]])
-        print(result)
+        score = model.evaluate(x_test_tf,  y_test_tf, verbose=5)
+        print(score)
+        predictions = model(x_test_tf[100:105])
+        print(x_test_tf[100:105])
+        print(y_test_tf[100:105])
+        print(predictions)
