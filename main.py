@@ -9,8 +9,8 @@ try:
     # number_of_days = 5
     # GetSgvs().get_sgvs_day_to_day(number_of_days)
     # GetSgvs().get_all_sgvs_last_x_days(number_of_days)
-    # LabelData().label_sgv_data('nightscout_1445_sgvs_starting_2022-1-26.csv')
-    BuildModel().build_model('nightscout_1445_sgvs_starting_2022-1-26.csv-labeled.csv')
+    file_name, feature_cols, label_cols = LabelData().label_sgv_data('nightscout_1445_sgvs_starting_2022-1-26.csv')
+    BuildModel().build_model(file_name, feature_cols, label_cols)
 
     
 except ApiException as e:
