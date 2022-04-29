@@ -4,6 +4,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras import layers
 from sklearn.linear_model import LinearRegression
+# import autosklearn.classification
 
 
 class SimpleModel(NightscoutMlBase):
@@ -66,4 +67,16 @@ class SimpleModel(NightscoutMlBase):
         high_cob = predictor.predict([[100.0,3.0,30.0]])
         high_both = predictor.predict([[200.0,3.0,30.0]])
         print(f"    high_sgv: {high_sgv}    high_cob: {high_cob}    high_both: {high_both}")
+
+    # Test with AutoSKLearn but wouldn't install
+    # def build_auto_sklearn(self):
+    #     df = pd.read_csv(self.data_folder+'/simple_model_data.csv')
+    #     label_cols = ["sgv", "total_iob", "cob"]
+    #     X_train = df[label_cols]
+    #     # df_features = df.drop("aismb")
+    #     # df_features_np = np.array(df_features)
+    #     y_train = df[["aismb"]]
+    #     cls = autosklearn.classification.AutoSklearnClassifier()
+    #     cls.fit(X_train, y_train)
+    #     predictions = cls.predict([[50.0,0.0,0.0]])
 

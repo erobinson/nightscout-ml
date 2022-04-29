@@ -6,6 +6,14 @@ import sys
 # from nightscout_python_client.rest import ApiException
 from simple_model import SimpleModel
 
+
+# Notes:
+# 3ef758d4 commit has a bunch of the stuff needed for implementing algorithm in AAPS
+# autoML - https://medium.com/analytics-vidhya/6-open-source-automated-machine-learning-tools-every-data-scientist-should-know-49960c1397c9
+
+
+
+
 try:
     # number_of_days = 5
     # GetSgvs().get_sgvs_day_to_day(number_of_days)
