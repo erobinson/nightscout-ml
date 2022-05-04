@@ -2,6 +2,7 @@ from nightscout_ml_base import NightscoutMlBase
 import pandas as pd
 import numpy as np
 import tensorflow as tf
+from datetime import datetime
 from tensorflow.keras import layers
 from sklearn.linear_model import LinearRegression
 # import autosklearn.classification
@@ -45,7 +46,7 @@ class SimpleModel(NightscoutMlBase):
         print(f"    high_sgv: {high_sgv}    high_cob: {high_cob}    high_both: {high_both}")
         
 
-    def build_model_2(self):
+    def sklearn_linear_regression_model(self):
         df = pd.read_csv(self.data_folder+'/simple_model_data.csv')
         # df = df.sample(frac=1).reset_index(drop=True)
 
@@ -67,6 +68,53 @@ class SimpleModel(NightscoutMlBase):
         high_cob = predictor.predict([[100.0,3.0,30.0]])
         high_both = predictor.predict([[200.0,3.0,30.0]])
         print(f"    high_sgv: {high_sgv}    high_cob: {high_cob}    high_both: {high_both}")
+
+    def build_tf_regression(self):
+        df = pd.read_csv(self.data_folder+'/simple_model_data.csv')
+        
+        train_dataset = df.sample(frac=0.8, random_state=0)
+        test_dataset = df.drop(train_dataset.index)
+
+        train_features = train_dataset.copy()
+        test_features = test_dataset.copy()
+
+        train_labels = train_features.pop('aismb')
+        test_labels = test_features.pop('aismb')
+
+        normalizer = tf.keras.layers.Normalization(axis=-1)
+        normalizer.adapt(np.array(train_features))
+
+        linear_model = tf.keras.Sequential([
+            normalizer,
+            layers.Dense(units=1)
+        ])
+
+        linear_model.compile(
+            optimizer=tf.optimizers.Adam(learning_rate=0.1),
+            loss='mean_absolute_error')
+
+        linear_model.fit(
+            train_features,
+            train_labels,
+            epochs=10,
+            # Suppress logging.
+            verbose=0,
+            # Calculate validation results on 20% of the training data.
+            validation_split = 0.2)
+
+        test_results = {}
+        test_results['linear_model'] = linear_model.evaluate(
+            test_features, test_labels, verbose=0)
+
+        now = datetime.now()
+        date_str = "{}-{}-{}_{}:{}".format(now.year, now.month, now.day, now.hour, now.minute)
+        linear_model.save('models/tf_linear_model_'+date_str)
+
+        print(test_results)
+
+
+
+
 
     # Test with AutoSKLearn but wouldn't install
     # def build_auto_sklearn(self):
