@@ -5,9 +5,6 @@ import tensorflow as tf
 from datetime import datetime
 from tensorflow.keras import layers
 from sklearn.linear_model import LinearRegression
-# import autosklearn.classification
-
-
 class SimpleModel(NightscoutMlBase):
     
     def build_model(self):
@@ -33,18 +30,7 @@ class SimpleModel(NightscoutMlBase):
                       optimizer = tf.optimizers.Adam())
 
         model.fit(df_features, df_labels, epochs=8)
-
-        print("\n\n== tf neural networkk ==")
-        low = model.predict([50.0,0.0,0.0])
-        low_w_iob = model.predict([50.0,3.0,0.0])
-        normal_w_iob = model.predict([100.0,3.0,0.0])
-        normal_wo_iob = model.predict([100.0,0.0,0.0])
-        print(f"    low: {low}    low_w_iob: {low_w_iob}    normal_w_iob: {normal_w_iob}    normal_wo_iob: {normal_wo_iob}")
-        high_sgv = model.predict([200.0,0.0,0.0])
-        high_cob = model.predict([100.0,0.0,30.0])
-        high_both = model.predict([200.0,0.0,30.0])
-        print(f"    high_sgv: {high_sgv}    high_cob: {high_cob}    high_both: {high_both}")
-        
+        self.run_predictions(model, "tf neural network")
 
     def sklearn_linear_regression_model(self):
         df = pd.read_csv(self.data_folder+'/simple_model_data.csv')
@@ -55,21 +41,13 @@ class SimpleModel(NightscoutMlBase):
         # df_features = df.drop("aismb")
         # df_features_np = np.array(df_features)
         df_labels = df[["aismb"]]
-        predictor = LinearRegression(n_jobs=-1)
-        predictor.fit(X=df_features.values, y=df_labels.values)
+        model = LinearRegression(n_jobs=-1)
+        model.fit(X=df_features.values, y=df_labels.values)
 
-        print("\n\n== sklearn Linear Regression ==")
-        low = predictor.predict([[50.0,0.0,0.0]])
-        low_w_iob = predictor.predict([[50.0,3.0,0.0]])
-        normal_w_iob = predictor.predict([[100.0,3.0,0.0]])
-        normal_wo_iob = predictor.predict([[100.0,0.0,0.0]])
-        print(f"    low: {low}    low_w_iob: {low_w_iob}    normal_w_iob: {normal_w_iob}    normal_wo_iob: {normal_wo_iob}")
-        high_sgv = predictor.predict([[200.0,0.0,0.0]])
-        high_cob = predictor.predict([[100.0,3.0,30.0]])
-        high_both = predictor.predict([[200.0,3.0,30.0]])
-        print(f"    high_sgv: {high_sgv}    high_cob: {high_cob}    high_both: {high_both}")
+        self.run_predictions(model, "sklearn Linear Regression")
 
     def build_tf_regression(self):
+        # https://www.tensorflow.org/tutorials/keras/regression#regression_with_a_deep_neural_network_dnn
         df = pd.read_csv(self.data_folder+'/simple_model_data.csv')
         
         train_dataset = df.sample(frac=0.8, random_state=0)
@@ -102,22 +80,39 @@ class SimpleModel(NightscoutMlBase):
             # Calculate validation results on 20% of the training data.
             validation_split = 0.2)
 
-        test_results = {}
-        test_results['linear_model'] = linear_model.evaluate(
+        test_results = linear_model.evaluate(
             test_features, test_labels, verbose=0)
-
-        now = datetime.now()
-        date_str = "{}-{}-{}_{}:{}".format(now.year, now.month, now.day, now.hour, now.minute)
-        linear_model.save('models/tf_linear_model_'+date_str)
-
         print(test_results)
 
+        self.run_predictions(linear_model, "TF Linear Regression")
+
+        # https://www.tensorflow.org/tutorials/keras/save_and_load#savedmodel_format
+        now = datetime.now()
+        date_str = "{}-{}-{}_{}-{}".format(now.year, now.month, now.day, now.hour, now.minute)
+        linear_model.save('models/tf_linear_model_'+date_str)
+
+        # https://medium.com/analytics-vidhya/running-ml-models-in-android-using-tensorflow-lite-e549209287f0
+        converter = tf.lite.TFLiteConverter.from_keras_model(model=linear_model)
+        lite_model = converter.convert()
+        open('models/tf_linear_model_'+date_str+'.tflite', "wb").write(lite_model)
 
 
+    def run_predictions(self, model, model_description):
+        print("\n == "+model_description+" ==")
+        low = model.predict([[50.0,0.0,0.0]])
+        low_w_iob = model.predict([[50.0,3.0,0.0]])
+        normal_w_iob = model.predict([[100.0,3.0,0.0]])
+        normal_wo_iob = model.predict([[100.0,0.0,0.0]])
+        print(f"    low: {low}    low_w_iob: {low_w_iob}    normal_w_iob: {normal_w_iob}    normal_wo_iob: {normal_wo_iob}")
+        high_sgv = model.predict([[200.0,0.0,0.0]])
+        high_cob = model.predict([[100.0,3.0,30.0]])
+        high_both = model.predict([[200.0,3.0,30.0]])
+        print(f"    high_sgv: {high_sgv}    high_cob: {high_cob}    high_both: {high_both}")
 
 
     # Test with AutoSKLearn but wouldn't install
     # def build_auto_sklearn(self):
+    #     import autosklearn.classification
     #     df = pd.read_csv(self.data_folder+'/simple_model_data.csv')
     #     label_cols = ["sgv", "total_iob", "cob"]
     #     X_train = df[label_cols]
