@@ -4,51 +4,18 @@ import numpy as np
 import tensorflow as tf
 from datetime import datetime
 from tensorflow.keras import layers
-from sklearn.linear_model import LinearRegression
-class SimpleModel(NightscoutMlBase):
-    
-    def build_model(self):
-        df = pd.read_csv(self.data_folder+'/simple_model_data.csv')
-        # df = df.sample(frac=1).reset_index(drop=True)
 
-        label_cols = ["bg", "iob", "cob"]
-        df_features = df[label_cols]
-        # df_features = df.drop("aismb")
-        # df_features_np = np.array(df_features)
-        df_labels = df[["aismb"]]
 
-        normalize = layers.Normalization()
-        normalize.adapt(np.array(df_features))
-
-        model = tf.keras.Sequential([
-            normalize,
-            layers.Dense(3),
-            layers.Dense(1)
-            ])
-
-        model.compile(loss = tf.keras.losses.MeanSquaredError(),
-                      optimizer = tf.optimizers.Adam())
-
-        model.fit(df_features, df_labels, epochs=8)
-        self.run_predictions(model, "tf neural network")
-
-    def sklearn_linear_regression_model(self):
-        df = pd.read_csv(self.data_folder+'/simple_model_data.csv')
-        # df = df.sample(frac=1).reset_index(drop=True)
-
-        label_cols = ["bg", "iob", "cob"]
-        df_features = df[label_cols]
-        # df_features = df.drop("aismb")
-        # df_features_np = np.array(df_features)
-        df_labels = df[["aismb"]]
-        model = LinearRegression(n_jobs=-1)
-        model.fit(X=df_features.values, y=df_labels.values)
-
-        self.run_predictions(model, "sklearn Linear Regression")
-
+class TFModel(NightscoutMlBase):
     def build_tf_regression(self):
         # https://www.tensorflow.org/tutorials/keras/regression#regression_with_a_deep_neural_network_dnn
-        df = pd.read_csv(self.data_folder+'/simple_model_data.csv')
+        df_base = pd.read_csv(self.data_folder+'/simple_data_generated.csv')
+        df = pd.read_csv(self.data_folder+'/aiSMB_records_adjusted.csv')
+        df = self.adjust_smbs_based_on_outcomes(df)
+
+        df = pd.concat([df, df_base])
+        current_cols = ["bg", "iob", "cob", "smbToGive"]
+        df = df[current_cols]
         
         train_dataset = df.sample(frac=0.8, random_state=0)
         test_dataset = df.drop(train_dataset.index)
@@ -56,8 +23,8 @@ class SimpleModel(NightscoutMlBase):
         train_features = train_dataset.copy()
         test_features = test_dataset.copy()
 
-        train_labels = train_features.pop('aismb')
-        test_labels = test_features.pop('aismb')
+        train_labels = train_features.pop('smbToGive')
+        test_labels = test_features.pop('smbToGive')
 
         normalizer = tf.keras.layers.Normalization(axis=-1)
         normalizer.adapt(np.array(train_features))
@@ -100,6 +67,9 @@ class SimpleModel(NightscoutMlBase):
         lite_model = converter.convert()
         open('models/tf_linear_model_'+date_str+'.tflite', "wb").write(lite_model)
 
+    def adjust_smbs_based_on_outcomes(self, df):
+        # df['smbToGive'] = np.where(df['smbToGive'] > .2, df['smbToGive'] - .2, 0)
+        return df
 
     def run_predictions(self, model, model_description):
         print("\n == "+model_description+" ==")
@@ -112,18 +82,3 @@ class SimpleModel(NightscoutMlBase):
         high_cob = model.predict([[100.0,3.0,30.0]])
         high_both = model.predict([[200.0,3.0,30.0]])
         print(f"    high_bg: {high_bg}    high_cob: {high_cob}    high_both: {high_both}")
-
-
-    # Test with AutoSKLearn but wouldn't install
-    # def build_auto_sklearn(self):
-    #     import autosklearn.classification
-    #     df = pd.read_csv(self.data_folder+'/simple_model_data.csv')
-    #     label_cols = ["bg", "iob", "cob"]
-    #     X_train = df[label_cols]
-    #     # df_features = df.drop("aismb")
-    #     # df_features_np = np.array(df_features)
-    #     y_train = df[["aismb"]]
-    #     cls = autosklearn.classification.AutoSklearnClassifier()
-    #     cls.fit(X_train, y_train)
-    #     predictions = cls.predict([[50.0,0.0,0.0]])
-
