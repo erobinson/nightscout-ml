@@ -10,13 +10,20 @@ from generate_simple_data import GenerateSimpleData
 
 
 # Notes:
-# TEST: Record data in app
-# TODO: generate some data based on current settings
+# DONE: get max IOB & max SMB from preferences
 # TODO: figure out & use total IOB
-# TEST: implement safety - max IOB, max Bolus
-# TEST: Round pump request to .05
-# TODO: Load model from file for faster feedback loop
-# TEST: Header in csv
+# TODO: move smb adjustments into code rather than excel
+# TODO: use more features when building model
+# TODO: add more layers to model
+# TODO: get exercise/step count data
+# TODO: account for future cob - right now doesn't show up in COB
+# TODO: support temp target
+# DONE: Record data in app
+# DONE: generate some data based on current settings
+# DONE: implement safety - max IOB, max Bolus
+# DONE: Round pump request to .05
+# DONE: Header in csv
+# DONE: Load model from file for faster feedback loop
 
 # features to add:
 # cob, last meal time & carbs
@@ -24,12 +31,18 @@ from generate_simple_data import GenerateSimpleData
 # Partially done - day of week, hour of day, AM/PM, holiday
 # targetBG
 # Done - ttd 7d, 1d, last 24
+# Excel formulas: 
+# dynamic ISF - =IF(C2 > 200, 60, IF(C2>150, 80, 100)) * (1-F2/20)
+# smb recommended - =C2/V2 + E2/15 - D2 +1
+# future high/low =IF(C11>200,"HIGH",IF(C11>150,"high",IF(C11>120,"medium",IF(C11<70,"LOW",IF(C11<80,"low","normal")))))
+# future rise/drop - =IF(F11>6,"RISE",IF(F11>3,"rise",IF(F11<-6,"DROP",IF(F11<-3,"drop","stable"))))
 
 
 
 
+
+GenerateSimpleData().generate_data(200)
 TFModel().build_tf_regression()
-# GenerateSimpleData().generate_data(200)
 
 
 
