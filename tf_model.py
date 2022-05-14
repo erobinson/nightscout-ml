@@ -7,14 +7,21 @@ from tensorflow.keras import layers
 
 
 class TFModel(NightscoutMlBase):
+
+    now = datetime.now()
+    date_str = "{}-{}-{}_{}-{}".format(now.year, now.month, now.day, now.hour, now.minute)
+
     def build_tf_regression(self):
         # https://www.tensorflow.org/tutorials/keras/regression#regression_with_a_deep_neural_network_dnn
-        df_base = pd.read_csv(self.data_folder+'/simple_data_generated.csv')
-        df = pd.read_csv(self.data_folder+'/aiSMB_records_adjusted.csv')
+        df = pd.read_csv('aiSMB_records_adjusted.csv')
         df = self.adjust_smbs_based_on_outcomes(df)
 
-        df = pd.concat([df, df_base])
-        current_cols = ["bg", "iob", "cob", "smbToGive"]
+        # df = pd.concat([df, df_base])
+        current_cols = ["bg","iob","cob","delta","shortAvgDelta","longAvgDelta",
+                        "tdd7Days","tddDaily","tdd24Hrs",
+                        # "recentSteps5Minutes","recentSteps10Minutes","recentSteps15Minutes",
+                        "maxSMB","maxIob","smbToGive"]
+        # current_cols = ["bg","iob","cob","smbToGive"]
         df = df[current_cols]
         
         train_dataset = df.sample(frac=0.8, random_state=0)
@@ -30,8 +37,9 @@ class TFModel(NightscoutMlBase):
         normalizer.adapt(np.array(train_features))
 
         linear_model = tf.keras.Sequential([
-            layers.Input(shape=(3,)),
+            layers.Input(shape=(train_features.shape[1],)),
             normalizer,
+            layers.Dense(units=6),
             layers.Dense(units=1)
         ])
 
@@ -42,43 +50,46 @@ class TFModel(NightscoutMlBase):
         linear_model.fit(
             train_features,
             train_labels,
-            epochs=10,
+            epochs=5,
             # Suppress logging.
             verbose=0,
             # Calculate validation results on 20% of the training data.
             validation_split = 0.2)
 
-        config = linear_model.get_config() # Returns pretty much every information about your model
-        print(config["layers"][0]["config"]["batch_input_shape"])
-
         test_results = linear_model.evaluate(
-            test_features, test_labels, verbose=0)
-        print(test_results)
+            test_features, test_labels)
+        
+        self.save_model_info(linear_model, test_results, current_cols, len(df))
 
-        self.run_predictions(linear_model, "TF Linear Regression")
+        self.save_model(linear_model)
 
+    def save_model_info(self, linear_model, test_results, current_cols, data_row_count):
+        model_info = "\n\n------------\n"
+        model_info += f"Model {self.date_str} \n"
+        model_info += f"Layers - {len(linear_model.layers)}\n"
+        for i in range (len(linear_model.layers)):
+            layer = linear_model.layers[i]
+            layer_info = f"  Layer {i}  - {layer.name}"
+            layer_info += f"({layer.units})" if 'dense' in layer.name else ""
+            model_info += layer_info + "\n"
+            
+        model_info += f"Model Loss: {test_results} \n"
+        model_info += f"Columns ({len(current_cols)}): {current_cols} \n"
+        model_info += f"Training Data Size: {data_row_count} \n"
+        open('models/tf_linear_model_results.txt', "a").write(model_info)
+
+
+    def save_model(self, linear_model):
         # https://www.tensorflow.org/tutorials/keras/save_and_load#savedmodel_format
-        now = datetime.now()
-        date_str = "{}-{}-{}_{}-{}".format(now.year, now.month, now.day, now.hour, now.minute)
-        linear_model.save('models/tf_linear_model_'+date_str)
+        linear_model.save('models/tf_linear_model_'+self.date_str)
 
         # https://medium.com/analytics-vidhya/running-ml-models-in-android-using-tensorflow-lite-e549209287f0
         converter = tf.lite.TFLiteConverter.from_keras_model(model=linear_model)
         lite_model = converter.convert()
-        open('models/tf_linear_model_'+date_str+'.tflite', "wb").write(lite_model)
+        open('models/tf_linear_model_'+self.date_str+'.tflite', "wb").write(lite_model)
+        open('models/model.tflite', "wb").write(lite_model)
+
 
     def adjust_smbs_based_on_outcomes(self, df):
         # df['smbToGive'] = np.where(df['smbToGive'] > .2, df['smbToGive'] - .2, 0)
         return df
-
-    def run_predictions(self, model, model_description):
-        print("\n == "+model_description+" ==")
-        low = model.predict([[50.0,0.0,0.0]])
-        low_w_iob = model.predict([[50.0,1.0,0.0]])
-        normal_w_iob = model.predict([[100.0,1.0,0.0]])
-        normal_wo_iob = model.predict([[100.0,0.0,0.0]])
-        print(f"    low: {low}    low_w_iob: {low_w_iob}    normal_w_iob: {normal_w_iob}    normal_wo_iob: {normal_wo_iob}")
-        high_bg = model.predict([[200.0,0.0,0.0]])
-        high_cob = model.predict([[100.0,1.0,30.0]])
-        high_both = model.predict([[200.0,1.0,30.0]])
-        print(f"    high_bg: {high_bg}    high_cob: {high_cob}    high_both: {high_both}")
