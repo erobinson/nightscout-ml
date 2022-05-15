@@ -11,11 +11,11 @@ from generate_simple_data import GenerateSimpleData
 
 # Notes:
 # DONE: get max IOB & max SMB from preferences
+# TODO: get exercise/step count data
 # TODO: figure out & use total IOB
 # TODO: move smb adjustments into code rather than excel
 # TODO: use more features when building model
 # TODO: add more layers to model
-# TODO: get exercise/step count data
 # TODO: account for future cob - right now doesn't show up in COB
 # TODO: support temp target
 # DONE: Record data in app
@@ -26,7 +26,8 @@ from generate_simple_data import GenerateSimpleData
 # DONE: Load model from file for faster feedback loop
 
 # features to add:
-# cob, last meal time & carbs
+# TODO: cob, last meal time & carbs
+# TODO: sensor age, site age, site placement
 # Done - glucose, delta, short delta, long delta, noise
 # Partially done - day of week, hour of day, AM/PM, holiday
 # targetBG
@@ -41,7 +42,7 @@ from generate_simple_data import GenerateSimpleData
 
 
 
-# GenerateSimpleData().generate_data(200)
+GenerateSimpleData().generate_data(300)
 TFModel().build_tf_regression()
 
 
