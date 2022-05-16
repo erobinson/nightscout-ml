@@ -11,13 +11,17 @@ from generate_simple_data import GenerateSimpleData
 
 # Notes:
 # DONE: get max IOB & max SMB from preferences
-# TODO: get exercise/step count data
-# TODO: figure out & use total IOB
 # TODO: move smb adjustments into code rather than excel
-# TODO: use more features when building model
-# TODO: add more layers to model
-# TODO: account for future cob - right now doesn't show up in COB
+# TODO: get exercise/step count data from fit API
 # TODO: support temp target
+# TODO: sensor age, site age, site placement
+# TODO: last meal time, food type/tag
+# TODO: account for future cob - right now doesn't show up in COB
+# TODO: extended high, low earlier today
+# DONE: expand date data
+# DONE: add more layers to model
+# DONE: figure out & use total IOB
+# DONE: get exercise/step count data from phone sensor data
 # DONE: Record data in app
 # DONE: generate some data based on current settings
 # DONE: implement safety - max IOB, max Bolus
@@ -35,14 +39,14 @@ from generate_simple_data import GenerateSimpleData
 # Excel formulas: 
 # dynamic ISF - =IF(C2 > 200, 60, IF(C2>150, 80, 100)) * (1-F2/20)
 # smb recommended - =C2/V2 + E2/15 - D2 +1
-# future high/low =IF(C11>200,"HIGH",IF(C11>150,"high",IF(C11>120,"medium",IF(C11<70,"LOW",IF(C11<80,"low","normal")))))
-# future rise/drop - =IF(F11>6,"RISE",IF(F11>3,"rise",IF(F11<-6,"DROP",IF(F11<-3,"drop","stable"))))
+# future high/low =IF(C9>200,"HIGH",IF(C9>150,"high",IF(C9>120,"medium",IF(C9<70,"LOW",IF(C9<80,"low","normal")))))
+# future rise/drop - =IF(F9>6,"RISE",IF(F9>3,"rise",IF(F9<-6,"DROP",IF(F9<-3,"drop","stable"))))
 
 
 
 
 
-GenerateSimpleData().generate_data(300)
+GenerateSimpleData().generate_data(200)
 TFModel().build_tf_regression()
 
 

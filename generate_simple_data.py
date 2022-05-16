@@ -9,16 +9,18 @@ class GenerateSimpleData(NightscoutMlBase):
     target = 100
     maxIob = 7
     maxSMB = 2
-    baseIob = .6
+    baseIob = .8
+    weekend_ratio = .6
 
     def generate_data(self, count_to_generate):
         file_name = self.data_folder+'/simple_data_generated.csv'
         if(os.path.exists(file_name)):
             os.remove(file_name)
         file = open(file_name, 'a')
-        current_cols = "bg,iob,cob,delta,shortAvgDelta,longAvgDelta,"+ \
+        current_cols =  "hour0_2,hour3_5,hour6_8,hour9_11,hour12_14,hour15_17,hour18_20,hour21_23,weekend," + \
+                        "bg,iob,cob,delta,shortAvgDelta,longAvgDelta," + \
                         "tdd7Days,tddDaily,tdd24Hrs," + \
-                        "recentSteps5Minutes,recentSteps10Minutes,recentSteps15Minutes," + \
+                        "recentSteps5Minutes,recentSteps10Minutes,recentSteps15Minutes,recentSteps30Minutes,recentSteps60Minutes," + \
                         "maxSMB,maxIob,smbToGive"
         file.write(f"{current_cols}\n")
         for i in range(count_to_generate):
@@ -34,6 +36,18 @@ class GenerateSimpleData(NightscoutMlBase):
             recentSteps5Minutes = 0
             recentSteps10Minutes = 0
             recentSteps15Minutes = 0
+            recentSteps30Minutes = 0
+            recentSteps60Minutes = 0
+            hour = random.randint(0,23)
+            hour0_2 =   1 if hour >= 0 and hour <= 2 else 0
+            hour3_5 =   1 if hour >= 3 and hour <= 5 else 0
+            hour6_8 =   1 if hour >= 6 and hour <= 8 else 0
+            hour9_11 =  1 if hour >= 9 and hour <= 11 else 0
+            hour12_14 = 1 if hour >= 12 and hour <= 14 else 0
+            hour15_17 = 1 if hour >= 15 and hour <= 17 else 0
+            hour18_20 = 1 if hour >= 18 and hour <= 20 else 0
+            hour21_23 = 1 if hour >= 21 and hour <= 23 else 0
+            weekend = random.randint(0,1)
 
             dynamicISF = self.isf
             if bg > 150:
@@ -42,7 +56,8 @@ class GenerateSimpleData(NightscoutMlBase):
                 dynamicISF = self.isf * .6
             insulin_for_bg = (bg - self.target) / dynamicISF
             insulin_for_cob = cob / self.cr
-            smbToGive = insulin_for_bg + insulin_for_cob - iob + self.baseIob
+            target_iob = self.baseIob if weekend == 0 else self.baseIob * self.weekend_ratio
+            smbToGive = insulin_for_bg + insulin_for_cob - iob + target_iob
             smbToGive += delta / dynamicISF
             if bg < 100 and delta < 1:
                 smbToGive = 0
@@ -54,9 +69,11 @@ class GenerateSimpleData(NightscoutMlBase):
                 smbToGive = self.maxSMB
             if smbToGive < 0:
                 smbToGive = 0
-            line = f"{bg},{iob},{cob},{delta},{shortAvgDelta},{longAvgDelta},"+ \
+            
+            line = f"{hour0_2},{hour3_5},{hour6_8},{hour9_11},{hour12_14},{hour15_17},{hour18_20},{hour21_23},{weekend}," + \
+                        f"{bg},{iob},{cob},{delta},{shortAvgDelta},{longAvgDelta}," + \
                         f"{tdd7Days},{tddDaily},{tdd24Hrs}," + \
-                        f"{recentSteps5Minutes},{recentSteps10Minutes},{recentSteps15Minutes}," + \
+                        f"{recentSteps5Minutes},{recentSteps10Minutes},{recentSteps15Minutes},{recentSteps30Minutes},{recentSteps60Minutes}," + \
                         f"{self.maxSMB},{self.maxIob},{smbToGive}"
             file.write(f"{line}\n")
         file.close()
