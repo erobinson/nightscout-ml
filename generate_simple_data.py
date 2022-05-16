@@ -9,6 +9,7 @@ class GenerateSimpleData(NightscoutMlBase):
     target = 100
     maxIob = 7
     maxSMB = 2
+    baseIob = .6
 
     def generate_data(self, count_to_generate):
         file_name = self.data_folder+'/simple_data_generated.csv'
@@ -41,8 +42,12 @@ class GenerateSimpleData(NightscoutMlBase):
                 dynamicISF = self.isf * .6
             insulin_for_bg = (bg - self.target) / dynamicISF
             insulin_for_cob = cob / self.cr
-            smbToGive = insulin_for_bg + insulin_for_cob - iob + 1
+            smbToGive = insulin_for_bg + insulin_for_cob - iob + self.baseIob
             smbToGive += delta / dynamicISF
+            if bg < 100 and delta < 1:
+                smbToGive = 0
+            if bg < 70:
+                smbToGive = 0
             if smbToGive + iob > self.maxIob:
                 smbToGive = self.maxIob - iob
             if smbToGive > self.maxSMB:
