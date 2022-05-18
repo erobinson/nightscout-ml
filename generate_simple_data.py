@@ -9,7 +9,7 @@ class GenerateSimpleData(NightscoutMlBase):
     target = 100
     maxIob = 7
     maxSMB = 2
-    baseIob = .8
+    baseIob = 1
     weekend_ratio = .6
 
     def generate_data(self, count_to_generate):
@@ -21,15 +21,20 @@ class GenerateSimpleData(NightscoutMlBase):
                         "bg,iob,cob,delta,shortAvgDelta,longAvgDelta," + \
                         "tdd7Days,tddDaily,tdd24Hrs," + \
                         "recentSteps5Minutes,recentSteps10Minutes,recentSteps15Minutes,recentSteps30Minutes,recentSteps60Minutes," + \
-                        "maxSMB,maxIob,smbToGive"
+                        "maxIob,maxSMB,smbToGive"
         file.write(f"{current_cols}\n")
         for i in range(count_to_generate):
-            bg = random.randint(40, 350)
-            iob = random.randint(0, 10)
-            cob = random.randint(0, 100)
-            delta = random.randint(-30, 30)
-            shortAvgDelta = random.randint(-30, 30)
-            longAvgDelta = random.randint(-30, 30)
+            bg = random.randint(60, 180)
+            # iob = random.randint(0, 6)
+            iob = round(random.gauss(1.0, 2), 2)
+            iob = iob if iob > 0 else 0
+            cob = random.randint(0, 60)
+            cob = 0 if random.randint(0,7) == 0 else cob
+            iob = round(iob + 2 if cob > 20 else iob, 2)
+            # delta = random.randint(-10, 10)
+            delta = round(random.gauss(0, 5), 0)
+            shortAvgDelta = random.randint(-10, 10)
+            longAvgDelta = random.randint(-10, 10)
             tdd7Days = random.randint(48, 55)
             tdd24Hrs = random.randint(48, 55)
             tddDaily = random.randint(0, 55)
@@ -57,12 +62,14 @@ class GenerateSimpleData(NightscoutMlBase):
             insulin_for_bg = (bg - self.target) / dynamicISF
             insulin_for_cob = cob / self.cr
             target_iob = self.baseIob if weekend == 0 else self.baseIob * self.weekend_ratio
+            
             smbToGive = insulin_for_bg + insulin_for_cob - iob + target_iob
             smbToGive += delta / dynamicISF
-            if bg < 100 and delta < 1:
+
+            # don't give if low or dropping
+            if (bg < 70) or (bg < 100 and delta < 0) or (delta < -8):
                 smbToGive = 0
-            if bg < 70:
-                smbToGive = 0
+            
             if smbToGive + iob > self.maxIob:
                 smbToGive = self.maxIob - iob
             if smbToGive > self.maxSMB:
@@ -74,7 +81,7 @@ class GenerateSimpleData(NightscoutMlBase):
                         f"{bg},{iob},{cob},{delta},{shortAvgDelta},{longAvgDelta}," + \
                         f"{tdd7Days},{tddDaily},{tdd24Hrs}," + \
                         f"{recentSteps5Minutes},{recentSteps10Minutes},{recentSteps15Minutes},{recentSteps30Minutes},{recentSteps60Minutes}," + \
-                        f"{self.maxSMB},{self.maxIob},{smbToGive}"
+                        f"{self.maxIob},{self.maxSMB},{smbToGive}"
             file.write(f"{line}\n")
         file.close()
 

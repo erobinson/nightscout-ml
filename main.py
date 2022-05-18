@@ -46,7 +46,7 @@ from generate_simple_data import GenerateSimpleData
 
 
 
-GenerateSimpleData().generate_data(200)
+GenerateSimpleData().generate_data(500)
 TFModel().build_tf_regression()
 
 
