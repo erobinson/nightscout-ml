@@ -21,7 +21,7 @@ class GenerateSimpleData(NightscoutMlBase):
                         "bg,iob,cob,delta,shortAvgDelta,longAvgDelta," + \
                         "tdd7Days,tddDaily,tdd24Hrs," + \
                         "recentSteps5Minutes,recentSteps10Minutes,recentSteps15Minutes,recentSteps30Minutes,recentSteps60Minutes," + \
-                        "maxIob,maxSMB,smbToGive"
+                        "smbToGive"
         file.write(f"{current_cols}\n")
         for i in range(count_to_generate):
             bg = random.randint(60, 180)
@@ -81,7 +81,7 @@ class GenerateSimpleData(NightscoutMlBase):
                         f"{bg},{iob},{cob},{delta},{shortAvgDelta},{longAvgDelta}," + \
                         f"{tdd7Days},{tddDaily},{tdd24Hrs}," + \
                         f"{recentSteps5Minutes},{recentSteps10Minutes},{recentSteps15Minutes},{recentSteps30Minutes},{recentSteps60Minutes}," + \
-                        f"{self.maxIob},{self.maxSMB},{smbToGive}"
+                        f"{smbToGive}"
             file.write(f"{line}\n")
         file.close()
 

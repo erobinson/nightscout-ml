@@ -7,7 +7,7 @@ import sys
 from simple_model import SimpleModel
 from tf_model import TFModel
 from generate_simple_data import GenerateSimpleData
-
+from adjust_smbs import AdjustSmbs
 
 # Notes:
 # DONE: get max IOB & max SMB from preferences
@@ -18,6 +18,9 @@ from generate_simple_data import GenerateSimpleData
 # TODO: last meal time, food type/tag
 # TODO: account for future cob - right now doesn't show up in COB
 # TODO: extended high, low earlier today
+# TODO: sensor age, site age, site placement
+# DONE: remove maxSMB/Iob from model
+# DONE: add safety preventions in android
 # DONE: expand date data
 # DONE: add more layers to model
 # DONE: figure out & use total IOB
@@ -30,8 +33,7 @@ from generate_simple_data import GenerateSimpleData
 # DONE: Load model from file for faster feedback loop
 
 # features to add:
-# TODO: cob, last meal time & carbs
-# TODO: sensor age, site age, site placement
+# DONE: cob
 # Done - glucose, delta, short delta, long delta, noise
 # Partially done - day of week, hour of day, AM/PM, holiday
 # targetBG
@@ -48,6 +50,7 @@ from generate_simple_data import GenerateSimpleData
 
 GenerateSimpleData().generate_data(500)
 TFModel().build_tf_regression()
+# AdjustSmbs().adjust_smbs()
 
 
 

@@ -4,6 +4,7 @@ import numpy as np
 import tensorflow as tf
 from datetime import datetime
 from tensorflow.keras import layers
+import time
 
 
 class TFModel(NightscoutMlBase):
@@ -25,13 +26,12 @@ class TFModel(NightscoutMlBase):
                         "bg","iob","cob","delta","shortAvgDelta","longAvgDelta",
                         "tdd7Days","tddDaily","tdd24Hrs",
                         "recentSteps5Minutes","recentSteps10Minutes","recentSteps15Minutes","recentSteps30Minutes","recentSteps60Minutes",
-                        "maxSMB","maxIob","smbToGive"]
+                        "smbToGive"]
         # current_cols = [
         #                 # "hour0_2","hour3_5","hour6_8","hour9_11","hour12_14","hour15_17","hour18_20","hour21_23","weekend",
         #                 "bg","iob","cob","delta","shortAvgDelta","longAvgDelta",
         #                 # "tdd7Days","tddDaily","tdd24Hrs",
         #                 # "recentSteps5Minutes","recentSteps10Minutes","recentSteps15Minutes","recentSteps30Minutes","recentSteps60Minutes",
-        #                 # "maxSMB","maxIob",
         #                 "smbToGive"]
         df = df[current_cols]
         
@@ -48,6 +48,8 @@ class TFModel(NightscoutMlBase):
         best_model = 1
         best_epochs = 0
 
+        start = time.time()
+
         for dropout_rate_l1 in range(0, 6, 2):
             for num_hidden_nodes_l1 in range(0, 6, 2):
                 for dropout_rate_l2 in range(0, 4, 2):
@@ -61,6 +63,8 @@ class TFModel(NightscoutMlBase):
                                     best_results = results
                                     best_epochs = num_epochs
 
+        training_time = time.time() - start
+
         # model = self.train_model(train_features, train_labels, 0, 0, 0, 0, 0, 10)
         # results = model.evaluate(test_features, test_labels)
         # if results < best_results:
@@ -69,7 +73,7 @@ class TFModel(NightscoutMlBase):
         #     best_epochs = 4
 
         
-        self.save_model_info(best_model, best_results, best_epochs, current_cols, len(df))
+        self.save_model_info(best_model, best_results, best_epochs, current_cols, len(df), training_time)
 
         self.save_model(best_model)
 
@@ -110,7 +114,7 @@ class TFModel(NightscoutMlBase):
             validation_split = 0.2)
         return model
 
-    def save_model_info(self, model, test_results, num_epochs, current_cols, data_row_count):
+    def save_model_info(self, model, test_results, num_epochs, current_cols, data_row_count, training_time):
         model_info = "\n\n------------\n"
         model_info += f"Model {self.date_str}\n"
         model_info += f"{len(model.layers)} Layers:\n"
@@ -125,6 +129,7 @@ class TFModel(NightscoutMlBase):
         model_info += f"Columns ({len(current_cols)}): {current_cols} \n"
         model_info += f"Training Data Size: {data_row_count} \n"
         model_info += self.basic_predictions(model, current_cols) + "\n"
+        model_info += f"Took {time.strftime('%H:%M:%S', time.gmtime(training_time))} to train\n"
         model_info += "NOTES: \n"
         open('models/tf_model_results.txt', "a").write(model_info)
 
@@ -147,8 +152,7 @@ class TFModel(NightscoutMlBase):
         prediction = model.predict([0,0,0,0,0,0,0,0,0, \
                         bg,iob,cob,delta,delta,delta, \
                         40,40,40, \
-                        0,0,0,0,0, \
-                        2,7])
+                        0,0,0,0,0])
         return round(prediction[0][0], 3)
     
 
