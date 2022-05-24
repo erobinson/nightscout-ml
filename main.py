@@ -11,9 +11,12 @@ from adjust_smbs import AdjustSmbs
 
 # Notes:
 # DONE: get max IOB & max SMB from preferences
-# TODO: move smb adjustments into code rather than excel
 # TODO: get exercise/step count data from fit API
+## https://github.com/android/fit-samples/blob/main/StepCounterKotlin/app/src/main/java/com/google/android/gms/fit/samples/stepcounterkotlin/MainActivity.kt
+## credentials id - 564617406014-8kkm14657o81ancp2okpo9oga0078v2j.apps.googleusercontent.com
+# TODO: move smb adjustments into code rather than excel
 # TODO: support temp target
+# TODO: tag low preventions
 # TODO: sensor age, site age, site placement
 # TODO: last meal time, food type/tag
 # TODO: account for future cob - right now doesn't show up in COB
@@ -48,9 +51,9 @@ from adjust_smbs import AdjustSmbs
 
 
 
-GenerateSimpleData().generate_data(500)
-TFModel().build_tf_regression()
-# AdjustSmbs().adjust_smbs()
+# GenerateSimpleData().generate_data(500)
+# TFModel().build_tf_regression()
+AdjustSmbs().adjust_smbs()
 
 
 
