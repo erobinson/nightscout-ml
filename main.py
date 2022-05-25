@@ -52,8 +52,8 @@ from adjust_smbs import AdjustSmbs
 
 
 # GenerateSimpleData().generate_data(500)
-# TFModel().build_tf_regression()
-AdjustSmbs().adjust_smbs()
+TFModel().build_tf_regression()
+# AdjustSmbs().adjust_smbs()
 
 
 

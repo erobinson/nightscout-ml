@@ -43,28 +43,29 @@ class TFModel(NightscoutMlBase):
 
         start = time.time()
 
-        for dropout_rate_l1 in range(0, 6, 2):
-            for num_hidden_nodes_l1 in range(0, 6, 2):
-                for dropout_rate_l2 in range(0, 4, 2):
-                    for num_hidden_nodes_l2 in range(0, 3, 2):
+        for dropout_rate_l1 in range(0, 6, 4):
+            for num_hidden_nodes_l1 in range(0, 12, 4):
+                for dropout_rate_l2 in range(0, 6, 2):
+                    for num_hidden_nodes_l2 in range(0, 6, 2):
                         for num_hidden_nodes_l3 in range(0, 3, 2):
-                            for num_epochs in range(1, 10, 4):
-                                model = self.train_model(train_features, train_labels, dropout_rate_l1/10, num_hidden_nodes_l1, dropout_rate_l2/10, num_hidden_nodes_l2, num_hidden_nodes_l3, num_epochs)
-                                results = model.evaluate(test_features, test_labels)
-                                if results < best_results:
-                                    best_model = model
-                                    best_results = results
-                                    best_epochs = num_epochs
+                            # for num_epochs in range(10, 10, 3):
+                            num_epochs = 8
+                            model = self.train_model(train_features, train_labels, dropout_rate_l1/10, num_hidden_nodes_l1, dropout_rate_l2/10, num_hidden_nodes_l2, num_hidden_nodes_l3, num_epochs)
+                            results = model.evaluate(test_features, test_labels)
+                            if results < best_results:
+                                best_model = model
+                                best_results = results
+                                best_epochs = num_epochs
 
-        training_time = time.time() - start
 
-        # model = self.train_model(train_features, train_labels, 0, 0, 0, 0, 0, 10)
+        # model = self.train_model(train_features, train_labels, 0, 6, .4, 4, 2, 10)
         # results = model.evaluate(test_features, test_labels)
         # if results < best_results:
         #     best_model = model
         #     best_results = results
-        #     best_epochs = 4
+        #     best_epochs = 10
 
+        training_time = time.time() - start
         
         self.save_model_info(best_model, best_results, best_epochs, current_cols, len(df), training_time)
 
@@ -115,6 +116,7 @@ class TFModel(NightscoutMlBase):
             layer = model.layers[i]
             layer_info = f"    - Layer {i}  - {layer.name}"
             layer_info += f" ({layer.units})" if 'dense' in layer.name else ""
+            layer_info += f" ({layer.rate})" if 'dropout' in layer.name else ""
             model_info += layer_info + "\n"
             
         model_info += f"Model Loss: {test_results} \n"
@@ -127,8 +129,8 @@ class TFModel(NightscoutMlBase):
         open('models/tf_model_results.txt', "a").write(model_info)
 
     def basic_predictions(self, model, current_cols):
-        if len(current_cols) != 26:
-            return "ERROR: incorrect number of columns"
+        if len(current_cols) != 24:
+            return f"ERROR: incorrect number of columns ({len(current_cols)})"
 
         low = self.basic_predict(model,50.0,0.0,0.0,0)
         low_w_iob = self.basic_predict(model,50.0,1.0,0.0,0)
@@ -142,16 +144,21 @@ class TFModel(NightscoutMlBase):
         return line
         
     def basic_predict(self, model, bg, iob, cob, delta):
-        prediction = model.predict([0,0,0,0,0,0,0,0,0, \
-                        bg,iob,cob,delta,delta,delta, \
+        prediction = model.predict([0,0,0, 0,0,0, 0,0,0, \
+                        bg,iob,cob, delta,delta,delta, \
                         40,40,40, \
-                        0,0,0,0,0])
+                        0,0,0, 0,0])
+                        # "hour0_2","hour3_5","hour6_8", "hour9_11","hour12_14","hour15_17", "hour18_20","hour21_23","weekend",
+                        # "bg","iob","cob", "delta","shortAvgDelta","longAvgDelta",
+                        # "tdd7Days","tddDaily","tdd24Hrs",
+                        # "recentSteps5Minutes","recentSteps10Minutes","recentSteps15Minutes","recentSteps30Minutes","recentSteps60Minutes",
+                        
         return round(prediction[0][0], 3)
     
 
     def save_model(self, model):
         # https://www.tensorflow.org/tutorials/keras/save_and_load#savedmodel_format
-        model.save('models/tf_model_'+self.date_str)
+        model.save('models/backup/tf_model_'+self.date_str)
 
         # https://medium.com/analytics-vidhya/running-ml-models-in-android-using-tensorflow-lite-e549209287f0
         converter = tf.lite.TFLiteConverter.from_keras_model(model=model)
