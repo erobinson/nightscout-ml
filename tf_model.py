@@ -15,7 +15,6 @@ class TFModel(NightscoutMlBase):
     def build_tf_regression(self):
         # https://www.tensorflow.org/tutorials/keras/regression#regression_with_a_deep_neural_network_dnn
         df = pd.read_csv('aiSMB_records_adjusted.csv')
-        df = self.adjust_smbs_based_on_outcomes(df)
  
         df_gen = pd.read_csv(self.data_folder+'/simple_data_generated.csv')
         df = pd.concat([df, df_gen])
@@ -27,12 +26,6 @@ class TFModel(NightscoutMlBase):
                         "tdd7Days","tddDaily","tdd24Hrs",
                         "recentSteps5Minutes","recentSteps10Minutes","recentSteps15Minutes","recentSteps30Minutes","recentSteps60Minutes",
                         "smbToGive"]
-        # current_cols = [
-        #                 # "hour0_2","hour3_5","hour6_8","hour9_11","hour12_14","hour15_17","hour18_20","hour21_23","weekend",
-        #                 "bg","iob","cob","delta","shortAvgDelta","longAvgDelta",
-        #                 # "tdd7Days","tddDaily","tdd24Hrs",
-        #                 # "recentSteps5Minutes","recentSteps10Minutes","recentSteps15Minutes","recentSteps30Minutes","recentSteps60Minutes",
-        #                 "smbToGive"]
         df = df[current_cols]
         
         train_dataset = df.sample(frac=0.8, random_state=0)
@@ -166,7 +159,3 @@ class TFModel(NightscoutMlBase):
         open('models/backup/tf_model_'+self.date_str+'.tflite', "wb").write(lite_model)
         open('models/model.tflite', "wb").write(lite_model)
 
-
-    def adjust_smbs_based_on_outcomes(self, df):
-        # df['smbToGive'] = np.where(df['smbToGive'] > .2, df['smbToGive'] - .2, 0)
-        return df
