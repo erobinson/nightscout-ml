@@ -17,7 +17,7 @@ class AdjustSmbs(NightscoutMlBase):
     def adjust_smbs(self):
         df = pd.read_csv('adjustment_test.csv')
         
-        
+        self.drop_any_manually_triggered_entries(df)
 
         # when below 70 then don't give insulin
         df.loc[df['bg'] < self.no_insulin_threshold, 'smbToGive'] = 0
@@ -59,12 +59,28 @@ class AdjustSmbs(NightscoutMlBase):
                 smb_given = prior_row['smbToGive']
                 if smb_given >= u_to_remove:
                     new_smb = smb_given - u_to_remove
-                    prior_row['smbToGive'] = new_smb
                     df.at[index-i, 'smbToGive'] = new_smb
                     return
                 if smb_given > 0 and smb_given < u_to_remove:
-                    prior_row['smbToGive'] = 0
+                    df.at[index-i, 'smbToGive'] = 0
                     u_to_remove -= smb_given
+
+    def drop_any_manually_triggered_entries(self, df):
+        # remove any rows where it was manually requested
+        # makes it harder to calculate time series w/ 5 min offsets if there is a 2min value
+        rows_to_drop = []
+        for index, row in df.iterrows():
+            if index > 0 and index < len(df)-1:
+                prior_date = datetime.strptime(df.iloc[index - 1]['dateStr'], self.date_format_str)
+                row_date   = datetime.strptime(row['dateStr'], self.date_format_str)
+                next_date  = datetime.strptime(df.iloc[index + 1]['dateStr'], self.date_format_str)
+                expected_prior = row_date - pd.DateOffset(minutes=5)
+                expected_next = row_date + pd.DateOffset(minutes=5)
+                if expected_prior != prior_date and expected_next != next_date:
+                    rows_to_drop.append(index)
+
+        df.drop(df.index[rows_to_drop], inplace=True)
+        df.reset_index()
 
     def roundToPt05(self, units):
         return round(units * 20) / 20
