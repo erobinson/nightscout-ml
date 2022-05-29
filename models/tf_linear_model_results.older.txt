@@ -1,0 +1,648 @@
+------------
+Model 2022-5-13_15-44 
+Model Loss: 0.44808492064476013 
+Columns: ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'maxSMB', 'maxIob', 'smbToGive'] 
+
+
+------------
+Model 2022-5-13_15-45 
+Model Loss: 0.3841445744037628 
+Columns: ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'maxSMB', 'maxIob', 'smbToGive'] 
+
+
+------------
+Model 2022-5-13_15-46 
+Model Loss: 0.40267637372016907 
+Columns: ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'maxSMB', 'maxIob', 'smbToGive'] 
+
+
+------------
+Model 2022-5-13_15-55 
+Layers - 3  
+  Layer 0  - normalize
+  Layer 1  - dense(5)
+  Layer 2  - dense
+Layers - 3Model Loss: 0.37886545062065125 
+Columns: ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'maxSMB', 'maxIob', 'smbToGive'] 
+
+
+------------
+Model 2022-5-13_15-56 
+Layers - 3
+  Layer 0  - normalization
+  Layer 1  - dense(8)
+  Layer 2  - dense_1
+Layers - 3Model Loss: 0.3687888979911804 
+Columns: ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'maxSMB', 'maxIob', 'smbToGive'] 
+
+
+------------
+Model 2022-5-13_15-58 
+Layers - 4
+  Layer 0  - normalization
+  Layer 1  - dense(6)
+  Layer 2  - dense_1(3)
+  Layer 3  - dense_2(1)
+Layers - 4Model Loss: 0.3843446969985962 
+Columns: ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'maxSMB', 'maxIob', 'smbToGive'] 
+
+
+------------
+Model 2022-5-13_16-3 
+Layers - 3
+  Layer 0  - normalization
+  Layer 1  - dense(10)
+  Layer 2  - dense_1(1)
+Model Loss: 0.3711746335029602 
+Columns: ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'maxSMB', 'maxIob', 'smbToGive'] 
+
+
+------------
+Model 2022-5-13_16-6 
+Layers - 3
+  Layer 0  - normalization
+  Layer 1  - dense(10)
+  Layer 2  - dense_1(1)
+Model Loss: 0.38273516297340393 
+Columns: ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'maxSMB', 'maxIob', 'smbToGive'] 
+
+
+------------
+Model 2022-5-13_16-14 
+Layers - 3
+  Layer 0  - normalization
+  Layer 1  - dense(10)
+  Layer 2  - dense_1(1)
+Model Loss: 0.3429822623729706 
+Columns: ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+
+
+------------
+Model 2022-5-13_16-15 
+Layers - 3
+  Layer 0  - normalization
+  Layer 1  - dense(10)
+  Layer 2  - dense_1(1)
+Model Loss: 0.3594784140586853 
+Columns: ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'maxSMB', 'maxIob', 'smbToGive'] 
+
+
+------------
+Model 2022-5-13_16-15 
+Layers - 4
+  Layer 0  - normalization
+  Layer 1  - dense(10)
+  Layer 2  - dense_1(3)
+  Layer 3  - dense_2(1)
+Model Loss: 0.36010390520095825 
+Columns: ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+
+
+------------
+Model 2022-5-13_16-16 
+Layers - 3
+  Layer 0  - normalization
+  Layer 1  - dense(10)
+  Layer 2  - dense_1(1)
+Model Loss: 0.40127694606781006 
+Columns: ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+
+
+------------
+Model 2022-5-13_16-16 
+Layers - 3
+  Layer 0  - normalization
+  Layer 1  - dense(10)
+  Layer 2  - dense_1(1)
+Model Loss: 0.38001736998558044 
+Columns: ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+
+
+------------
+Model 2022-5-13_16-17 
+Layers - 3
+  Layer 0  - normalization
+  Layer 1  - dense(14)
+  Layer 2  - dense_1(1)
+Model Loss: 0.3732452690601349 
+Columns: ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+
+
+------------
+Model 2022-5-13_16-18 
+Layers - 2
+  Layer 0  - normalization
+  Layer 1  - dense(1)
+Model Loss: 0.3374744951725006 
+Columns: ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+
+
+------------
+Model 2022-5-13_16-18 
+Layers - 2
+  Layer 0  - normalization
+  Layer 1  - dense(1)
+Model Loss: 0.40312764048576355 
+Columns: ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+
+
+------------
+Model 2022-5-13_16-20 
+Layers - 2
+  Layer 0  - normalization
+  Layer 1  - dense(1)
+Model Loss: 0.38353124260902405 
+Columns: ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+
+
+------------
+Model 2022-5-13_16-21 
+Layers - 2
+  Layer 0  - normalization
+  Layer 1  - dense(1)
+Model Loss: 0.3302925229072571 
+Columns (15): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+
+
+------------
+Model 2022-5-13_22-44 
+Layers - 2
+  Layer 0  - normalization
+  Layer 1  - dense(1)
+Model Loss: 0.4624311625957489 
+Columns (15): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+
+
+------------
+Model 2022-5-13_22-44 
+Layers - 2
+  Layer 0  - normalization
+  Layer 1  - dense(1)
+Model Loss: 0.38321223855018616 
+Columns (12): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'maxSMB', 'maxIob', 'smbToGive'] 
+
+
+------------
+Model 2022-5-13_22-45 
+Layers - 2
+  Layer 0  - normalization
+  Layer 1  - dense(1)
+Model Loss: 0.4341055750846863 
+Columns (15): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+
+
+------------
+Model 2022-5-13_22-45 
+Layers - 2
+  Layer 0  - normalization
+  Layer 1  - dense(1)
+Model Loss: 0.4480177164077759 
+Columns (15): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+
+
+------------
+Model 2022-5-13_22-45 
+Layers - 2
+  Layer 0  - normalization
+  Layer 1  - dense(1)
+Model Loss: 0.378872275352478 
+Columns (12): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'maxSMB', 'maxIob', 'smbToGive'] 
+
+
+------------
+Model 2022-5-13_22-46 
+Layers - 2
+  Layer 0  - normalization
+  Layer 1  - dense(1)
+Model Loss: 0.38657745718955994 
+Columns (12): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'maxSMB', 'maxIob', 'smbToGive'] 
+
+
+------------
+Model 2022-5-13_22-46 
+Layers - 3
+  Layer 0  - normalization
+  Layer 1  - dense(5)
+  Layer 2  - dense_1(1)
+Model Loss: 0.3434726595878601 
+Columns (12): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'maxSMB', 'maxIob', 'smbToGive'] 
+
+
+------------
+Model 2022-5-13_22-47 
+Layers - 3
+  Layer 0  - normalization
+  Layer 1  - dense(5)
+  Layer 2  - dense_1(1)
+Model Loss: 0.3610585331916809 
+Columns (12): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'maxSMB', 'maxIob', 'smbToGive'] 
+
+
+------------
+Model 2022-5-13_22-48 
+Layers - 3
+  Layer 0  - normalization
+  Layer 1  - dense(5)
+  Layer 2  - dense_1(1)
+Model Loss: 0.4519237279891968 
+Columns (12): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 552 
+
+
+------------
+Model 2022-5-13_22-48 
+Layers - 3
+  Layer 0  - normalization
+  Layer 1  - dense(5)
+  Layer 2  - dense_1(1)
+Model Loss: 0.34857863187789917 
+Columns (12): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 552 
+
+
+------------
+Model 2022-5-13_22-48 
+Layers - 3
+  Layer 0  - normalization
+  Layer 1  - dense(5)
+  Layer 2  - dense_1(1)
+Model Loss: 0.4715416431427002 
+Columns (12): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 552 
+
+
+------------
+Model 2022-5-13_22-49 
+Layers - 3
+  Layer 0  - normalization
+  Layer 1  - dense(5)
+  Layer 2  - dense_1(1)
+Model Loss: 0.38254040479660034 
+Columns (12): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 552 
+
+
+------------
+Model 2022-5-13_22-49 
+Layers - 3
+  Layer 0  - normalization
+  Layer 1  - dense(5)
+  Layer 2  - dense_1(1)
+Model Loss: 0.3666687309741974 
+Columns (12): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 552 
+
+
+------------
+Model 2022-5-13_22-49 
+Layers - 3
+  Layer 0  - normalization
+  Layer 1  - dense(5)
+  Layer 2  - dense_1(1)
+Model Loss: 0.42573341727256775 
+Columns (12): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 552 
+
+
+------------
+Model 2022-5-13_22-50 
+Layers - 3
+  Layer 0  - normalization
+  Layer 1  - dense(6)
+  Layer 2  - dense_1(1)
+Model Loss: 0.30920884013175964 
+Columns (12): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 552 
+
+
+------------
+Model 2022-5-14_23-6 
+Layers - 3
+  Layer 0  - normalization
+  Layer 1  - dense(6)
+  Layer 2  - dense_1(1)
+Model Loss: 0.31566229462623596 
+Columns (12): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 737 
+
+
+------------
+Model 2022-5-14_23-24 
+Layers - 3
+  Layer 0  - normalization
+  Layer 1  - dense(6)
+  Layer 2  - dense_1(1)
+Model Loss: nan 
+Columns (12): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 1037 
+
+
+------------
+Model 2022-5-14_23-27 
+Layers - 3
+  Layer 0  - normalization
+  Layer 1  - dense(6)
+  Layer 2  - dense_1(1)
+Model Loss: 0.3096863031387329 
+Columns (12): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 1037 
+
+
+------------
+Model 2022-5-14_23-30 
+Layers - 3
+  Layer 0  - normalization
+  Layer 1  - dense(6)
+  Layer 2  - dense_1(1)
+Model Loss: 0.3077962398529053 
+Columns (12): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 1037 
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------
+Model 2022-5-14_23-36 
+Layers - 3
+  Layer 0  - normalization_6
+  Layer 1  - dense_12(1)
+  Layer 2  - dense_13(1)
+Model Loss: 0.26012593507766724 
+Columns (12): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 1037 
+
+
+------------
+Model 2022-5-15_10-11 
+Layers - 3
+  Layer 0  - normalization_5
+  Layer 1  - dense_10(1)
+  Layer 2  - dense_11(1)
+Model Loss: 0.26314976811408997 
+Columns (12): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 1037 
+
+
+
+
+
+------------
+TEST MODEL
+Model 2022-5-15_22-11
+5 Layers:
+    - Layer 0  - normalization
+    - Layer 1  - dense (1)
+    - Layer 2  - dense_1 (1)
+    - Layer 3  - dense_2 (1)
+    - Layer 4  - dense_3 (1)
+Model Loss: 0.3424851596355438 
+Number of Epochs: 2 
+Columns (26): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 1119 
+
+
+
+
+
+
+------------
+Model 2022-5-15_22-12
+5 Layers:
+    - Layer 0  - normalization_813
+    - Layer 1  - dense_2684 (2)
+    - Layer 2  - dense_2685 (4)
+    - Layer 3  - dense_2686 (5)
+    - Layer 4  - dense_2687 (1)
+Model Loss: 0.26072290539741516 
+Number of Epochs: 7 
+Columns (26): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 1119 
+Notes: Too agressive, but better
+
+
+
+------------
+Model 2022-5-16_9-11
+3 Layers:
+    - Layer 0  - normalization
+    - Layer 1  - dense (3)
+    - Layer 2  - dense_1 (1)
+Model Loss: 0.4873864948749542 
+Number of Epochs: 4 
+Columns (26): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 1919 
+
+
+------------
+Model 2022-5-16_9-13
+2 Layers:
+    - Layer 0  - normalization
+    - Layer 1  - dense (1)
+Model Loss: 0.6054385304450989 
+Number of Epochs: 4 
+Columns (26): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 1919 
+
+
+------------
+Model 2022-5-16_9-14
+2 Layers:
+    - Layer 0  - normalization
+    - Layer 1  - dense (1)
+Model Loss: 0.49180546402931213 
+Number of Epochs: 4 
+Columns (26): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 1000 
+
+
+------------
+Model 2022-5-16_9-17
+4 Layers:
+    - Layer 0  - normalization
+    - Layer 1  - dense (10)
+    - Layer 2  - dense_1 (3)
+    - Layer 3  - dense_2 (1)
+Model Loss: 0.5286294221878052 
+Number of Epochs: 4 
+Columns (26): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 5000 
+
+
+------------
+Model 2022-5-16_9-22
+4 Layers:
+    - Layer 0  - normalization_20
+    - Layer 1  - dense_30 (2)
+    - Layer 2  - dense_31 (3)
+    - Layer 3  - dense_32 (1)
+Model Loss: 0.500290036201477 
+Number of Epochs: 7 
+Columns (26): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 5000 
+
+
+------------
+Model 2022-5-16_9-42
+3 Layers:
+    - Layer 0  - normalization_5
+    - Layer 1  - dense_7 (2)
+    - Layer 2  - dense_8 (1)
+Model Loss: 0.505987286567688 
+Number of Epochs: 9 
+Columns (7): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'smbToGive'] 
+Training Data Size: 10000 
+
+
+------------
+Model 2022-5-16_9-43
+3 Layers:
+    - Layer 0  - normalization_5
+    - Layer 1  - dense_7 (2)
+    - Layer 2  - dense_8 (1)
+Model Loss: 0.5509983897209167 
+Number of Epochs: 9 
+Columns (7): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'smbToGive'] 
+Training Data Size: 200 
+
+
+------------
+Model 2022-5-16_12-30
+2 Layers:
+    - Layer 0  - normalization
+    - Layer 1  - dense (1)
+Model Loss: 0.5514722466468811 
+Number of Epochs: 4 
+Columns (7): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'smbToGive'] 
+Training Data Size: 2919 
+
+
+------------
+Model 2022-5-16_12-31
+2 Layers:
+    - Layer 0  - normalization
+    - Layer 1  - dense (1)
+Model Loss: 0.5318683385848999 
+Number of Epochs: 4 
+Columns (7): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'smbToGive'] 
+Training Data Size: 2000 
+
+
+------------
+Model 2022-5-16_12-36
+2 Layers:
+    - Layer 0  - normalization
+    - Layer 1  - dense (1)
+Model Loss: 0.594161868095398 
+Number of Epochs: 4 
+Columns (26): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 1419 
+
+
+------------
+Model 2022-5-16_12-38
+2 Layers:
+    - Layer 0  - normalization
+    - Layer 1  - dense (1)
+Model Loss: 0.5018982291221619 
+Number of Epochs: 4 
+Columns (26): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 1419 
+
+
+------------
+Model 2022-5-16_12-39
+2 Layers:
+    - Layer 0  - normalization
+    - Layer 1  - dense (1)
+Model Loss: 0.8198733925819397 
+Number of Epochs: 4 
+Columns (26): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 1419 
+
+
+------------
+Model 2022-5-16_12-42
+2 Layers:
+    - Layer 0  - normalization
+    - Layer 1  - dense (1)
+Model Loss: 0.06034800037741661 
+Number of Epochs: 4 
+Columns (26): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 500 
+
+
+------------
+Model 2022-5-16_12-43
+2 Layers:
+    - Layer 0  - normalization
+    - Layer 1  - dense (1)
+Model Loss: 0.46359679102897644 
+Number of Epochs: 4 
+Columns (26): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 500 
+
+
+------------
+Model 2022-5-16_12-44
+2 Layers:
+    - Layer 0  - normalization
+    - Layer 1  - dense (1)
+Model Loss: 0.5175719261169434 
+Number of Epochs: 4 
+Columns (26): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 50000 
+
+
+------------
+Model 2022-5-16_12-45
+3 Layers:
+    - Layer 0  - normalization
+    - Layer 1  - dense (7)
+    - Layer 2  - dense_1 (1)
+Model Loss: 0.5390927791595459 
+Number of Epochs: 4 
+Columns (26): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 50000 
+
+
+------------
+Model 2022-5-16_12-46
+2 Layers:
+    - Layer 0  - normalization
+    - Layer 1  - dense (1)
+Model Loss: 0.6018267273902893 
+Number of Epochs: 4 
+Columns (7): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'smbToGive'] 
+Training Data Size: 1000 
+
+
+------------
+Model 2022-5-16_12-47
+2 Layers:
+    - Layer 0  - normalization
+    - Layer 1  - dense (1)
+Model Loss: 0.5076535940170288 
+Number of Epochs: 4 
+Columns (7): ['bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'smbToGive'] 
+Training Data Size: 1000 
+
+
+------------
+Model 2022-5-16_12-51
+3 Layers:
+    - Layer 0  - normalization_5
+    - Layer 1  - dense_7 (2)
+    - Layer 2  - dense_8 (1)
+Model Loss: 0.34410181641578674 
+Number of Epochs: 9 
+Columns (26): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 1419 

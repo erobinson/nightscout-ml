@@ -1,0 +1,256 @@
+
+
+------------
+Model 2022-5-16_14-53
+3 Layers:
+    - Layer 0  - normalization_8
+    - Layer 1  - dense_13 (4)
+    - Layer 2  - dense_14 (1)
+Model Loss: 0.30411452054977417 
+Number of Epochs: 9 
+Columns (26): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 1017 
+    low: None    low_w_iob: None    normal_w_iob: None    normal_wo_iob: None    high_bg: None    high_cob: None    high_both: None
+NOTES: 
+
+
+------------
+Model 2022-5-16_15-2
+3 Layers:
+    - Layer 0  - normalization_8
+    - Layer 1  - dense_13 (4)
+    - Layer 2  - dense_14 (1)
+Model Loss: 0.3088301718235016 
+Number of Epochs: 9 
+Columns (26): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 1017 
+    low: None    low_w_iob: None    normal_w_iob: None    normal_wo_iob: None    high_bg: None    high_cob: None    high_both: None
+NOTES: 
+
+
+------------
+Model 2022-5-16_15-6
+3 Layers:
+    - Layer 0  - normalization_8
+    - Layer 1  - dense_13 (4)
+    - Layer 2  - dense_14 (1)
+Model Loss: 0.30346056818962097 
+Number of Epochs: 9 
+Columns (26): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 1017 
+    low: [[0.08011869]]    low_w_iob: [[0.03499521]]    normal_w_iob: [[0.15541932]]    normal_wo_iob: [[0.20054278]]    high_bg: [[0.441391]]    high_cob: [[0.3768146]]    high_both: [[0.61766285]]
+NOTES: Using now (5/15 - 3:32p)
+
+
+------------
+Model 2022-5-16_15-31
+3 Layers:
+    - Layer 0  - normalization_5
+    - Layer 1  - dense_7 (2)
+    - Layer 2  - dense_8 (1)
+Model Loss: 0.3141089379787445 
+Number of Epochs: 9 
+Columns (26): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 1517 
+    low: 0.13899999856948853    low_w_iob: -0.024000000208616257    normal_w_iob: 0.2199999988079071    normal_wo_iob: 0.382999986410141    high_bg: 0.8730000257492065    high_cob: 0.6179999709129333    high_both: 1.1069999933242798
+NOTES: 
+
+
+------------
+Model 2022-5-16_16-14
+6 Layers:
+    - Layer 0  - normalization_178
+    - Layer 1  - dropout_190
+    - Layer 2  - dense_361 (2)
+    - Layer 3  - dense_362 (2)
+    - Layer 4  - dense_363 (2)
+    - Layer 5  - dense_364 (1)
+Model Loss: 0.27846643328666687 
+Number of Epochs: 5 
+Columns (26): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'maxSMB', 'maxIob', 'smbToGive'] 
+Training Data Size: 1517 
+    low: 0.14300000667572021    low_w_iob: 0.09300000220537186    normal_w_iob: 0.20800000429153442    normal_wo_iob: 0.257999986410141    high_bg: 0.4880000054836273    high_cob: 0.3540000021457672    high_both: 0.5839999914169312
+NOTES: Using now - pretty good - less baseline insulin
+
+
+------------
+Model 2022-5-18_15-10
+6 Layers:
+    - Layer 0  - normalization_116
+    - Layer 1  - dropout_100
+    - Layer 2  - dense_231 (2)
+    - Layer 3  - dropout_101
+    - Layer 4  - dense_232 (2)
+    - Layer 5  - dense_233 (1)
+Model Loss: 0.20477986335754395 
+Number of Epochs: 9 
+Columns (24): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'smbToGive'] 
+Training Data Size: 2009 
+ERROR: incorrect number of columns
+Took 00:04:26 to train
+NOTES: Using 5/18 4:00pm - to 5/25 - too agressive even when dropping
+
+
+
+
+------------
+Model 2022-5-25_10-58
+5 Layers:
+    - Layer 0  - normalization_104
+    - Layer 1  - dropout_80
+    - Layer 2  - dense_198 (2)
+    - Layer 3  - dense_199 (2)
+    - Layer 4  - dense_200 (1)
+Model Loss: 0.1536811888217926 
+Number of Epochs: 9 
+Columns (24): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'smbToGive'] 
+Training Data Size: 3543 
+ERROR: incorrect number of columns
+Took 00:05:09 to train
+NOTES: 
+
+
+------------
+Model 2022-5-25_11-7
+6 Layers:
+    - Layer 0  - normalization_143
+    - Layer 1  - dense_356 (6)
+    - Layer 2  - dropout_95 (.4)
+    - Layer 3  - dense_357 (4)
+    - Layer 4  - dense_358 (2)
+    - Layer 5  - dense_359 (1)
+Model Loss: 0.15421202778816223 
+Number of Epochs: 9 
+Columns (24): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'smbToGive'] 
+Training Data Size: 3543 
+ERROR: incorrect number of columns
+Took 00:14:32 to train
+NOTES: 
+
+
+------------
+Model 2022-5-25_11-33
+5 Layers:
+    - Layer 0  - normalization
+    - Layer 1  - dense (6)
+    - Layer 2  - dropout (0.4)
+    - Layer 3  - dense_1 (4)
+    - Layer 4  - dense_2 (1)
+Model Loss: 0.24658803641796112 
+Number of Epochs: 4 
+Columns (24): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'smbToGive'] 
+Training Data Size: 3543 
+ERROR: incorrect number of columns
+Took 00:00:02 to train
+NOTES: 
+
+
+------------
+Model 2022-5-25_11-35
+6 Layers:
+    - Layer 0  - normalization
+    - Layer 1  - dense (6)
+    - Layer 2  - dropout (0.4)
+    - Layer 3  - dense_1 (4)
+    - Layer 4  - dense_2 (2)
+    - Layer 5  - dense_3 (1)
+Model Loss: 0.15883426368236542 
+Number of Epochs: 4 
+Columns (24): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'smbToGive'] 
+Training Data Size: 3543 
+ERROR: incorrect number of columns
+Took 00:00:02 to train
+NOTES: 
+
+
+------------
+Model 2022-5-25_11-36
+6 Layers:
+    - Layer 0  - normalization
+    - Layer 1  - dense (6)
+    - Layer 2  - dropout (0.4)
+    - Layer 3  - dense_1 (4)
+    - Layer 4  - dense_2 (2)
+    - Layer 5  - dense_3 (1)
+Model Loss: 0.1600187122821808 
+Number of Epochs: 10 
+Columns (24): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'smbToGive'] 
+Training Data Size: 3543 
+ERROR: incorrect number of columns (24)
+Took 00:00:02 to train
+NOTES: 
+
+
+------------
+Model 2022-5-25_11-37
+6 Layers:
+    - Layer 0  - normalization
+    - Layer 1  - dense (6)
+    - Layer 2  - dropout (0.4)
+    - Layer 3  - dense_1 (4)
+    - Layer 4  - dense_2 (2)
+    - Layer 5  - dense_3 (1)
+Model Loss: 0.17563654482364655 
+Number of Epochs: 10 
+Columns (24): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'smbToGive'] 
+Training Data Size: 3543 
+    low: 0.06499999761581421    low_w_iob: 0.05000000074505806    normal_w_iob: 0.0860000029206276    normal_wo_iob: 0.10000000149011612    high_bg: 0.17100000381469727    high_cob: 0.125    high_both: 0.19599999487400055
+Took 00:00:02 to train
+NOTES: 
+
+
+------------
+Model 2022-5-25_11-40
+6 Layers:
+    - Layer 0  - normalization_27
+    - Layer 1  - dense_43 (4)
+    - Layer 2  - dropout_15 (0.2)
+    - Layer 3  - dense_44 (2)
+    - Layer 4  - dense_45 (2)
+    - Layer 5  - dense_46 (1)
+Model Loss: 0.15748435258865356 
+Number of Epochs: 8 
+Columns (24): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'smbToGive'] 
+Training Data Size: 3543 
+    low: 0.1420000046491623    low_w_iob: 0.07400000095367432    normal_w_iob: 0.19599999487400055    normal_wo_iob: 0.2639999985694885
+    high_bg: 0.5070000290870667    high_cob: 0.35600000619888306    high_both: 0.5989999771118164
+Took 00:02:50 to train
+NOTES: Using 5/25 - to 5/27 2:10pm - good over night - should be more agressive when rising
+
+
+------------
+Model 2022-5-26_12-52
+6 Layers:
+    - Layer 0  - normalization_27
+    - Layer 1  - dense_43 (4)
+    - Layer 2  - dropout_15 (0.2)
+    - Layer 3  - dense_44 (2)
+    - Layer 4  - dense_45 (2)
+    - Layer 5  - dense_46 (1)
+Model Loss: 0.16594311594963074 
+Number of Epochs: 8 
+Columns (24): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'smbToGive'] 
+Training Data Size: 3969 
+    low: 0.07699999958276749    low_w_iob: 0.024000000208616257    normal_w_iob: 0.1589999943971634    normal_wo_iob: 0.210999995470047
+    high_bg: 0.47999998927116394    high_cob: 0.31700000166893005    high_both: 0.5849999785423279
+Took 00:03:04 to train
+NOTES: 
+
+
+------------
+Model 2022-5-27_13-48
+4 Layers:
+    - Layer 0  - normalization_20
+    - Layer 1  - dense_22 (4)
+    - Layer 2  - dense_23 (2)
+    - Layer 3  - dense_24 (1)
+Model Loss: 0.1612655073404312 
+Number of Epochs: 8 
+Columns (24): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'smbToGive'] 
+Training Data Size: 3969 
+    low: 0.04100000113248825    low_w_iob: 0.04100000113248825    normal_w_iob: 0.07400000095367432    normal_wo_iob: 0.12700000405311584
+    high_bg: 1.1629999876022339    high_cob: 0.5139999985694885    high_both: 1.5880000591278076
+    low_rising: 0.609000027179718    normal_rising: 0.9309999942779541    high_rising: 1.7910000085830688
+Took 00:01:54 to train
+NOTES: using relu activation - testing 5/27 2:09pm - 
+

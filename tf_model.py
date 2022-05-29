@@ -83,13 +83,13 @@ class TFModel(NightscoutMlBase):
         if dropout_rate_l1 > 0:
             model.add(layers.Dropout(dropout_rate_l1))
         if num_hidden_nodes_l1 > 0:
-            model.add(layers.Dense(units=num_hidden_nodes_l1))
+            model.add(layers.Dense(units=num_hidden_nodes_l1, activation="relu"))
         if dropout_rate_l2 > 0:
             model.add(layers.Dropout(dropout_rate_l2))
         if num_hidden_nodes_l2 > 0 and num_hidden_nodes_l1 > 0:
-            model.add(layers.Dense(units=num_hidden_nodes_l2))
+            model.add(layers.Dense(units=num_hidden_nodes_l2, activation="relu"))
         if num_hidden_nodes_l3 > 0 and num_hidden_nodes_l2 > 0 and num_hidden_nodes_l1 > 0:
-            model.add(layers.Dense(units=num_hidden_nodes_l3))
+            model.add(layers.Dense(units=num_hidden_nodes_l3, activation="relu"))
 
         model.add(layers.Dense(units=1))
         
@@ -139,8 +139,9 @@ class TFModel(NightscoutMlBase):
         high_bg = self.basic_predict(model,200.0,0.0,0.0,0)
         high_cob = self.basic_predict(model,100.0,1.0,30.0,0)
         high_both = self.basic_predict(model,200.0,1.0,30.0,0)
-        line = f"    low: {low}    low_w_iob: {low_w_iob}    normal_w_iob: {normal_w_iob}    normal_wo_iob: {normal_wo_iob}"
-        line += f"    high_bg: {high_bg}    high_cob: {high_cob}    high_both: {high_both}"
+        line = f"    low: {low}    low_w_iob: {low_w_iob}    normal_w_iob: {normal_w_iob}    normal_wo_iob: {normal_wo_iob}\n"
+        line += f"    high_bg: {high_bg}    high_cob: {high_cob}    high_both: {high_both}\n"
+        line += f"    low_rising: {self.basic_predict(model, 70, 0, 20, 10)}    normal_rising: {self.basic_predict(model, 100, 0, 20, 10)}    high_rising: {self.basic_predict(model, 180, 0, 20, 10)}\n"
         return line
         
     def basic_predict(self, model, bg, iob, cob, delta):
