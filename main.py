@@ -9,12 +9,12 @@ from pull_notes import PullNotes
 
 # GenerateSimpleData().generate_data(500)
 
-start_date_time = '5/21/22 02:51PM'
-notes_file = PullNotes().pull_notes_to_csv(start_date_time)
-PullNotes().add_low_treatment_flags('data/aiSMB_records.csv', notes_file)
+# start_date_time = '5/31/22 09:34AM'
+# notes_file = PullNotes().pull_notes_to_csv(start_date_time)
+# PullNotes().add_low_treatment_flags('data/aiSMB_records.csv', notes_file)
 # AdjustSmbs().adjust_smbs(start_date_time)
 
-# TFModel().build_tf_regression()
+TFModel().build_tf_regression()
 
 
 # Notes:

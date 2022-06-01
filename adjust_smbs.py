@@ -29,6 +29,8 @@ class AdjustSmbs(NightscoutMlBase):
             if row_date > start_date:
                 self.adjust_for_lows(index, row, df)
                 self.adjust_for_highs(index, row, df)
+        
+        df['adjustment'] = df['smbToGive'] - df['smbGiven']
 
         # df.to_csv('data/adjustment_test_updated.csv', index=False)
         df.to_csv('data/aiSMB_records_adjusted.code.csv', index=False)
@@ -80,9 +82,10 @@ class AdjustSmbs(NightscoutMlBase):
 
     def check_for_upcoming_low(self, recent_index, df_last_hour):
         for i in range(recent_index, len(df_last_hour)):
-            row = df_last_hour[i]
-            if row['bg'] < self.no_insulin_threshold \
-                or (row['bg'] < self.no_insulin_when_dropping_threshold and row['delta'] < 0):
+            row = df_last_hour.iloc[i]
+            low_and_dropping = row['bg'] < self.no_insulin_when_dropping_threshold and row['delta'] < 0
+            below_threshold = row['bg'] < self.no_insulin_threshold
+            if below_threshold or low_and_dropping:
                 return True
         return False
 

@@ -9,8 +9,7 @@ class NightscoutMlBase():
         # drop leading 0 on month
         date_str = date_str[1:] if date_str.startswith('0') else date_str
         
-        # switch midnight 00:XXAM to 12:XXAM
-        # date_str = date_str.replace('00:', '12:')
+        date_str = date_str.replace('/0', '/')
         return date_str
     
     def str_to_time(self, date_str):
