@@ -1,5 +1,3 @@
-# import sys
-# sys.path.append('../nightscout-python-client')
 # from get_svgs import GetSgvs
 # from label_data import LabelData
 # from build_model import BuildModel
@@ -7,11 +5,16 @@
 from tf_model import TFModel
 from generate_simple_data import GenerateSimpleData
 from adjust_smbs import AdjustSmbs
-
+from pull_notes import PullNotes
 
 # GenerateSimpleData().generate_data(500)
-TFModel().build_tf_regression()
-# AdjustSmbs().adjust_smbs()
+
+start_date_time = '5/21/22 02:51PM'
+notes_file = PullNotes().pull_notes_to_csv(start_date_time)
+PullNotes().add_low_treatment_flags('data/aiSMB_records.csv', notes_file)
+# AdjustSmbs().adjust_smbs(start_date_time)
+
+# TFModel().build_tf_regression()
 
 
 # Notes:
@@ -23,7 +26,8 @@ TFModel().build_tf_regression()
 # TODO: account for future cob - right now doesn't show up in COB
 # TODO: extended high, low earlier today
 # TODO: sensor age, site age, site placement
-# TODO: tag low preventions
+# DONE: tag low preventions - include as adjustments in records
+# DONE: tag low preventions - download
 # DONE: move smb adjustments into code rather than excel
 # DONE: remove maxSMB/Iob from model
 # DONE: add safety preventions in android

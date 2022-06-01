@@ -4,7 +4,6 @@ from datetime import datetime
 
 
 class AdjustSmbs(NightscoutMlBase):
-    date_format_str = '%m/%d/%y %H:%M%p'
     no_insulin_threshold = 70
     no_insulin_when_dropping_threshold = 100
     min_target = 75
@@ -12,11 +11,11 @@ class AdjustSmbs(NightscoutMlBase):
     base_isf = 100
     max_smb = 2
 
-    def adjust_smbs(self):
+    def adjust_smbs(self, start_date_time_str):
         # df = pd.read_csv('adjustment_test.csv')
-        df = pd.read_csv('aiSMB_records_adjusted.csv')
+        df = pd.read_csv('data/aiSMB_records.csv')
 
-        df.loc[df['adjusted'] != 1, 'smbToGive'] = df['smbGiven']
+        df['smbToGive'] = df['smbGiven']
 
         # when below 70 then don't give insulin
         df.loc[df['bg'] < self.no_insulin_threshold, 'smbToGive'] = 0
@@ -24,14 +23,12 @@ class AdjustSmbs(NightscoutMlBase):
         # when below 100 & dropping, don't give insulin
         df.loc[(df['bg'] < self.no_insulin_when_dropping_threshold) & (df['delta'] < 0), 'smbToGive'] = 0
 
+        start_date = datetime.strptime(start_date_time_str, self.date_format_str)
         for index, row in df.iterrows():
-            if row['adjusted'] != 1:
-
+            row_date = datetime.strptime(row['dateStr'], self.date_format_str)
+            if row_date > start_date:
                 self.adjust_for_lows(index, row, df)
-
                 self.adjust_for_highs(index, row, df)
-
-                df.at[index, 'adjusted'] = 1
 
         # df.to_csv('data/adjustment_test_updated.csv', index=False)
         df.to_csv('data/aiSMB_records_adjusted.code.csv', index=False)
@@ -48,7 +45,8 @@ class AdjustSmbs(NightscoutMlBase):
             self.remove_prior_insulin(index, row, df, u_to_remove)
 
     def adjust_for_highs(self, index, row, df):
-        if row['bg'] > self.max_target and row['delta'] > 0:
+        trending_up_or_stable = row['delta'] > -2 or row['shortAvgDelta'] > -2
+        if row['bg'] > self.max_target and trending_up_or_stable:
             u_to_add = self.u_to_adjust_based_on_delta(row)
             self.add_prior_insulin(index, row, df, u_to_add)
         

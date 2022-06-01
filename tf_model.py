@@ -1,3 +1,4 @@
+from sklearn import metrics
 from nightscout_ml_base import NightscoutMlBase
 import pandas as pd
 import numpy as np
@@ -37,9 +38,11 @@ class TFModel(NightscoutMlBase):
         train_labels = train_features.pop('smbToGive')
         test_labels = test_features.pop('smbToGive')
 
-        best_results = 1
+        best_loss = 1
+        best_accuracy = 0
         best_model = 1
         best_epochs = 0
+
 
         start = time.time()
 
@@ -52,9 +55,10 @@ class TFModel(NightscoutMlBase):
                             num_epochs = 8
                             model = self.train_model(train_features, train_labels, dropout_rate_l1/10, num_hidden_nodes_l1, dropout_rate_l2/10, num_hidden_nodes_l2, num_hidden_nodes_l3, num_epochs)
                             results = model.evaluate(test_features, test_labels)
-                            if results < best_results:
+                            if results[0] < best_loss:
                                 best_model = model
-                                best_results = results
+                                best_loss = results[0]
+                                best_accuracy = results[1]
                                 best_epochs = num_epochs
 
 
@@ -67,7 +71,7 @@ class TFModel(NightscoutMlBase):
 
         training_time = time.time() - start
         
-        self.save_model_info(best_model, best_results, best_epochs, current_cols, len(df), training_time)
+        self.save_model_info(best_model, best_loss, best_accuracy, best_epochs, current_cols, len(df), training_time)
 
         self.save_model(best_model)
 
@@ -96,7 +100,8 @@ class TFModel(NightscoutMlBase):
 
         model.compile(
             optimizer=tf.optimizers.Adam(learning_rate=0.1),
-            loss='mean_absolute_error')
+            loss='mean_absolute_error',
+            metrics=["accuracy"])
 
         model.fit(
             train_features,
@@ -108,7 +113,7 @@ class TFModel(NightscoutMlBase):
             validation_split = 0.2)
         return model
 
-    def save_model_info(self, model, test_results, num_epochs, current_cols, data_row_count, training_time):
+    def save_model_info(self, model, best_loss, best_accuracy, num_epochs, current_cols, data_row_count, training_time):
         model_info = "\n\n------------\n"
         model_info += f"Model {self.date_str}\n"
         model_info += f"{len(model.layers)} Layers:\n"
@@ -118,8 +123,8 @@ class TFModel(NightscoutMlBase):
             layer_info += f" ({layer.units})" if 'dense' in layer.name else ""
             layer_info += f" ({layer.rate})" if 'dropout' in layer.name else ""
             model_info += layer_info + "\n"
-            
-        model_info += f"Model Loss: {test_results} \n"
+
+        model_info += f"Model Loss & Accuracy: {best_loss} - {best_accuracy} \n"
         model_info += f"Number of Epochs: {num_epochs} \n"
         model_info += f"Columns ({len(current_cols)}): {current_cols} \n"
         model_info += f"Training Data Size: {data_row_count} \n"
