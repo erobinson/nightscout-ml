@@ -292,4 +292,84 @@ Training Data Size: 5241
     low_rising: 0.30300000309944153    normal_rising: 0.42100000381469727    high_rising: 1.1859999895095825
 
 Took 00:03:21 to train
-NOTES: Going to use 5/31 10:28am
+NOTES: Going to use 5/31 10:28am - 6/1 11:04am
+
+
+------------
+Model 2022-6-1_10-58
+4 Layers:
+    - Layer 0  - normalization_22
+    - Layer 1  - dense_29 (4)
+    - Layer 2  - dense_30 (4)
+    - Layer 3  - dense_31 (1)
+Model Loss & Accuracy: 0.14338594675064087 - 0.33968254923820496 
+Number of Epochs: 8 
+Columns (24): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'smbToGive'] 
+Training Data Size: 5570 
+    low: 0.04500000178813934    low_w_iob: 0.04500000178813934    normal_w_iob: 0.04500000178813934    normal_wo_iob: 0.04500000178813934
+    high_bg: 0.42399999499320984    high_cob: 0.04500000178813934    high_both: 0.7059999704360962
+    low_rising: 0.24699999392032623    normal_rising: 0.24500000476837158    high_rising: 0.39500001072883606
+
+Took 00:03:54 to train
+NOTES: Testing 6/1 - 11am
+
+
+------------
+Model 2022-6-1_11-28
+5 Layers:
+    - Layer 0  - normalization_76
+    - Layer 1  - dropout_70 (0.4)
+    - Layer 2  - dense_155 (4)
+    - Layer 3  - dense_156 (4)
+    - Layer 4  - dense_157 (1)
+Model Loss & Accuracy: 0.0839684009552002 - 0.34351950883865356 
+Number of Epochs: 10 
+Columns (24): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'smbToGive'] 
+Training Data Size: 5584 
+    low: 0.14300000667572021    low_w_iob: 0.14300000667572021    normal_w_iob: 0.14300000667572021    normal_wo_iob: 0.14300000667572021
+    high_bg: 0.14300000667572021    high_cob: 0.14300000667572021    high_both: 0.5649999976158142
+    low_rising: 0.5320000052452087    normal_rising: 0.5320000052452087    high_rising: 0.5320000052452087
+
+Took 00:04:10 to train
+NOTES: Trained using mean_squared_error rather than mean_absolute_error, switched last layer to relu as well
+
+
+------------
+Model 2022-6-1_13-20
+5 Layers:
+    - Layer 0  - normalization_39
+    - Layer 1  - dense_79 (8)
+    - Layer 2  - dense_80 (2)
+    - Layer 3  - dense_81 (2)
+    - Layer 4  - dense_82 (1)
+Model Loss & Accuracy: 0.0627586618065834 - 0.34351950883865356 
+Number of Epochs: 10 
+Columns (24): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'smbToGive'] 
+Training Data Size: 5584 
+    low: 0.046    low_w_iob: 0.046    normal_w_iob: 0.046    normal_wo_iob: 0.046
+    high_bg: 1.26    high_cob: 0.305    high_both: 1.345
+    low_rising  : 0.301    normal_rising  : 0.37    high_rising  : 1.147
+    low_dropping: 0.046    normal_dropping: 0.046    high_dropping: 1.43
+
+Took 00:04:07 to train
+NOTES: Trying 6/1 - 1:26pm
+
+
+------------
+Model 2022-6-1_13-55
+4 Layers:
+    - Layer 0  - normalization_134
+    - Layer 1  - dense_180 (4)
+    - Layer 2  - dense_181 (4)
+    - Layer 3  - dense_182 (1)
+Model Loss & Accuracy: 0.08792169392108917 - 0.3284169137477875 
+Number of Epochs: 10 
+Columns (24): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'smbToGive'] 
+Training Data Size: 5084 
+    low: 0.118    low_w_iob: 0.118    normal_w_iob: 0.118    normal_wo_iob: 0.118
+    high_bg: 0.918    high_cob: 0.118    high_both: 1.873
+    low_rising  : 0.407    normal_rising  : 0.407    high_rising  : 1.277
+    low_dropping: 0.118    normal_dropping: 0.118    high_dropping: 0.118
+
+Took 00:27:03 to train
+NOTES: tried 5-30 epochs - 10 epochs seemed fine - skipping model b/c prior looks better

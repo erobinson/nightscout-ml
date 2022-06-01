@@ -17,8 +17,8 @@ class TFModel(NightscoutMlBase):
         # https://www.tensorflow.org/tutorials/keras/regression#regression_with_a_deep_neural_network_dnn
         df = pd.read_csv('aiSMB_records_adjusted.csv')
  
-        df_gen = pd.read_csv(self.data_folder+'/simple_data_generated.csv')
-        df = pd.concat([df, df_gen])
+        # df_gen = pd.read_csv(self.data_folder+'/simple_data_generated.csv')
+        # df = pd.concat([df, df_gen])
         # df = df_gen
 
         current_cols = [
@@ -51,15 +51,15 @@ class TFModel(NightscoutMlBase):
                 for dropout_rate_l2 in range(0, 6, 2):
                     for num_hidden_nodes_l2 in range(0, 6, 2):
                         for num_hidden_nodes_l3 in range(0, 3, 2):
-                            # for num_epochs in range(10, 10, 3):
-                            num_epochs = 8
-                            model = self.train_model(train_features, train_labels, dropout_rate_l1/10, num_hidden_nodes_l1, dropout_rate_l2/10, num_hidden_nodes_l2, num_hidden_nodes_l3, num_epochs)
-                            results = model.evaluate(test_features, test_labels)
-                            if results[0] < best_loss:
-                                best_model = model
-                                best_loss = results[0]
-                                best_accuracy = results[1]
-                                best_epochs = num_epochs
+                            # for num_epochs in range(0, 30, 5):
+                                num_epochs = 10
+                                model = self.train_model(train_features, train_labels, dropout_rate_l1/10, num_hidden_nodes_l1, dropout_rate_l2/10, num_hidden_nodes_l2, num_hidden_nodes_l3, num_epochs)
+                                results = model.evaluate(test_features, test_labels)
+                                if results[0] < best_loss:
+                                    best_model = model
+                                    best_loss = results[0]
+                                    best_accuracy = results[1]
+                                    best_epochs = num_epochs
 
 
         # model = self.train_model(train_features, train_labels, 0, 6, .4, 4, 2, 10)
@@ -95,12 +95,12 @@ class TFModel(NightscoutMlBase):
         if num_hidden_nodes_l3 > 0 and num_hidden_nodes_l2 > 0 and num_hidden_nodes_l1 > 0:
             model.add(layers.Dense(units=num_hidden_nodes_l3, activation="relu"))
 
-        model.add(layers.Dense(units=1))
+        model.add(layers.Dense(units=1, activation='relu'))
         
 
         model.compile(
             optimizer=tf.optimizers.Adam(learning_rate=0.1),
-            loss='mean_absolute_error',
+            loss='mean_squared_error',
             metrics=["accuracy"])
 
         model.fit(
@@ -144,9 +144,10 @@ class TFModel(NightscoutMlBase):
         high_bg = self.basic_predict(model,200.0,0.0,0.0,0)
         high_cob = self.basic_predict(model,100.0,1.0,30.0,0)
         high_both = self.basic_predict(model,200.0,1.0,30.0,0)
-        line = f"    low: {low}    low_w_iob: {low_w_iob}    normal_w_iob: {normal_w_iob}    normal_wo_iob: {normal_wo_iob}\n"
+        line =  f"    low: {low}    low_w_iob: {low_w_iob}    normal_w_iob: {normal_w_iob}    normal_wo_iob: {normal_wo_iob}\n"
         line += f"    high_bg: {high_bg}    high_cob: {high_cob}    high_both: {high_both}\n"
-        line += f"    low_rising: {self.basic_predict(model, 70, 0, 20, 10)}    normal_rising: {self.basic_predict(model, 100, 0, 20, 10)}    high_rising: {self.basic_predict(model, 180, 0, 20, 10)}\n"
+        line += f"    low_rising  : {self.basic_predict(model, 70, 0, 20, 10)}    normal_rising  : {self.basic_predict(model, 100, 0, 20, 10)}    high_rising  : {self.basic_predict(model, 180, 0, 20, 10)}\n"
+        line += f"    low_dropping: {self.basic_predict(model, 70, 0, 20, -7)}    normal_dropping: {self.basic_predict(model, 100, 0, 20, -7)}    high_dropping: {self.basic_predict(model, 180, 0, 20, -7)}\n"
         return line
         
     def basic_predict(self, model, bg, iob, cob, delta):
@@ -159,7 +160,7 @@ class TFModel(NightscoutMlBase):
                         # "tdd7Days","tddDaily","tdd24Hrs",
                         # "recentSteps5Minutes","recentSteps10Minutes","recentSteps15Minutes","recentSteps30Minutes","recentSteps60Minutes",
                         
-        return round(prediction[0][0], 3)
+        return str(round(prediction[0][0], 3))
     
 
     def save_model(self, model):
