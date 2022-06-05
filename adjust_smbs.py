@@ -6,8 +6,6 @@ from datetime import datetime
 class AdjustSmbs(NightscoutMlBase):
     no_insulin_threshold = 70
     no_insulin_when_dropping_threshold = 100
-    min_target = 75
-    max_target = 125
     base_isf = 100
     max_smb = 2
 
@@ -23,9 +21,9 @@ class AdjustSmbs(NightscoutMlBase):
         # when below 100 & dropping, don't give insulin
         df.loc[(df['bg'] < self.no_insulin_when_dropping_threshold) & (df['delta'] < 0), 'smbToGive'] = 0
 
-        start_date = datetime.strptime(start_date_time_str, self.date_format_str)
+        start_date = self.str_to_time(start_date_time_str)
         for index, row in df.iterrows():
-            row_date = datetime.strptime(row['dateStr'], self.date_format_str)
+            row_date = self.str_to_time(row['dateStr'])
             if row_date > start_date:
                 self.adjust_for_lows(index, row, df)
                 self.adjust_for_highs(index, row, df)
@@ -37,7 +35,7 @@ class AdjustSmbs(NightscoutMlBase):
 
     def adjust_for_lows(self, index, row, df):
         # if low, calculate insulin suplus (delta/isf) - go back 30+ min & delete
-        if row['bg'] < self.min_target and row['delta'] < 0:
+        if row['bg'] < (row['targetBg']-20) and row['delta'] < 0:
             u_to_remove = self.u_to_adjust_based_on_delta(row)
             self.remove_prior_insulin(index, row, df, u_to_remove)
         
@@ -48,7 +46,7 @@ class AdjustSmbs(NightscoutMlBase):
 
     def adjust_for_highs(self, index, row, df):
         trending_up_or_stable = row['delta'] > -2 or row['shortAvgDelta'] > -2
-        if row['bg'] > self.max_target and trending_up_or_stable:
+        if row['bg'] > (row['targetBg']+20) and trending_up_or_stable:
             u_to_add = self.u_to_adjust_based_on_delta(row)
             self.add_prior_insulin(index, row, df, u_to_add)
 
@@ -59,7 +57,7 @@ class AdjustSmbs(NightscoutMlBase):
     def add_prior_insulin(self, index, row, df, u_to_add):
         one_hour_ago = index - 12 if index > 12 else 0
         df_last_hour = df[one_hour_ago:index]
-        orig_date = datetime.strptime(row['dateStr'], self.date_format_str)
+        orig_date = self.str_to_time(row['dateStr'])
         min_date = orig_date - pd.DateOffset(minutes=13*5)
         for i, recent_row in df_last_hour.iterrows():
             # don't add insulin if carbs are added later, add after carbs are added
@@ -67,7 +65,7 @@ class AdjustSmbs(NightscoutMlBase):
             # don't add insulin if pending low
             upcoming_low = self.check_for_upcoming_low(i, df_last_hour)
             # don't add if old date
-            out_dated = datetime.strptime(recent_row['dateStr'], self.date_format_str) < min_date
+            out_dated = self.str_to_time(recent_row['dateStr']) < min_date
 
             if not more_carbs_added_later and not upcoming_low and not out_dated:
                 current_smb = recent_row['smbToGive']
@@ -94,12 +92,12 @@ class AdjustSmbs(NightscoutMlBase):
         return False
 
     def remove_prior_insulin(self, index, row, df, u_to_remove):
-        orig_date = datetime.strptime(row['dateStr'], self.date_format_str)
+        orig_date = self.str_to_time(row['dateStr'])
         min_date = orig_date - pd.DateOffset(minutes=37*5)
 
         for i in range(6, 36):
             prior_row = df.iloc[index - i]
-            row_date = datetime.strptime(prior_row['dateStr'], self.date_format_str)
+            row_date = self.str_to_time(prior_row['dateStr'])
             if row_date > min_date:
                 smb_given = prior_row['smbToGive']
                 if smb_given >= u_to_remove:
