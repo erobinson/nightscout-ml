@@ -51,6 +51,10 @@ class AdjustSmbs(NightscoutMlBase):
         if row['bg'] > self.max_target and trending_up_or_stable:
             u_to_add = self.u_to_adjust_based_on_delta(row)
             self.add_prior_insulin(index, row, df, u_to_add)
+
+        if row['more_aggressive'] == 1:
+            u_to_add = 1
+            self.add_prior_insulin(index, row, df, u_to_add)
         
     def add_prior_insulin(self, index, row, df, u_to_add):
         one_hour_ago = index - 12 if index > 12 else 0

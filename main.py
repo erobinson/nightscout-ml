@@ -9,23 +9,27 @@ from pull_notes import PullNotes
 
 # GenerateSimpleData().generate_data(500)
 
-# start_date_time = '5/31/22 09:34AM'
+# start_date_time = '6/2/22 07:39AM'
 # notes_file = PullNotes().pull_notes_to_csv(start_date_time)
-# PullNotes().add_low_treatment_flags('data/aiSMB_records.csv', notes_file)
+# PullNotes().add_adjustment_flags('data/aiSMB_records.csv', notes_file)
 # AdjustSmbs().adjust_smbs(start_date_time)
 
 TFModel().build_tf_regression()
 
 
 # Notes:
+# TODO: account for future cob - right now doesn't show up in COB
+# TODO: support time since last meal
 # TODO: get exercise/step count data from fit API
 ## https://github.com/android/fit-samples/blob/main/StepCounterKotlin/app/src/main/java/com/google/android/gms/fit/samples/stepcounterkotlin/MainActivity.kt
 ## credentials id - 564617406014-8kkm14657o81ancp2okpo9oga0078v2j.apps.googleusercontent.com
 # TODO: support temp target
-# TODO: last meal time, food type/tag
-# TODO: account for future cob - right now doesn't show up in COB
+# TODO: meal tags
 # TODO: extended high, low earlier today
 # TODO: sensor age, site age, site placement
+# TODO: measure & optimize model
+    # https://www.tensorflow.org/model_optimization/guide/quantization/post_training
+    # converter.optimizations = [tf.lite.Optimize.DEFAULT]
 # DONE: tag low preventions - include as adjustments in records
 # DONE: tag low preventions - download
 # DONE: move smb adjustments into code rather than excel

@@ -352,7 +352,7 @@ Training Data Size: 5584
     low_dropping: 0.046    normal_dropping: 0.046    high_dropping: 1.43
 
 Took 00:04:07 to train
-NOTES: Trying 6/1 - 1:26pm
+NOTES: Trying 6/1 - 1:26pm - to 6/2 2pm should be more aggressive when COB show up and over night
 
 
 ------------
@@ -373,3 +373,66 @@ Training Data Size: 5084
 
 Took 00:27:03 to train
 NOTES: tried 5-30 epochs - 10 epochs seemed fine - skipping model b/c prior looks better
+
+
+------------
+Model 2022-6-2_13-29
+4 Layers:
+    - Layer 0  - normalization_38
+    - Layer 1  - dense_76 (8)
+    - Layer 2  - dense_77 (2)
+    - Layer 3  - dense_78 (1)
+Model Loss & Accuracy: 0.11260748654603958 - 0.31012070178985596 
+Number of Epochs: 10 
+Columns (24): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'smbToGive'] 
+Training Data Size: 5383 
+    low: 0.024    low_w_iob: 0.024    normal_w_iob: 0.024    normal_wo_iob: 0.024
+    high_bg: 0.212    high_cob: 0.337    high_both: 1.541
+    low_rising  : 0.662    normal_rising  : 0.662    high_rising  : 0.662
+    low_dropping: 0.024    normal_dropping: 0.024    high_dropping: 0.024
+
+Took 00:04:07 to train
+NOTES: testing 6/2 - 1:37pm - really bad overnight high didn't give insulin
+
+
+
+
+------------
+Model 2022-6-3_10-24
+3 Layers:
+    - Layer 0  - normalization_57
+    - Layer 1  - dense_60 (4)
+    - Layer 2  - dense_61 (1)
+Model Loss & Accuracy: 0.11117763817310333 - 0.3160291314125061 
+Number of Epochs: 3 
+Columns (24): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'smbToGive'] 
+Training Data Size: 5492 
+    low: 0.0    low_w_iob: 0.0    normal_w_iob: 0.0    normal_wo_iob: 0.0
+    high_bg: 0.0    high_cob: 0.0    high_both: 0.965
+    low_rising  : 0.254    normal_rising  : 0.568    high_rising  : 1.405
+    low_dropping: 0.0    normal_dropping: 0.0    high_dropping: 0.0
+
+Took 00:09:44 to train
+NOTES: 
+
+
+------------
+Model 2022-6-3_11-18
+4 Layers:
+    - Layer 0  - normalization_464
+    - Layer 1  - dense_864 (8)
+    - Layer 2  - dense_865 (3)
+    - Layer 3  - dense_866 (1)
+Model Loss & Accuracy: 0.04945531487464905 - 0.3233151137828827 
+Number of Epochs: 8 
+Columns (24): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'iob', 'cob', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'smbToGive'] 
+Training Data Size: 5492 
+Learning Rate: 0.01   Loss function: mean_squared_error
+Activation: prelu 
+    low: 0.258    low_w_iob: 0.221    normal_w_iob: 0.37    normal_wo_iob: 0.663
+    high_bg: 1.545    high_cob: 0.912    high_both: 2.202
+    low_rising  : 0.741    normal_rising  : 1.05    high_rising  : 1.874
+    low_dropping: 0.051    normal_dropping: 0.137    high_dropping: 1.302
+
+Took 00:58:12 to train
+NOTES: testing - 6/3 12:31pm

@@ -27,7 +27,7 @@ class PullNotes(NightscoutMlBase):
         csv_writer = csv.writer(sgv_output_file)
         csv_writer.writerow(['dateStr', 'note'])
         for line in api_response:
-            if 'notes' in line and 'low' in line['notes'].lower():
+            if 'notes' in line and ('low' in line['notes'].lower() or 'aggressive' in line['notes'].lower()):
                 created_at_dt = datetime.strptime(line['created_at'], '%Y-%m-%dT%H:%M:%S.%fZ')
                 created_at_dt = created_at_dt - timedelta(hours=self.timezone_offset_from_zulu)
                 created_at_str = self.time_to_str(created_at_dt)
@@ -35,24 +35,28 @@ class PullNotes(NightscoutMlBase):
         
         return self.output_file_path
 
-    def add_low_treatment_flags(self, aismb_records_file_str, notes_file_str):
+    def add_adjustment_flags(self, aismb_records_file_str, notes_file_str):
         notes_pd = pd.read_csv(notes_file_str)
         aismb_df = pd.read_csv(aismb_records_file_str)
         
         if 'low_treatment' not in aismb_df:
             aismb_df['low_treatment'] = 0
+        
+        if 'more_aggressive' not in aismb_df:
+            aismb_df['more_aggressive'] = 0
 
         for index, row in notes_pd.iterrows():
             note_date = self.str_to_time(row['dateStr'])
-            self.apply_low_treatment_flag(aismb_df, note_date)
+            column = 'low_treatment' if 'low' in row['note'].lower() else 'more_aggressive'
+            self.pply_adjustment_flags_to_row(aismb_df, note_date, column)
 
         aismb_df.to_csv(aismb_records_file_str, index=False)
     
-    def apply_low_treatment_flag(self, aismb_df, note_date):
+    def pply_adjustment_flags_to_row(self, aismb_df, note_date, column):
         # search for multiple lines to find an existing matching timestamp
         for offset in range(10):
             note_date_plus_offset = note_date + timedelta(minutes=offset)
             note_date_str = self.time_to_str(note_date_plus_offset)
             if note_date_str in aismb_df['dateStr'].values:
-                aismb_df.loc[aismb_df['dateStr'] == note_date_str, 'low_treatment'] = 1
+                aismb_df.loc[aismb_df['dateStr'] == note_date_str, column] = 1
                 return

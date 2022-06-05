@@ -5,6 +5,7 @@ import numpy as np
 import tensorflow as tf
 from datetime import datetime
 from tensorflow.keras import layers
+from tensorflow.keras.layers import PReLU
 import time
 
 
@@ -42,42 +43,58 @@ class TFModel(NightscoutMlBase):
         best_accuracy = 0
         best_model = 1
         best_epochs = 0
-
+        best_last_activation = ''
+        best_learning_rate = .1
+        best_loss_function = ''
 
         start = time.time()
 
+        # loss_functions = ['mean_squared_error', 'mean_absolute_error']
+        loss_functions = ['mean_squared_error']
+        # last_activation_functions = [None, 'relu', 'prelu']
+        last_activation_functions = ['relu', 'prelu']
+        # learning_rates = [.01, .05, .1, .2]
+        learning_rates = [.01, .05, .1]
+
         for dropout_rate_l1 in range(0, 6, 4):
             for num_hidden_nodes_l1 in range(0, 12, 4):
-                for dropout_rate_l2 in range(0, 6, 2):
-                    for num_hidden_nodes_l2 in range(0, 6, 2):
-                        for num_hidden_nodes_l3 in range(0, 3, 2):
-                            # for num_epochs in range(0, 30, 5):
-                                num_epochs = 10
-                                model = self.train_model(train_features, train_labels, dropout_rate_l1/10, num_hidden_nodes_l1, dropout_rate_l2/10, num_hidden_nodes_l2, num_hidden_nodes_l3, num_epochs)
-                                results = model.evaluate(test_features, test_labels)
-                                if results[0] < best_loss:
-                                    best_model = model
-                                    best_loss = results[0]
-                                    best_accuracy = results[1]
-                                    best_epochs = num_epochs
+                for dropout_rate_l2 in range(0, 6, 4):
+                    for num_hidden_nodes_l2 in range(0, 6, 3):
+                        for num_hidden_nodes_l3 in range(0, 3, 5):
+                            for num_epochs in range(3, 10, 5):
+                                for loss_function in loss_functions:
+                                    for last_activation in last_activation_functions:
+                                        for learning_rate in learning_rates:
+                                            # num_epochs = 10
+                                            model = self.train_model(train_features, train_labels, dropout_rate_l1/10, num_hidden_nodes_l1, dropout_rate_l2/10, num_hidden_nodes_l2, num_hidden_nodes_l3, num_epochs, last_activation, loss_function, learning_rate)
+                                            results = model.evaluate(test_features, test_labels)
+                                            meets_min_requirements = self.model_meets_min_requirements(model)
+                                            if meets_min_requirements and results[0] < best_loss:
+                                                best_model = model
+                                                best_loss = results[0]
+                                                best_accuracy = results[1]
+                                                best_epochs = num_epochs
+                                                best_last_activation = last_activation
+                                                best_learning_rate = learning_rate
+                                                best_loss_function = loss_function
 
 
-        # model = self.train_model(train_features, train_labels, 0, 6, .4, 4, 2, 10)
+        # model = self.train_model(train_features, train_labels, 0, 0, 0, 0, 0, 1)
         # results = model.evaluate(test_features, test_labels)
-        # if results < best_results:
-        #     best_model = model
-        #     best_results = results
-        #     best_epochs = 10
+        # best_model = model
+        # best_loss = results[0]
+        # best_accuracy = results[1]
+        # best_epochs = 10
 
         training_time = time.time() - start
         
-        self.save_model_info(best_model, best_loss, best_accuracy, best_epochs, current_cols, len(df), training_time)
+        self.save_model_info(best_model, best_loss, best_accuracy, best_epochs, current_cols, len(df), training_time, best_last_activation, best_learning_rate, best_loss_function)
 
         self.save_model(best_model)
 
 
 
-    def train_model(self, train_features, train_labels, dropout_rate_l1, num_hidden_nodes_l1, dropout_rate_l2, num_hidden_nodes_l2, num_hidden_nodes_l3, num_epochs):
+    def train_model(self, train_features, train_labels, dropout_rate_l1, num_hidden_nodes_l1, dropout_rate_l2, num_hidden_nodes_l2, num_hidden_nodes_l3, num_epochs, last_activation, loss_function, learning_rate):
         normalizer = tf.keras.layers.Normalization(axis=-1)
         normalizer.adapt(np.array(train_features))
 
@@ -95,12 +112,15 @@ class TFModel(NightscoutMlBase):
         if num_hidden_nodes_l3 > 0 and num_hidden_nodes_l2 > 0 and num_hidden_nodes_l1 > 0:
             model.add(layers.Dense(units=num_hidden_nodes_l3, activation="relu"))
 
-        model.add(layers.Dense(units=1, activation='relu'))
-        
+        if last_activation == 'prelu':
+            prelu = PReLU()
+            model.add(layers.Dense(units=1, activation=prelu))
+        else:
+            model.add(layers.Dense(units=1, activation=last_activation))
 
         model.compile(
-            optimizer=tf.optimizers.Adam(learning_rate=0.1),
-            loss='mean_squared_error',
+            optimizer=tf.optimizers.Adam(learning_rate=learning_rate),
+            loss=loss_function,
             metrics=["accuracy"])
 
         model.fit(
@@ -113,7 +133,7 @@ class TFModel(NightscoutMlBase):
             validation_split = 0.2)
         return model
 
-    def save_model_info(self, model, best_loss, best_accuracy, num_epochs, current_cols, data_row_count, training_time):
+    def save_model_info(self, model, best_loss, best_accuracy, num_epochs, current_cols, data_row_count, training_time, best_last_activation, best_learning_rate, best_loss_function):
         model_info = "\n\n------------\n"
         model_info += f"Model {self.date_str}\n"
         model_info += f"{len(model.layers)} Layers:\n"
@@ -128,10 +148,17 @@ class TFModel(NightscoutMlBase):
         model_info += f"Number of Epochs: {num_epochs} \n"
         model_info += f"Columns ({len(current_cols)}): {current_cols} \n"
         model_info += f"Training Data Size: {data_row_count} \n"
+        model_info += f"Learning Rate: {best_learning_rate}   Loss function: {best_loss_function}\n"
+        model_info += f"Activation: {best_last_activation} \n" if best_last_activation is not None else "Activation: None\n"
         model_info += self.basic_predictions(model, current_cols) + "\n"
         model_info += f"Took {time.strftime('%H:%M:%S', time.gmtime(training_time))} to train\n"
         model_info += "NOTES: \n"
         open('models/tf_model_results.txt', "a").write(model_info)
+
+
+    def model_meets_min_requirements(self, model):
+        high_rising_and_no_iob = self.basic_predict(model, 160, 0, 0, 8)
+        return .5 < float(high_rising_and_no_iob)
 
     def basic_predictions(self, model, current_cols):
         if len(current_cols) != 24:
@@ -151,7 +178,7 @@ class TFModel(NightscoutMlBase):
         return line
         
     def basic_predict(self, model, bg, iob, cob, delta):
-        prediction = model.predict([0,0,0, 0,0,0, 0,0,0, \
+        prediction = model.predict([1,0,0, 0,0,0, 0,0,0, \
                         bg,iob,cob, delta,delta,delta, \
                         40,40,40, \
                         0,0,0, 0,0])
