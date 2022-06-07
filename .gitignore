@@ -2,3 +2,5 @@ data
 __pycache__
 models/backup
 models/model.tflite
+logs
+~$data.xlsx

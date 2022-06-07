@@ -16,17 +16,20 @@ class TFModel(NightscoutMlBase):
 
     def build_tf_regression(self):
         # https://www.tensorflow.org/tutorials/keras/regression#regression_with_a_deep_neural_network_dnn
-        df = pd.read_csv('aiSMB_records_adjusted.csv')
+        # df = pd.read_csv('aiSMB_records_adjusted.csv')
+        df = pd.read_excel('data.xlsx','training_data')
  
         # df_gen = pd.read_csv(self.data_folder+'/simple_data_generated.csv')
         # df = pd.concat([df, df_gen])
         # df = df_gen
 
         current_cols = [
-                        "hour0_2","hour3_5","hour6_8","hour9_11","hour12_14","hour15_17","hour18_20","hour21_23","weekend",
+                        "hourOfDay","hour0_2","hour3_5","hour6_8","hour9_11","hour12_14","hour15_17","hour18_20","hour21_23","weekend",
                         "bg","targetBg","iob","cob","lastCarbAgeMin","futureCarbs","delta","shortAvgDelta","longAvgDelta",
-                        "tdd7Days","tddDaily","tdd24Hrs",
+                        "accelerating_up","deccelerating_up","accelerating_down","deccelerating_down","stable",
+                        "tdd7Days","tddDaily","tddPerHour","tdd24Hrs",
                         "recentSteps5Minutes","recentSteps10Minutes","recentSteps15Minutes","recentSteps30Minutes","recentSteps60Minutes",
+                        "sleep","sedentary",
                         "smbToGive"]
         df = df[current_cols]
         
@@ -56,16 +59,15 @@ class TFModel(NightscoutMlBase):
         # learning_rates = [.01, .05, .1, .2]
         learning_rates = [.01, .05, .1]
 
-        for dropout_rate_l1 in range(0, 6, 4):
-            for num_hidden_nodes_l1 in range(0, 12, 4):
-                for dropout_rate_l2 in range(0, 6, 4):
-                    for num_hidden_nodes_l2 in range(0, 6, 3):
+        for dropout_rate_l1 in range(0, 6, 8):
+            for num_hidden_nodes_l1 in range(5, 20, 5):
+                for dropout_rate_l2 in range(0, 6, 8):
+                    for num_hidden_nodes_l2 in range(0, 5, 3):
                         for num_hidden_nodes_l3 in range(0, 3, 5):
-                            for num_epochs in range(3, 10, 6):
+                            for num_epochs in range(6, 11, 3):
                                 for loss_function in loss_functions:
                                     for last_activation in last_activation_functions:
                                         for learning_rate in learning_rates:
-                                            # num_epochs = 10
                                             model = self.train_model(train_features, train_labels, dropout_rate_l1/10, num_hidden_nodes_l1, dropout_rate_l2/10, num_hidden_nodes_l2, num_hidden_nodes_l3, num_epochs, last_activation, loss_function, learning_rate)
                                             results = model.evaluate(test_features, test_labels)
                                             meets_min_requirements = self.model_meets_min_requirements(model)
@@ -85,6 +87,20 @@ class TFModel(NightscoutMlBase):
         # best_loss = results[0]
         # best_accuracy = results[1]
         # best_epochs = 10
+
+        # for i in range(10):
+        #     learning_rate = .01
+        #     model = self.train_model(train_features, train_labels, 0, 10, 0, 3, 0, 10, 'relu', 'mean_squared_error', learning_rate)
+        #     results = model.evaluate(test_features, test_labels)
+        #     meets_min_requirements = self.model_meets_min_requirements(model)
+        #     if meets_min_requirements and results[0] < best_loss:
+        #         best_model = model
+        #         best_loss = results[0]
+        #         best_accuracy = results[1]
+        #         best_epochs = 10
+        #         best_last_activation = 'relu'
+        #         best_learning_rate = learning_rate
+        #         best_loss_function = 'mean_squared_error'
 
         training_time = time.time() - start
         
@@ -158,12 +174,13 @@ class TFModel(NightscoutMlBase):
 
 
     def model_meets_min_requirements(self, model):
+        return True
         high_rising_and_no_iob = self.basic_predict(model, 160, 0, 0, 8)
-        low_dropping = self.basic_predict(model, 70, 1.5, 0, -5)
+        low_dropping = self.basic_predict(model, 70, 3, 0, -10)
         return .5 < float(high_rising_and_no_iob) and .025 > float(low_dropping)
 
     def basic_predictions(self, model, current_cols):
-        if len(current_cols) != 27:
+        if len(current_cols) != 36:
             return f"ERROR: incorrect number of columns ({len(current_cols)})"
 
         low = self.basic_predict(model,50.0,0.0,0.0,0)
@@ -181,14 +198,21 @@ class TFModel(NightscoutMlBase):
         
     def basic_predict(self, model, bg, iob, cob, delta):
         last_cob_min = 0 if cob == 0 else 5
-        prediction = model.predict([[1,0,0, 0,0,0, 0,0,0, \
-                        bg,100,iob,cob,last_cob_min,0,delta,delta,delta, \
-                        40,40,40, \
-                        0,0,0, 0,0]])
-                        # "hour0_2","hour3_5","hour6_8", "hour9_11","hour12_14","hour15_17", "hour18_20","hour21_23","weekend",
-                        # "bg","iob","cob", "delta","shortAvgDelta","longAvgDelta",
-                        # "tdd7Days","tddDaily","tdd24Hrs",
-                        # "recentSteps5Minutes","recentSteps10Minutes","recentSteps15Minutes","recentSteps30Minutes","recentSteps60Minutes",
+        accelerating_up = 1 if delta > 3 else 0
+        deccelerating_down = 1 if delta < -3 else 0
+        stable= 1 if delta > -3 and delta < 3 else 0
+        prediction = model.predict([[11,1,0,0, 0,0,0, 0,0,0, 
+                        bg,100,iob,cob,last_cob_min,0,delta,delta,delta,
+                        accelerating_up, 0, deccelerating_down, 0, stable, 
+                        33,33,1,33, 
+                        0,0,0, 0,0,
+                        0,1]])
+                        # "hourOfDay","hour0_2","hour3_5","hour6_8", "hour9_11","hour12_14","hour15_17", "hour18_20","hour21_23","weekend",
+                        # "bg","targetBg","iob","cob","lastCarbAgeMin","futureCarbs","delta","shortAvgDelta","longAvgDelta",
+                        # "accelerating_up","deccelerating_up","accelerating_down","deccelerating_down","stable",
+                        # "tdd7Days","tddDaily","tddPerHour","tdd24Hrs",
+                        # "recentSteps5Minutes","recentSteps10Minutes","recentSteps15Minutes", "recentSteps30Minutes","recentSteps60Minutes",
+                        # "sleep","sedintary",
                         
         return str(round(prediction[0][0], 3))
     
