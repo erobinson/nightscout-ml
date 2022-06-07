@@ -771,4 +771,54 @@ Activation: relu
     low_dropping: 0.0    normal_dropping: 0.0    high_dropping: 0.039
 
 Took 00:02:06 to train
+NOTES: Testing - 6/7 - noon - 
+
+
+------------
+Model 2022-6-7_12-50
+5 Layers:
+    - Layer 0  - normalization_321
+    - Layer 1  - dense_996 (15)
+    - Layer 2  - dense_997 (6)
+    - Layer 3  - dense_998 (6)
+    - Layer 4  - dense_999 (1)
+Model Loss & Accuracy: 0.018660470843315125 - 0.31602373719215393 
+Number of Epochs: 9 
+Columns (36): ['hourOfDay', 'hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'targetBg', 'iob', 'cob', 'lastCarbAgeMin', 'futureCarbs', 'delta', 'shortAvgDelta', 'longAvgDelta', 'accelerating_up', 'deccelerating_up', 'accelerating_down', 'deccelerating_down', 'stable', 'tdd7Days', 'tddDaily', 'tddPerHour', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'sleep', 'sedentary', 'smbToGive'] 
+Training Data Size: 3369 
+Learning Rate: 0.01 
+Loss function: mean_squared_error 
+Activation: prelu 
+    low: 0.037    low_w_iob: 0.037    normal_w_iob: 0.3    normal_wo_iob: 0.505
+    high_bg: 0.95    high_cob: 0.893    high_both: 1.179
+    low_rising  : 1.032    normal_rising  : 1.041    high_rising  : 1.14
+    low_dropping: 0.037    normal_dropping: 0.083    high_dropping: 0.82
+
+Took 00:10:02 to train
 NOTES: 
+
+
+------------
+Model 2022-6-7_13-4
+6 Layers:
+    - Layer 0  - normalization_477
+    - Layer 1  - dense_1611 (15)
+    - Layer 2  - dense_1612 (6)
+    - Layer 3  - dense_1613 (6)
+    - Layer 4  - dense_1614 (6)
+    - Layer 5  - dense_1615 (1)
+Model Loss & Accuracy: 0.01725943572819233 - 0.31750741600990295 
+Number of Epochs: 10 
+Columns (36): ['hourOfDay', 'hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'targetBg', 'iob', 'cob', 'lastCarbAgeMin', 'futureCarbs', 'delta', 'shortAvgDelta', 'longAvgDelta', 'accelerating_up', 'deccelerating_up', 'accelerating_down', 'deccelerating_down', 'stable', 'tdd7Days', 'tddDaily', 'tddPerHour', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'sleep', 'sedentary', 'smbToGive'] 
+Training Data Size: 3369 
+Learning Rate: 0.01 
+Loss function: mean_squared_error 
+Activation: prelu 
+    low: 0.081    low_w_iob: 0.048    normal_w_iob: 0.287    normal_wo_iob: 0.35
+    high_bg: 1.01    high_cob: 0.769    high_both: 1.299
+    low_rising  : 0.795    normal_rising  : 0.909    high_rising  : 1.23
+    low_dropping: 0.035    normal_dropping: 0.048    high_dropping: 0.569
+
+Took 00:10:45 to train
+NOTES: Testing 6/7 - 1:23pm - added another layer which appears to work well - loss .05 -> .017 since yesterday
+ - got rid of some of the initial data

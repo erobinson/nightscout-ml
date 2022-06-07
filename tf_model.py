@@ -57,28 +57,30 @@ class TFModel(NightscoutMlBase):
         # last_activation_functions = [None, 'relu', 'prelu']
         last_activation_functions = ['relu', 'prelu']
         # learning_rates = [.01, .05, .1, .2]
-        learning_rates = [.01, .05, .1]
+        # tried .001 -> .2 and .01 seems to consistently work the best
+        learning_rates = [.01,]
 
         for dropout_rate_l1 in range(0, 6, 8):
             for num_hidden_nodes_l1 in range(5, 20, 5):
                 for dropout_rate_l2 in range(0, 6, 8):
-                    for num_hidden_nodes_l2 in range(0, 5, 3):
-                        for num_hidden_nodes_l3 in range(0, 3, 5):
-                            for num_epochs in range(6, 11, 3):
-                                for loss_function in loss_functions:
-                                    for last_activation in last_activation_functions:
-                                        for learning_rate in learning_rates:
-                                            model = self.train_model(train_features, train_labels, dropout_rate_l1/10, num_hidden_nodes_l1, dropout_rate_l2/10, num_hidden_nodes_l2, num_hidden_nodes_l3, num_epochs, last_activation, loss_function, learning_rate)
-                                            results = model.evaluate(test_features, test_labels)
-                                            meets_min_requirements = self.model_meets_min_requirements(model)
-                                            if meets_min_requirements and results[0] < best_loss:
-                                                best_model = model
-                                                best_loss = results[0]
-                                                best_accuracy = results[1]
-                                                best_epochs = num_epochs
-                                                best_last_activation = last_activation
-                                                best_learning_rate = learning_rate
-                                                best_loss_function = loss_function
+                    for num_hidden_nodes_l2 in range(0, 8, 3):
+                        for num_hidden_nodes_l3 in range(0, 8, 3):
+                            for num_hidden_nodes_l4 in range(0, 8, 3):
+                                for num_epochs in range(10, 11, 3):
+                                    for loss_function in loss_functions:
+                                        for last_activation in last_activation_functions:
+                                            for learning_rate in learning_rates:
+                                                model = self.train_model(train_features, train_labels, dropout_rate_l1/10, num_hidden_nodes_l1, dropout_rate_l2/10, num_hidden_nodes_l2, num_hidden_nodes_l3, num_hidden_nodes_l4, num_epochs, last_activation, loss_function, learning_rate)
+                                                results = model.evaluate(test_features, test_labels)
+                                                meets_min_requirements = self.model_meets_min_requirements(model)
+                                                if meets_min_requirements and results[0] < best_loss:
+                                                    best_model = model
+                                                    best_loss = results[0]
+                                                    best_accuracy = results[1]
+                                                    best_epochs = num_epochs
+                                                    best_last_activation = last_activation
+                                                    best_learning_rate = learning_rate
+                                                    best_loss_function = loss_function
 
 
         # model = self.train_model(train_features, train_labels, 0, 0, 0, 0, 0, 1)
@@ -110,7 +112,7 @@ class TFModel(NightscoutMlBase):
 
 
 
-    def train_model(self, train_features, train_labels, dropout_rate_l1, num_hidden_nodes_l1, dropout_rate_l2, num_hidden_nodes_l2, num_hidden_nodes_l3, num_epochs, last_activation, loss_function, learning_rate):
+    def train_model(self, train_features, train_labels, dropout_rate_l1, num_hidden_nodes_l1, dropout_rate_l2, num_hidden_nodes_l2, num_hidden_nodes_l3, num_hidden_nodes_l4, num_epochs, last_activation, loss_function, learning_rate):
         normalizer = tf.keras.layers.Normalization(axis=-1)
         normalizer.adapt(np.array(train_features))
 
@@ -126,6 +128,8 @@ class TFModel(NightscoutMlBase):
         if num_hidden_nodes_l2 > 0 and num_hidden_nodes_l1 > 0:
             model.add(layers.Dense(units=num_hidden_nodes_l2, activation="relu"))
         if num_hidden_nodes_l3 > 0 and num_hidden_nodes_l2 > 0 and num_hidden_nodes_l1 > 0:
+            model.add(layers.Dense(units=num_hidden_nodes_l3, activation="relu"))
+        if num_hidden_nodes_l4 > 0 and num_hidden_nodes_l3 > 0 and num_hidden_nodes_l2 > 0 and num_hidden_nodes_l1 > 0:
             model.add(layers.Dense(units=num_hidden_nodes_l3, activation="relu"))
 
         if last_activation == 'prelu':
