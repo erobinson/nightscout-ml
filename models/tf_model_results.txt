@@ -435,4 +435,50 @@ Activation: prelu
     low_dropping: 0.051    normal_dropping: 0.137    high_dropping: 1.302
 
 Took 00:58:12 to train
-NOTES: testing - 6/3 12:31pm
+NOTES: testing - 6/3 12:31pm - too strong on weekends.
+
+
+------------
+Model 2022-6-6_10-4
+4 Layers:
+    - Layer 0  - normalization_117
+    - Layer 1  - dense_219 (8)
+    - Layer 2  - dense_220 (3)
+    - Layer 3  - dense_221 (1)
+Model Loss & Accuracy: 0.05397043377161026 - 0.34996041655540466 
+Number of Epochs: 9 
+Columns (27): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'targetBg', 'iob', 'cob', 'lastCarbAgeMin', 'futureCarbs', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'smbToGive'] 
+Training Data Size: 6314 
+Learning Rate: 0.01 
+Loss function: mean_squared_error
+Activation: prelu 
+    low: 0.072    low_w_iob: 0.072    normal_w_iob: 0.072    normal_wo_iob: 0.072
+    high_bg: 0.533    high_cob: 0.135    high_both: 1.527
+    low_rising  : 0.449    normal_rising  : 0.539    high_rising  : 1.733
+    low_dropping: 0.072    normal_dropping: 0.072    high_dropping: 0.115
+
+Took 00:09:57 to train
+NOTES: 
+
+
+------------
+Model 2022-6-6_10-29
+4 Layers:
+    - Layer 0  - normalization_66
+    - Layer 1  - dense_90 (4)
+    - Layer 2  - dense_91 (3)
+    - Layer 3  - dense_92 (1)
+Model Loss & Accuracy: 0.05808185040950775 - 0.35233572125434875 
+Number of Epochs: 9 
+Columns (27): ['hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'targetBg', 'iob', 'cob', 'lastCarbAgeMin', 'futureCarbs', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7Days', 'tddDaily', 'tdd24Hrs', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'smbToGive'] 
+Training Data Size: 6314 
+Learning Rate: 0.01 
+Loss function: mean_squared_error 
+Activation: relu 
+    low: 0.092    low_w_iob: 0.131    normal_w_iob: 0.285    normal_wo_iob: 0.786
+    high_bg: 1.816    high_cob: 0.822    high_both: 1.949
+    low_rising  : 1.146    normal_rising  : 1.484    high_rising  : 2.386
+    low_dropping: 0.0    normal_dropping: 0.0    high_dropping: 0.932
+
+Took 00:11:21 to train
+NOTES: 

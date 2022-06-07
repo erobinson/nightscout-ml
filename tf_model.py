@@ -24,7 +24,7 @@ class TFModel(NightscoutMlBase):
 
         current_cols = [
                         "hour0_2","hour3_5","hour6_8","hour9_11","hour12_14","hour15_17","hour18_20","hour21_23","weekend",
-                        "bg","iob","cob","delta","shortAvgDelta","longAvgDelta",
+                        "bg","targetBg","iob","cob","lastCarbAgeMin","futureCarbs","delta","shortAvgDelta","longAvgDelta",
                         "tdd7Days","tddDaily","tdd24Hrs",
                         "recentSteps5Minutes","recentSteps10Minutes","recentSteps15Minutes","recentSteps30Minutes","recentSteps60Minutes",
                         "smbToGive"]
@@ -61,7 +61,7 @@ class TFModel(NightscoutMlBase):
                 for dropout_rate_l2 in range(0, 6, 4):
                     for num_hidden_nodes_l2 in range(0, 6, 3):
                         for num_hidden_nodes_l3 in range(0, 3, 5):
-                            for num_epochs in range(3, 10, 5):
+                            for num_epochs in range(3, 10, 6):
                                 for loss_function in loss_functions:
                                     for last_activation in last_activation_functions:
                                         for learning_rate in learning_rates:
@@ -148,7 +148,8 @@ class TFModel(NightscoutMlBase):
         model_info += f"Number of Epochs: {num_epochs} \n"
         model_info += f"Columns ({len(current_cols)}): {current_cols} \n"
         model_info += f"Training Data Size: {data_row_count} \n"
-        model_info += f"Learning Rate: {best_learning_rate}   Loss function: {best_loss_function}\n"
+        model_info += f"Learning Rate: {best_learning_rate} \n"
+        model_info += f"Loss function: {best_loss_function} \n"
         model_info += f"Activation: {best_last_activation} \n" if best_last_activation is not None else "Activation: None\n"
         model_info += self.basic_predictions(model, current_cols) + "\n"
         model_info += f"Took {time.strftime('%H:%M:%S', time.gmtime(training_time))} to train\n"
@@ -158,10 +159,11 @@ class TFModel(NightscoutMlBase):
 
     def model_meets_min_requirements(self, model):
         high_rising_and_no_iob = self.basic_predict(model, 160, 0, 0, 8)
-        return .5 < float(high_rising_and_no_iob)
+        low_dropping = self.basic_predict(model, 70, 1.5, 0, -5)
+        return .5 < float(high_rising_and_no_iob) and .025 > float(low_dropping)
 
     def basic_predictions(self, model, current_cols):
-        if len(current_cols) != 24:
+        if len(current_cols) != 27:
             return f"ERROR: incorrect number of columns ({len(current_cols)})"
 
         low = self.basic_predict(model,50.0,0.0,0.0,0)
@@ -178,10 +180,11 @@ class TFModel(NightscoutMlBase):
         return line
         
     def basic_predict(self, model, bg, iob, cob, delta):
-        prediction = model.predict([1,0,0, 0,0,0, 0,0,0, \
-                        bg,iob,cob, delta,delta,delta, \
+        last_cob_min = 0 if cob == 0 else 5
+        prediction = model.predict([[1,0,0, 0,0,0, 0,0,0, \
+                        bg,100,iob,cob,last_cob_min,0,delta,delta,delta, \
                         40,40,40, \
-                        0,0,0, 0,0])
+                        0,0,0, 0,0]])
                         # "hour0_2","hour3_5","hour6_8", "hour9_11","hour12_14","hour15_17", "hour18_20","hour21_23","weekend",
                         # "bg","iob","cob", "delta","shortAvgDelta","longAvgDelta",
                         # "tdd7Days","tddDaily","tdd24Hrs",

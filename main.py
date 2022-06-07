@@ -9,7 +9,7 @@ from pull_notes import PullNotes
 
 # GenerateSimpleData().generate_data(500)
 
-# start_date_time = '6/3/22 12:54AM'
+# start_date_time = '6/4/22 09:47PM'
 # notes_file = PullNotes().pull_notes_to_csv(start_date_time)
 # PullNotes().add_adjustment_flags('data/aiSMB_records.csv', notes_file)
 # AdjustSmbs().adjust_smbs(start_date_time)
@@ -17,17 +17,18 @@ from pull_notes import PullNotes
 TFModel().build_tf_regression()
 
 # Notes:
-# TODO: add target, futureCob, minSinceLastCarb to model/training
-# TODO: support time since last meal
+# TODO: parameters search - https://www.tensorflow.org/tensorboard/hyperparameter_tuning_with_hparams
 # TODO: get exercise/step count data from fit API
 ## https://github.com/android/fit-samples/blob/main/StepCounterKotlin/app/src/main/java/com/google/android/gms/fit/samples/stepcounterkotlin/MainActivity.kt
 ## credentials id - 564617406014-8kkm14657o81ancp2okpo9oga0078v2j.apps.googleusercontent.com
 # TODO: meal tags
 # TODO: extended high, low earlier today
 # TODO: sensor age, site age, site placement
-# TODO: measure & optimize model
+# TODO: measure & optimize model for battery/app
     # https://www.tensorflow.org/model_optimization/guide/quantization/post_training
     # converter.optimizations = [tf.lite.Optimize.DEFAULT]
+# DONE: support time since last meal
+# DONE: add target, futureCob, minSinceLastCarb to model/training
 # DONE: support temp target - done in AAPS
 # DONE: account for future cob - right now doesn't show up in COB - done in AAPS
 # DONE: tag low preventions - include as adjustments in records
