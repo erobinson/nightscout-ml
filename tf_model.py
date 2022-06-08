@@ -53,15 +53,17 @@ class TFModel(NightscoutMlBase):
         start = time.time()
 
         # loss_functions = ['mean_squared_error', 'mean_absolute_error']
+        # loss_functions = ['mean_absolute_error']
         loss_functions = ['mean_squared_error']
         # last_activation_functions = [None, 'relu', 'prelu']
-        last_activation_functions = ['relu', 'prelu']
+        # last_activation_functions = ['relu', 'prelu']
+        last_activation_functions = ['prelu']
         # learning_rates = [.01, .05, .1, .2]
         # tried .001 -> .2 and .01 seems to consistently work the best
-        learning_rates = [.01,]
+        learning_rates = [.01]
 
         for dropout_rate_l1 in range(0, 6, 8):
-            for num_hidden_nodes_l1 in range(5, 20, 5):
+            for num_hidden_nodes_l1 in range(10, 20, 3):
                 for dropout_rate_l2 in range(0, 6, 8):
                     for num_hidden_nodes_l2 in range(0, 8, 3):
                         for num_hidden_nodes_l3 in range(0, 8, 3):
@@ -178,26 +180,26 @@ class TFModel(NightscoutMlBase):
 
 
     def model_meets_min_requirements(self, model):
-        return True
+        # return True
         high_rising_and_no_iob = self.basic_predict(model, 160, 0, 0, 8)
         low_dropping = self.basic_predict(model, 70, 3, 0, -10)
-        return .5 < float(high_rising_and_no_iob) and .025 > float(low_dropping)
+        return .5 < float(high_rising_and_no_iob) and .024 > float(low_dropping)
 
     def basic_predictions(self, model, current_cols):
         if len(current_cols) != 36:
             return f"ERROR: incorrect number of columns ({len(current_cols)})"
 
-        low = self.basic_predict(model,50.0,0.0,0.0,0)
-        low_w_iob = self.basic_predict(model,50.0,1.0,0.0,0)
-        normal_w_iob = self.basic_predict(model,100.0,1.0,0.0,0)
-        normal_wo_iob = self.basic_predict(model,100.0,0.0,0.0,0)
-        high_bg = self.basic_predict(model,200.0,0.0,0.0,0)
-        high_cob = self.basic_predict(model,100.0,1.0,30.0,0)
-        high_both = self.basic_predict(model,200.0,1.0,30.0,0)
+        low = self.basic_predict(model,50,0.0,0.0,0)
+        low_w_iob = self.basic_predict(model,50,1.0,0.0,0)
+        normal_w_iob = self.basic_predict(model,100,1.0,0.0,0)
+        normal_wo_iob = self.basic_predict(model,100,0.0,0.0,0)
+        high_bg = self.basic_predict(model,200,0.0,0.0,0)
+        high_cob = self.basic_predict(model,100,1.0,30.0,0)
+        high_both = self.basic_predict(model,200,1.0,30.0,0)
         line =  f"    low: {low}    low_w_iob: {low_w_iob}    normal_w_iob: {normal_w_iob}    normal_wo_iob: {normal_wo_iob}\n"
-        line += f"    high_bg: {high_bg}    high_cob: {high_cob}    high_both: {high_both}\n"
+        line += f"    high_bg: {high_bg}    high_cob: {high_cob}    high_both: {high_both}    high_both_and_rising {self.basic_predict(model, 200, 1, 60, 10)}\n"
         line += f"    low_rising  : {self.basic_predict(model, 70, 0, 20, 10)}    normal_rising  : {self.basic_predict(model, 100, 0, 20, 10)}    high_rising  : {self.basic_predict(model, 180, 0, 20, 10)}\n"
-        line += f"    low_dropping: {self.basic_predict(model, 70, 0, 20, -7)}    normal_dropping: {self.basic_predict(model, 100, 0, 20, -7)}    high_dropping: {self.basic_predict(model, 180, 0, 20, -7)}\n"
+        line += f"    low_dropping: {self.basic_predict(model, 70, 2, 0, -7)}    normal_dropping: {self.basic_predict(model, 100, 2, 0, -7)}    high_dropping: {self.basic_predict(model, 180, 2, 0, -7)}\n"
         return line
         
     def basic_predict(self, model, bg, iob, cob, delta):

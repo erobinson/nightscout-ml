@@ -6,18 +6,53 @@ from tf_model import TFModel
 from generate_simple_data import GenerateSimpleData
 from adjust_smbs import AdjustSmbs
 from pull_notes import PullNotes
+import numpy as np
+import tensorflow as tf
+
 
 # GenerateSimpleData().generate_data(500)
 
-# start_date_time = '6/4/22 09:47PM'
+# start_date_time = '6/7/22 08:45AM'
 # notes_file = PullNotes().pull_notes_to_csv(start_date_time)
 # PullNotes().add_adjustment_flags('data/aiSMB_records.csv', notes_file)
 # AdjustSmbs().adjust_smbs(start_date_time)
 
 TFModel().build_tf_regression()
 
+
+
+# modelMAE = tf.keras.models.load_model('models/backup/tf_model_2022-6-7_21-23')
+# modelMSE = tf.keras.models.load_model('models/backup/tf_model_2022-6-7_13-4')
+# bg = 120
+# cob = 60
+# last_cob_min = 5
+# delta = 4
+# shortDelta = 1
+# longDelta = 1
+# stable = 1
+# accelerating_up = 0
+# deccelerating_up = 0
+# accelerating_down = 0
+# deccelerating_down = 0
+# values = [11,0,0,0, 1,0,0, 0,0,0, 
+#                     bg,100,1,cob,last_cob_min,0,delta,shortDelta,longDelta,
+#                     accelerating_up, deccelerating_up, accelerating_down, deccelerating_down, stable, 
+#                     33,33,1,33, 
+#                     0,0,0, 0,0,
+#                     0,1]
+# maeVal = modelMAE.predict([values])[0][0]
+# mseVal = modelMSE.predict([values])[0][0]
+# print(f"MAE: {maeVal}  MSE: {mseVal}")
+
+# "hourOfDay","hour0_2","hour3_5","hour6_8", "hour9_11","hour12_14","hour15_17", "hour18_20","hour21_23","weekend",
+# "bg","targetBg","iob","cob","lastCarbAgeMin","futureCarbs","delta","shortAvgDelta","longAvgDelta",
+# "accelerating_up","deccelerating_up","accelerating_down","deccelerating_down","stable",
+# "tdd7Days","tddDaily","tddPerHour","tdd24Hrs",
+# "recentSteps5Minutes","recentSteps10Minutes","recentSteps15Minutes", "recentSteps30Minutes","recentSteps60Minutes",
+# "sleep","sedintary",
+
+
 # Notes:
-# TODO: parameters search - https://www.tensorflow.org/tensorboard/hyperparameter_tuning_with_hparams
 # TODO: get exercise/step count data from fit API
 ## https://github.com/android/fit-samples/blob/main/StepCounterKotlin/app/src/main/java/com/google/android/gms/fit/samples/stepcounterkotlin/MainActivity.kt
 ## credentials id - 564617406014-8kkm14657o81ancp2okpo9oga0078v2j.apps.googleusercontent.com
@@ -27,6 +62,8 @@ TFModel().build_tf_regression()
 # TODO: measure & optimize model for battery/app
     # https://www.tensorflow.org/model_optimization/guide/quantization/post_training
     # converter.optimizations = [tf.lite.Optimize.DEFAULT]
+# DONE: parameters search - https://www.tensorflow.org/tensorboard/hyperparameter_tuning_with_hparams
+# found that 8-10 epochs works well, number of nodes doesn't make a big difference
 # DONE: support time since last meal
 # DONE: add target, futureCob, minSinceLastCarb to model/training
 # DONE: support temp target - done in AAPS
