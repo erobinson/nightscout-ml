@@ -6,7 +6,6 @@ import tensorflow as tf
 from datetime import datetime
 from tensorflow.keras import layers
 from tensorflow.keras.layers import PReLU
-import tensorflow_decision_forests as tfdf
 import time
 
 
@@ -40,8 +39,8 @@ class TFModel(NightscoutMlBase):
         train_features = train_dataset.copy()
         test_features = test_dataset.copy()
 
-        # train_labels = train_features.pop('smbToGive')
-        # test_labels = test_features.pop('smbToGive')
+        train_labels = train_features.pop('smbToGive')
+        test_labels = test_features.pop('smbToGive')
 
         best_loss = 1
         best_accuracy = 0
@@ -63,46 +62,29 @@ class TFModel(NightscoutMlBase):
         # tried .001 -> .2 and .01 seems to consistently work the best
         learning_rates = [.01]
 
-        # for dropout_rate_l1 in range(0, 6, 8):
-        #     for num_hidden_nodes_l1 in range(10, 20, 3):
-        #         for dropout_rate_l2 in range(0, 6, 8):
-        #             for num_hidden_nodes_l2 in range(0, 8, 3):
-        #                 for num_hidden_nodes_l3 in range(0, 8, 3):
-        #                     for num_hidden_nodes_l4 in range(0, 8, 3):
-        #                         for num_epochs in range(10, 11, 3):
-        #                             for loss_function in loss_functions:
-        #                                 for last_activation in last_activation_functions:
-        #                                     for learning_rate in learning_rates:
-        #                                         model = self.train_model(train_features, train_labels, dropout_rate_l1/10, num_hidden_nodes_l1, dropout_rate_l2/10, num_hidden_nodes_l2, num_hidden_nodes_l3, num_hidden_nodes_l4, num_epochs, last_activation, loss_function, learning_rate)
-        #                                         results = model.evaluate(test_features, test_labels)
-        #                                         meets_min_requirements = self.model_meets_min_requirements(model)
-        #                                         if meets_min_requirements and results[0] < best_loss:
-        #                                             best_model = model
-        #                                             best_loss = results[0]
-        #                                             best_accuracy = results[1]
-        #                                             best_epochs = num_epochs
-        #                                             best_last_activation = last_activation
-        #                                             best_learning_rate = learning_rate
-        #                                             best_loss_function = loss_function
+        for dropout_rate_l1 in range(0, 6, 8):
+            for num_hidden_nodes_l1 in range(10, 20, 3):
+                for dropout_rate_l2 in range(0, 6, 8):
+                    for num_hidden_nodes_l2 in range(0, 8, 3):
+                        for num_hidden_nodes_l3 in range(0, 8, 3):
+                            for num_hidden_nodes_l4 in range(0, 8, 3):
+                                for num_epochs in range(10, 11, 3):
+                                    for loss_function in loss_functions:
+                                        for last_activation in last_activation_functions:
+                                            for learning_rate in learning_rates:
+                                                model = self.train_model(train_features, train_labels, dropout_rate_l1/10, num_hidden_nodes_l1, dropout_rate_l2/10, num_hidden_nodes_l2, num_hidden_nodes_l3, num_hidden_nodes_l4, num_epochs, last_activation, loss_function, learning_rate)
+                                                results = model.evaluate(test_features, test_labels)
+                                                meets_min_requirements = self.model_meets_min_requirements(model)
+                                                if meets_min_requirements and results[0] < best_loss:
+                                                    best_model = model
+                                                    best_loss = results[0]
+                                                    best_accuracy = results[1]
+                                                    best_epochs = num_epochs
+                                                    best_last_activation = last_activation
+                                                    best_learning_rate = learning_rate
+                                                    best_loss_function = loss_function
 
 
-        train_ds = tfdf.keras.pd_dataframe_to_tf_dataset(train_features, label="smbToGive")
-        test_ds = tfdf.keras.pd_dataframe_to_tf_dataset(test_features, label="smbToGive")
-
-        # Train a Random Forest model.
-        model = tfdf.keras.RandomForestModel()
-        model.fit(train_ds)
-
-        # Summary of the model structure.
-        model.summary()
-
-        # Evaluate the model.
-        results = model.evaluate(test_ds)
-        predict_features = test_features[15:25]
-        predict_ds = tfdf.keras.pd_dataframe_to_tf_dataset(predict_features, label="smbToGive")
-        predictions = model.predict(predict_ds)
-        # line = self.basic_predictions(model, current_cols)
-        # print(line)
         # model = self.train_model(train_features, train_labels, 0, 0, 0, 0, 0, 1)
         # results = model.evaluate(test_features, test_labels)
         # best_model = model

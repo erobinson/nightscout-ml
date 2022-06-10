@@ -6,6 +6,7 @@ from tf_model import TFModel
 from generate_simple_data import GenerateSimpleData
 from adjust_smbs import AdjustSmbs
 from pull_notes import PullNotes
+from decision_forest import DecisionForest
 import numpy as np
 import tensorflow as tf
 
@@ -17,8 +18,9 @@ import tensorflow as tf
 # PullNotes().add_adjustment_flags('data/aiSMB_records.csv', notes_file)
 # AdjustSmbs().adjust_smbs(start_date_time)
 
-TFModel().build_tf_regression()
+# TFModel().build_tf_regression()
 
+DecisionForest().build_model()
 
 
 # modelMAE = tf.keras.models.load_model('models/backup/tf_model_2022-6-7_21-23')
