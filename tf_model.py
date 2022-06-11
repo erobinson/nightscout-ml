@@ -53,8 +53,10 @@ class TFModel(NightscoutMlBase):
         start = time.time()
 
         # loss_functions = ['mean_squared_error', 'mean_absolute_error']
-        # loss_functions = ['mean_absolute_error']
-        loss_functions = ['mean_squared_error']
+        loss_functions = ['mean_absolute_error']
+        # mean squared error produces a lower loss, 
+        # but is too aggressive which leads to a rollercoaster
+        # loss_functions = ['mean_squared_error']
         # last_activation_functions = [None, 'relu', 'prelu']
         # last_activation_functions = ['relu', 'prelu']
         last_activation_functions = ['prelu']

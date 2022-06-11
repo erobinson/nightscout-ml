@@ -96,17 +96,18 @@ class AdjustSmbs(NightscoutMlBase):
         min_date = orig_date - pd.DateOffset(minutes=37*5)
 
         for i in range(6, 36):
-            prior_row = df.iloc[index - i]
-            row_date = self.str_to_time(prior_row['dateStr'])
-            if row_date > min_date:
-                smb_given = prior_row['smbToGive']
-                if smb_given >= u_to_remove:
-                    new_smb = smb_given - u_to_remove
-                    df.at[index-i, 'smbToGive'] = new_smb
-                    return
-                if smb_given > 0 and smb_given < u_to_remove:
-                    df.at[index-i, 'smbToGive'] = 0
-                    u_to_remove -= smb_given
+            if index - i > 0:
+                prior_row = df.iloc[index - i]
+                row_date = self.str_to_time(prior_row['dateStr'])
+                if row_date > min_date:
+                    smb_given = prior_row['smbToGive']
+                    if smb_given >= u_to_remove:
+                        new_smb = smb_given - u_to_remove
+                        df.at[index-i, 'smbToGive'] = new_smb
+                        return
+                    if smb_given > 0 and smb_given < u_to_remove:
+                        df.at[index-i, 'smbToGive'] = 0
+                        u_to_remove -= smb_given
 
     def u_to_adjust_based_on_delta(self, row):
         units = abs(row['delta']) / self.get_isf(row['bg'])
