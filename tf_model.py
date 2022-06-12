@@ -14,6 +14,15 @@ class TFModel(NightscoutMlBase):
     now = datetime.now()
     date_str = "{}-{}-{}_{}-{}".format(now.year, now.month, now.day, now.hour, now.minute)
 
+    current_cols = [
+                    "hourOfDay","hour0_2","hour3_5","hour6_8","hour9_11","hour12_14","hour15_17","hour18_20","hour21_23","weekend",
+                    "bg","targetBg","iob","cob","lastCarbAgeMin","futureCarbs","delta","shortAvgDelta","longAvgDelta",
+                    "accelerating_up","deccelerating_up","accelerating_down","deccelerating_down","stable",
+                    "tdd7Days","tddDaily","tddPerHour","tdd24Hrs",
+                    "recentSteps5Minutes","recentSteps10Minutes","recentSteps15Minutes","recentSteps30Minutes","recentSteps60Minutes",
+                    "sleep","sedentary",
+                    "smbToGive"]
+
     def build_tf_regression(self):
         # https://www.tensorflow.org/tutorials/keras/regression#regression_with_a_deep_neural_network_dnn
         # df = pd.read_csv('aiSMB_records_adjusted.csv')
@@ -23,15 +32,8 @@ class TFModel(NightscoutMlBase):
         # df = pd.concat([df, df_gen])
         # df = df_gen
 
-        current_cols = [
-                        "hourOfDay","hour0_2","hour3_5","hour6_8","hour9_11","hour12_14","hour15_17","hour18_20","hour21_23","weekend",
-                        "bg","targetBg","iob","cob","lastCarbAgeMin","futureCarbs","delta","shortAvgDelta","longAvgDelta",
-                        "accelerating_up","deccelerating_up","accelerating_down","deccelerating_down","stable",
-                        "tdd7Days","tddDaily","tddPerHour","tdd24Hrs",
-                        "recentSteps5Minutes","recentSteps10Minutes","recentSteps15Minutes","recentSteps30Minutes","recentSteps60Minutes",
-                        "sleep","sedentary",
-                        "smbToGive"]
-        df = df[current_cols]
+        
+        df = df[self.current_cols]
         
         train_dataset = df.sample(frac=0.8, random_state=0)
         test_dataset = df.drop(train_dataset.index)
@@ -235,3 +237,26 @@ class TFModel(NightscoutMlBase):
         open('models/backup/tf_model_'+self.date_str+'.tflite', "wb").write(lite_model)
         open('models/model.tflite', "wb").write(lite_model)
 
+
+    def compare_two_models(self, model_1_date, model_2_date, row_date):
+        m1 = tf.keras.models.load_model(f'models/backup/tf_model_{model_1_date}')
+        m2 = tf.keras.models.load_model(f'models/backup/tf_model_{model_2_date}')
+
+        df = pd.read_excel('data.xlsx','training_data')
+        row = df.loc[df['dateStr'] == row_date]
+        row = row[self.current_cols]
+        row.pop('smbToGive')
+
+        eval_features = df.sample(frac=0.3, random_state=0)
+        eval_features = eval_features[self.current_cols]
+        eval_labels = eval_features.pop('smbToGive')
+
+        m1_eval = str(round(m1.evaluate(eval_features, eval_labels)[0], 6))
+        m2_eval = str(round(m2.evaluate(eval_features, eval_labels)[0], 6))
+
+        m1_predict = str(round(m1.predict([row])[0][0],3))
+        m2_predict = str(round(m2.predict([row])[0][0],3))
+        print(f"\n")
+        print(f" ---- EVAL LOSS:   model 1: {m1_eval}    - model 2: {m2_eval}")
+        print(f" ---- PREDICTIONS: {row_date} model 1: {m1_predict} - model 2: {m2_predict}")
+        print(f" ---- ROW INFO:    bg: {row['bg'].values[0]} delta: {row['delta'].values[0]} \n\n")

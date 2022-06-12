@@ -8,18 +8,18 @@ from adjust_smbs import AdjustSmbs
 from pull_notes import PullNotes
 import numpy as np
 import tensorflow as tf
+import pandas as pd
 
 
 # GenerateSimpleData().generate_data(500)
 
-# start_date_time = '6/7/22 08:45AM'
+# start_date_time = '6/9/22 05:30PM'
 # notes_file = PullNotes().pull_notes_to_csv(start_date_time)
 # PullNotes().add_adjustment_flags('data/aiSMB_records.csv', notes_file)
 # AdjustSmbs().adjust_smbs(start_date_time)
 
-TFModel().build_tf_regression()
-
-
+# TFModel().build_tf_regression()
+TFModel().compare_two_models('2022-6-10_10-48', '2022-6-11_21-18', '6/11/22 08:40AM')
 
 # modelMAE = tf.keras.models.load_model('models/backup/tf_model_2022-6-7_21-23')
 # modelMSE = tf.keras.models.load_model('models/backup/tf_model_2022-6-7_13-4')
