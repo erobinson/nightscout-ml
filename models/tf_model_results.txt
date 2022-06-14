@@ -993,3 +993,24 @@ Activation: prelu
 
 Took 00:02:55 to train
 NOTES: 
+
+
+------------
+Model 2022-6-12_8-10
+6 Layers:
+    - Layer 0  - normalization_97
+    - Layer 1  - dense_321 (19)
+    - Layer 2  - dense_322 (3)
+    - Layer 3  - dense_323 (6)
+    - Layer 4  - dense_324 (6)
+    - Layer 5  - dense_325 (1)
+Model Loss & Accuracy: 0.06796996295452118 - 0.37527114152908325 
+Number of Epochs: 10 
+Columns (38): ['hourOfDay', 'hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'targetBg', 'iob', 'cob', 'lastCarbAgeMin', 'futureCarbs', 'delta', 'shortAvgDelta', 'longAvgDelta', 'accelerating_up', 'deccelerating_up', 'accelerating_down', 'deccelerating_down', 'stable', 'tdd7Days', 'tdd7DaysPerHour', 'tddDaily', 'tddDailyPerHour', 'tdd24Hrs', 'tdd24HrsPerHour', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'sleep', 'sedentary', 'smbToGive'] 
+Training Data Size: 4608 
+Learning Rate: 0.01 
+Loss function: mean_absolute_error 
+Activation: prelu 
+ERROR: incorrect number of columns (38)
+Took 00:02:48 to train
+NOTES: 

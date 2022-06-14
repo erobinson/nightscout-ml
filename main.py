@@ -13,13 +13,13 @@ import pandas as pd
 
 # GenerateSimpleData().generate_data(500)
 
-# start_date_time = '6/9/22 05:30PM'
+# start_date_time = '6/11/22 08:45PM'
 # notes_file = PullNotes().pull_notes_to_csv(start_date_time)
 # PullNotes().add_adjustment_flags('data/aiSMB_records.csv', notes_file)
 # AdjustSmbs().adjust_smbs(start_date_time)
 
 # TFModel().build_tf_regression()
-TFModel().compare_two_models('2022-6-10_10-48', '2022-6-11_21-18', '6/11/22 08:40AM')
+TFModel().compare_two_models('2022-6-11_21-18', '2022-6-12_8-10', '6/12/22 03:10AM')
 
 # modelMAE = tf.keras.models.load_model('models/backup/tf_model_2022-6-7_21-23')
 # modelMSE = tf.keras.models.load_model('models/backup/tf_model_2022-6-7_13-4')

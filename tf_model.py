@@ -18,7 +18,7 @@ class TFModel(NightscoutMlBase):
                     "hourOfDay","hour0_2","hour3_5","hour6_8","hour9_11","hour12_14","hour15_17","hour18_20","hour21_23","weekend",
                     "bg","targetBg","iob","cob","lastCarbAgeMin","futureCarbs","delta","shortAvgDelta","longAvgDelta",
                     "accelerating_up","deccelerating_up","accelerating_down","deccelerating_down","stable",
-                    "tdd7Days","tddDaily","tddPerHour","tdd24Hrs",
+                    "tdd7Days","tdd7DaysPerHour","tddDaily","tddDailyPerHour","tdd24Hrs","tdd24HrsPerHour",
                     "recentSteps5Minutes","recentSteps10Minutes","recentSteps15Minutes","recentSteps30Minutes","recentSteps60Minutes",
                     "sleep","sedentary",
                     "smbToGive"]
@@ -112,7 +112,7 @@ class TFModel(NightscoutMlBase):
 
         training_time = time.time() - start
         
-        self.save_model_info(best_model, best_loss, best_accuracy, best_epochs, current_cols, len(df), training_time, best_last_activation, best_learning_rate, best_loss_function)
+        self.save_model_info(best_model, best_loss, best_accuracy, best_epochs, len(df), training_time, best_last_activation, best_learning_rate, best_loss_function)
 
         self.save_model(best_model)
 
@@ -159,7 +159,7 @@ class TFModel(NightscoutMlBase):
             validation_split = 0.2)
         return model
 
-    def save_model_info(self, model, best_loss, best_accuracy, num_epochs, current_cols, data_row_count, training_time, best_last_activation, best_learning_rate, best_loss_function):
+    def save_model_info(self, model, best_loss, best_accuracy, num_epochs, data_row_count, training_time, best_last_activation, best_learning_rate, best_loss_function):
         model_info = "\n\n------------\n"
         model_info += f"Model {self.date_str}\n"
         model_info += f"{len(model.layers)} Layers:\n"
@@ -172,26 +172,25 @@ class TFModel(NightscoutMlBase):
 
         model_info += f"Model Loss & Accuracy: {best_loss} - {best_accuracy} \n"
         model_info += f"Number of Epochs: {num_epochs} \n"
-        model_info += f"Columns ({len(current_cols)}): {current_cols} \n"
+        model_info += f"Columns ({len(self.current_cols)}): {self.current_cols} \n"
         model_info += f"Training Data Size: {data_row_count} \n"
         model_info += f"Learning Rate: {best_learning_rate} \n"
         model_info += f"Loss function: {best_loss_function} \n"
         model_info += f"Activation: {best_last_activation} \n" if best_last_activation is not None else "Activation: None\n"
-        model_info += self.basic_predictions(model, current_cols) + "\n"
+        model_info += self.basic_predictions(model) + "\n"
         model_info += f"Took {time.strftime('%H:%M:%S', time.gmtime(training_time))} to train\n"
         model_info += "NOTES: \n"
         open('models/tf_model_results.txt', "a").write(model_info)
 
 
     def model_meets_min_requirements(self, model):
-        # return True
         high_rising_and_no_iob = self.basic_predict(model, 160, 0, 0, 8)
         low_dropping = self.basic_predict(model, 70, 3, 0, -10)
         return .5 < float(high_rising_and_no_iob) and .024 > float(low_dropping)
 
-    def basic_predictions(self, model, current_cols):
-        if len(current_cols) != 36:
-            return f"ERROR: incorrect number of columns ({len(current_cols)})"
+    def basic_predictions(self, model):
+        if len(self.current_cols) != 38:
+            return f"ERROR: incorrect number of columns ({len(self.current_cols)})"
 
         low = self.basic_predict(model,50,0.0,0.0,0)
         low_w_iob = self.basic_predict(model,50,1.0,0.0,0)
@@ -214,13 +213,14 @@ class TFModel(NightscoutMlBase):
         prediction = model.predict([[11,1,0,0, 0,0,0, 0,0,0, 
                         bg,100,iob,cob,last_cob_min,0,delta,delta,delta,
                         accelerating_up, 0, deccelerating_down, 0, stable, 
-                        33,33,1,33, 
+                        33,1, 33,1, 33,1,
                         0,0,0, 0,0,
                         0,1]])
                         # "hourOfDay","hour0_2","hour3_5","hour6_8", "hour9_11","hour12_14","hour15_17", "hour18_20","hour21_23","weekend",
                         # "bg","targetBg","iob","cob","lastCarbAgeMin","futureCarbs","delta","shortAvgDelta","longAvgDelta",
                         # "accelerating_up","deccelerating_up","accelerating_down","deccelerating_down","stable",
                         # "tdd7Days","tddDaily","tddPerHour","tdd24Hrs",
+                        # "tdd7Days","tdd7DaysPerHour", "tddDaily","tddDailyPerHour", "tdd24Hrs","tdd24HrsPerHour",
                         # "recentSteps5Minutes","recentSteps10Minutes","recentSteps15Minutes", "recentSteps30Minutes","recentSteps60Minutes",
                         # "sleep","sedintary",
                         
@@ -246,17 +246,24 @@ class TFModel(NightscoutMlBase):
         row = df.loc[df['dateStr'] == row_date]
         row = row[self.current_cols]
         row.pop('smbToGive')
+        row_1 = row.copy()
+        row_1.pop('tdd7DaysPerHour')
+        row_1.pop('tdd24HrsPerHour')
 
         eval_features = df.sample(frac=0.3, random_state=0)
         eval_features = eval_features[self.current_cols]
+        eval_features_1 = eval_features.copy()
+        eval_features_1.pop('tdd7DaysPerHour')
+        eval_features_1.pop('tdd24HrsPerHour')
+        eval_features_1.pop('smbToGive')
         eval_labels = eval_features.pop('smbToGive')
 
-        m1_eval = str(round(m1.evaluate(eval_features, eval_labels)[0], 6))
+        m1_eval = str(round(m1.evaluate(eval_features_1, eval_labels)[0], 6))
         m2_eval = str(round(m2.evaluate(eval_features, eval_labels)[0], 6))
 
-        m1_predict = str(round(m1.predict([row])[0][0],3))
+        m1_predict = str(round(m1.predict([row_1])[0][0],3))
         m2_predict = str(round(m2.predict([row])[0][0],3))
         print(f"\n")
-        print(f" ---- EVAL LOSS:   model 1: {m1_eval}    - model 2: {m2_eval}")
-        print(f" ---- PREDICTIONS: {row_date} model 1: {m1_predict} - model 2: {m2_predict}")
+        print(f" ---- EVAL LOSS:   model 1: {m1_eval} - model 2: {m2_eval}")
+        print(f" ---- PREDICTIONS: {row_date} - model 1: {m1_predict} - model 2: {m2_predict}")
         print(f" ---- ROW INFO:    bg: {row['bg'].values[0]} delta: {row['delta'].values[0]} \n\n")
