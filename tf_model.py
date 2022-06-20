@@ -247,14 +247,14 @@ class TFModel(NightscoutMlBase):
         row = row[self.current_cols]
         row.pop('smbToGive')
         row_1 = row.copy()
-        row_1.pop('tdd7DaysPerHour')
-        row_1.pop('tdd24HrsPerHour')
+        # row_1.pop('tdd7DaysPerHour')
+        # row_1.pop('tdd24HrsPerHour')
 
         eval_features = df.sample(frac=0.3, random_state=0)
         eval_features = eval_features[self.current_cols]
         eval_features_1 = eval_features.copy()
-        eval_features_1.pop('tdd7DaysPerHour')
-        eval_features_1.pop('tdd24HrsPerHour')
+        # eval_features_1.pop('tdd7DaysPerHour')
+        # eval_features_1.pop('tdd24HrsPerHour')
         eval_features_1.pop('smbToGive')
         eval_labels = eval_features.pop('smbToGive')
 
@@ -264,6 +264,7 @@ class TFModel(NightscoutMlBase):
         m1_predict = str(round(m1.predict([row_1])[0][0],3))
         m2_predict = str(round(m2.predict([row])[0][0],3))
         print(f"\n")
+        print(f" ---- MODELS: model 1: {model_1_date} - model 2: {model_2_date}")
         print(f" ---- EVAL LOSS:   model 1: {m1_eval} - model 2: {m2_eval}")
         print(f" ---- PREDICTIONS: {row_date} - model 1: {m1_predict} - model 2: {m2_predict}")
         print(f" ---- ROW INFO:    bg: {row['bg'].values[0]} delta: {row['delta'].values[0]} \n\n")

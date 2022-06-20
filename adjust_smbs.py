@@ -112,6 +112,10 @@ class AdjustSmbs(NightscoutMlBase):
     def u_to_adjust_based_on_delta(self, row):
         units = abs(row['delta']) / self.get_isf(row['bg'])
         units = self.roundToPt05(units)
+
+        if row['bg'] > 150 and 3 > row['delta'] > -3 and 2 > row['longAvgDelta'] > -2 and units == .05:
+            units = .25
+
         # still want to remove some insulin if .02 should be removed
         units = .05 if units == 0 else units
         return units
