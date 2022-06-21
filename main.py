@@ -6,6 +6,7 @@ from tf_model import TFModel
 from generate_simple_data import GenerateSimpleData
 from adjust_smbs import AdjustSmbs
 from pull_notes import PullNotes
+from lstm_model import LstmModel
 import numpy as np
 import tensorflow as tf
 import pandas as pd
@@ -13,13 +14,15 @@ import pandas as pd
 
 # GenerateSimpleData().generate_data(500)
 
-# start_date_time = '6/11/22 08:45PM'
+# start_date_time = '6/17/22 04:22PM'
 # notes_file = PullNotes().pull_notes_to_csv(start_date_time)
 # PullNotes().add_adjustment_flags('data/aiSMB_records.csv', notes_file)
 # AdjustSmbs().adjust_smbs(start_date_time)
 
 # TFModel().build_tf_regression()
-TFModel().compare_two_models('2022-6-11_21-18', '2022-6-12_8-10', '6/12/22 03:10AM')
+# TFModel().compare_two_models('2022-6-11_21-18', '2022-6-12_8-10', '6/12/22 03:10AM')
+# TFModel().compare_two_models('2022-6-18_0-31', '2022-6-19_7-28', '6/17/22 10:20AM')
+LstmModel().build_lstm_model()
 
 # modelMAE = tf.keras.models.load_model('models/backup/tf_model_2022-6-7_21-23')
 # modelMSE = tf.keras.models.load_model('models/backup/tf_model_2022-6-7_13-4')
@@ -53,6 +56,11 @@ TFModel().compare_two_models('2022-6-11_21-18', '2022-6-12_8-10', '6/12/22 03:10
 
 
 # Notes:
+# TODO: build LSTM model
+# https://machinelearningmastery.com/time-series-prediction-lstm-recurrent-neural-networks-python-keras/
+# https://www.youtube.com/watch?v=ne-dpRdNReI
+# https://pythonprogramming.net/cryptocurrency-recurrent-neural-network-deep-learning-python-tensorflow-keras/
+
 # TODO: get exercise/step count data from fit API
 ## https://github.com/android/fit-samples/blob/main/StepCounterKotlin/app/src/main/java/com/google/android/gms/fit/samples/stepcounterkotlin/MainActivity.kt
 ## credentials id - 564617406014-8kkm14657o81ancp2okpo9oga0078v2j.apps.googleusercontent.com
