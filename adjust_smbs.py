@@ -41,7 +41,7 @@ class AdjustSmbs(NightscoutMlBase):
         
         # if low treatment - go back 30+ min & delete 1u
         if row['low_treatment'] == 1:
-            u_to_remove = 1
+            u_to_remove = .5
             self.remove_prior_insulin(index, row, df, u_to_remove)
 
     def adjust_for_highs(self, index, row, df):
@@ -51,7 +51,7 @@ class AdjustSmbs(NightscoutMlBase):
             self.add_prior_insulin(index, row, df, u_to_add)
 
         if row['more_aggressive'] == 1:
-            u_to_add = 1
+            u_to_add = .5
             self.add_prior_insulin(index, row, df, u_to_add)
         
     def add_prior_insulin(self, index, row, df, u_to_add):

@@ -14,7 +14,7 @@ import pandas as pd
 
 # GenerateSimpleData().generate_data(500)
 
-# start_date_time = '6/17/22 04:22PM'
+# start_date_time = '6/19/22 07:05AM'
 # notes_file = PullNotes().pull_notes_to_csv(start_date_time)
 # PullNotes().add_adjustment_flags('data/aiSMB_records.csv', notes_file)
 # AdjustSmbs().adjust_smbs(start_date_time)
@@ -58,7 +58,7 @@ LstmModel().build_lstm_model()
 # Notes:
 # TODO: build LSTM model
 # https://machinelearningmastery.com/time-series-prediction-lstm-recurrent-neural-networks-python-keras/
-# https://www.youtube.com/watch?v=ne-dpRdNReI
+# https://www.youtube.com/watch?v=yWkpRdpOiPY
 # https://pythonprogramming.net/cryptocurrency-recurrent-neural-network-deep-learning-python-tensorflow-keras/
 
 # TODO: get exercise/step count data from fit API
