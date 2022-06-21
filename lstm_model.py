@@ -35,6 +35,7 @@ class LstmModel(NightscoutMlBase):
         print(f'{features.shape} - {len(labels)}')
         
         model = Sequential()
+        model.add(layers.Input(shape=(features.shape[1:])))
         model.add(LSTM(20, input_shape=(features.shape[1:])))
         model.add(BatchNormalization())
         model.add(Dense(1, activation='relu'))
@@ -49,7 +50,7 @@ class LstmModel(NightscoutMlBase):
             epochs=10,
             verbose=1)
 
-        prediction = model.predict(features[0])
+        prediction = model.predict(np.array([features[88]]))[0][0]
         print(f"prediction: {prediction} vs {labels[0]}")
 
 
@@ -70,7 +71,7 @@ class LstmModel(NightscoutMlBase):
                     # windows.append(window)
 
 
-        return np.array(windows), labels
+        return np.array(windows), np.array(labels)
 
     def normalize(self, df):
         df['hourOfDay'] = df['hourOfDay'] / 23
