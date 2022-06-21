@@ -30,14 +30,26 @@ class LstmModel(NightscoutMlBase):
 
         # print(df.describe().transpose())
 
-        features, labels = self.convert_to_frames(df, 6)
+        features, labels = self.convert_to_frames(df, 12)
 
-        print(f'{features.shape} - {len(labels)}')
+        split_index = round(len(labels) * .8)
+        train_features = features[:split_index]
+        test_features = features[split_index:]
+        train_labels = labels[:split_index]
+        test_labels = labels[split_index:]
+
+        train_features, train_labels = self.shuffle_in_unison(train_features, train_labels)
+        test_features, test_labels = self.shuffle_in_unison(test_features, test_labels)
+
+        print(f'TRAIN: {train_features.shape} - {len(train_labels)}')
+        print(f'TEST: {test_features.shape} - {len(test_labels)}')
         
         model = Sequential()
-        model.add(layers.Input(shape=(features.shape[1:])))
-        model.add(LSTM(20, input_shape=(features.shape[1:])))
+        model.add(layers.Input(shape=(train_features.shape[1:])))
+        num_nodes = 100 # len(self.current_cols)
+        model.add(LSTM(num_nodes, input_shape=(train_features.shape[1:])))
         model.add(BatchNormalization())
+        model.add(Dense(5, activation='relu'))
         model.add(Dense(1, activation='relu'))
 
         model.compile(
@@ -47,11 +59,16 @@ class LstmModel(NightscoutMlBase):
         model.fit(
             features,
             labels,
-            epochs=10,
+            epochs=20,
             verbose=1)
 
-        prediction = model.predict(np.array([features[88]]))[0][0]
-        print(f"prediction: {prediction} vs {labels[0]}")
+
+        loss = model.evaluate(test_features, test_labels)
+        print(f"loss: {loss}")
+        line_to_predict = 88
+        prediction = model.predict(np.array([features[line_to_predict]]))[0][0]
+        # print(f"{features[line_to_predict]}")
+        print(f"prediction: {prediction} vs {labels[line_to_predict]}")
 
 
     def convert_to_frames(self, df, window_size):
@@ -101,3 +118,8 @@ class LstmModel(NightscoutMlBase):
         df['recentSteps30Minutes'] = df['recentSteps30Minutes'] / 20000
         df['recentSteps60Minutes'] = df['recentSteps60Minutes'] / 40000
         return df
+
+    def shuffle_in_unison(self, a, b):
+        assert len(a) == len(b)
+        p = np.random.permutation(len(b))
+        return a[p], b[p]
