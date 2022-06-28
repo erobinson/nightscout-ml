@@ -67,11 +67,11 @@ class TFModel(NightscoutMlBase):
         learning_rates = [.01]
 
         for dropout_rate_l1 in range(0, 6, 8):
-            for num_hidden_nodes_l1 in range(10, 20, 3):
+            for num_hidden_nodes_l1 in range(10, 36, 5):
                 for dropout_rate_l2 in range(0, 6, 8):
                     for num_hidden_nodes_l2 in range(0, 8, 3):
                         for num_hidden_nodes_l3 in range(0, 8, 3):
-                            for num_hidden_nodes_l4 in range(0, 8, 3):
+                            for num_hidden_nodes_l4 in range(0, 4, 3):
                                 for num_epochs in range(10, 11, 3):
                                     for loss_function in loss_functions:
                                         for last_activation in last_activation_functions:
@@ -115,6 +115,8 @@ class TFModel(NightscoutMlBase):
         self.save_model_info(best_model, best_loss, best_accuracy, best_epochs, len(df), training_time, best_last_activation, best_learning_rate, best_loss_function)
 
         self.save_model(best_model)
+        
+        return self.date_str
 
 
 
@@ -170,7 +172,7 @@ class TFModel(NightscoutMlBase):
             layer_info += f" ({layer.rate})" if 'dropout' in layer.name else ""
             model_info += layer_info + "\n"
 
-        model_info += f"Model Loss & Accuracy: {best_loss} - {best_accuracy} \n"
+        model_info += f"Model Loss & Accuracy: {str(round(best_loss, 5))} - {str(round(best_accuracy, 5))} \n"
         model_info += f"Number of Epochs: {num_epochs} \n"
         model_info += f"Columns ({len(self.current_cols)}): {self.current_cols} \n"
         model_info += f"Training Data Size: {data_row_count} \n"
@@ -238,15 +240,13 @@ class TFModel(NightscoutMlBase):
         open('models/model.tflite', "wb").write(lite_model)
 
 
-    def compare_two_models(self, model_1_date, model_2_date, row_date):
+    def compare_two_models(self, model_1_date, model_2_date, row_dates):
         m1 = tf.keras.models.load_model(f'models/backup/tf_model_{model_1_date}')
         m2 = tf.keras.models.load_model(f'models/backup/tf_model_{model_2_date}')
 
         df = pd.read_excel('data.xlsx','training_data')
-        row = df.loc[df['dateStr'] == row_date]
-        row = row[self.current_cols]
-        row.pop('smbToGive')
-        row_1 = row.copy()
+        
+        # row_1 = row.copy()
         # row_1.pop('tdd7DaysPerHour')
         # row_1.pop('tdd24HrsPerHour')
 
@@ -260,11 +260,22 @@ class TFModel(NightscoutMlBase):
 
         m1_eval = str(round(m1.evaluate(eval_features_1, eval_labels)[0], 6))
         m2_eval = str(round(m2.evaluate(eval_features, eval_labels)[0], 6))
+        eval_diff = str(round((float(m2_eval) - float(m1_eval)), 5))
 
-        m1_predict = str(round(m1.predict([row_1])[0][0],3))
-        m2_predict = str(round(m2.predict([row])[0][0],3))
-        print(f"\n")
-        print(f" ---- MODELS: model 1: {model_1_date} - model 2: {model_2_date}")
-        print(f" ---- EVAL LOSS:   model 1: {m1_eval} - model 2: {m2_eval}")
-        print(f" ---- PREDICTIONS: {row_date} - model 1: {m1_predict} - model 2: {m2_predict}")
-        print(f" ---- ROW INFO:    bg: {row['bg'].values[0]} delta: {row['delta'].values[0]} \n\n")
+        # m1_predict = str(round(m1.predict([row_1])[0][0],3))
+        # m2_predict = str(round(m2.predict([row])[0][0],3))
+
+        model_info = " ---- Model Comparison ----\n"
+        model_info += f" ---- MODELS: model 1: {model_1_date} - model 2: {model_2_date}\n"
+        model_info += f" ---- EVAL LOSS:   model 1: {m1_eval} - model 2: {m2_eval} => "
+        model_info += f"{(eval_diff)} getting better \n\n" if float(eval_diff) < 0 else f"{(eval_diff)} !!! BAD !!! \n\n"
+        for row_date in row_dates:
+            row = df.loc[df['dateStr'] == row_date]
+            row = row[self.current_cols]
+            smb_to_give = row['smbToGive'].values[0]
+            row.pop('smbToGive')
+            m1_predict = str(round(m1.predict([row])[0][0],3))
+            m2_predict = str(round(m2.predict([row])[0][0],3))
+            model_info += f" ------ PREDICTIONS: {row_date} - model 1: {m1_predict} - model 2: {m2_predict}\n"
+            model_info += f" ------ ROW INFO:    smbToGive: {smb_to_give} bg: {row['bg'].values[0]} delta: {row['delta'].values[0]} shortAvgDelta: {row['shortAvgDelta'].values[0]} \n\n"
+        open('models/tf_model_results.txt', "a").write(model_info)
