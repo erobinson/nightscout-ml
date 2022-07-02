@@ -31,7 +31,7 @@ class AdjustSmbs(NightscoutMlBase):
         
         df['adjustment'] = df['smbToGive'] - df['smbGiven']
 
-        start_index = df.index[df['dateStr'] == start_date_time_str].tolist()
+        start_index = df.index[df['dateStr'] == start_date_time_str].tolist()[0]
         df = df[start_index:]
 
         # df.to_csv('data/adjustment_test_updated.csv', index=False)
@@ -39,8 +39,12 @@ class AdjustSmbs(NightscoutMlBase):
         book = load_workbook('data.xlsx')
         writer = pd.ExcelWriter('data.xlsx', engine='openpyxl')
         writer.book = book
-        
-        df.to_excel(writer, sheet_name='training_data', startrow=writer.sheets['training_data'].max_row, index = False, header= False)
+        writer.sheets = {ws.title: ws for ws in book.worksheets}
+        start_row = writer.sheets['training_data'].max_row - 1
+        # data = pd.read_excel('data.xlsx','training_data')
+        # start_row = data.index[df['dateStr'] == start_date_time_str].tolist()[0]
+        # 6/29/22 03:10PM - 9850
+        df.to_excel(writer, sheet_name='training_data', startrow=start_row, index = False, header= False)
 
         writer.save()
 
