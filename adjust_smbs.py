@@ -1,6 +1,7 @@
 from nightscout_ml_base import NightscoutMlBase
 import pandas as pd
 from datetime import datetime
+from openpyxl import load_workbook
 
 
 class AdjustSmbs(NightscoutMlBase):
@@ -30,8 +31,18 @@ class AdjustSmbs(NightscoutMlBase):
         
         df['adjustment'] = df['smbToGive'] - df['smbGiven']
 
+        start_index = df.index[df['dateStr'] == start_date_time_str].tolist()
+        df = df[start_index:]
+
         # df.to_csv('data/adjustment_test_updated.csv', index=False)
-        df.to_csv('data/aiSMB_records_adjusted.code.csv', index=False)
+        # df.to_csv('data/aiSMB_records_adjusted.code.csv', index=False)
+        book = load_workbook('data.xlsx')
+        writer = pd.ExcelWriter('data.xlsx', engine='openpyxl')
+        writer.book = book
+        
+        df.to_excel(writer, sheet_name='training_data', startrow=writer.sheets['training_data'].max_row, index = False, header= False)
+
+        writer.save()
 
     def adjust_for_lows(self, index, row, df):
         # if low, calculate insulin suplus (delta/isf) - go back 30+ min & delete

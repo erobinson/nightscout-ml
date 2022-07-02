@@ -14,16 +14,16 @@ import pandas as pd
 
 # GenerateSimpleData().generate_data(500)
 
-# start_date_time = '6/27/22 01:25PM'
-# notes_file = PullNotes().pull_notes_to_csv(start_date_time)
-# PullNotes().add_adjustment_flags('data/aiSMB_records.csv', notes_file)
-# AdjustSmbs().adjust_smbs(start_date_time)
+start_date_time = '6/29/22 03:10PM'
+notes_file = PullNotes().pull_notes_to_csv(start_date_time)
+PullNotes().add_adjustment_flags('data/aiSMB_records.csv', notes_file)
+AdjustSmbs().adjust_smbs(start_date_time)
 
-model_date = TFModel().build_tf_regression()
-TFModel().compare_two_models('2022-6-22_15-32', model_date, 
-    ['6/12/22 03:10AM', '6/17/22 10:20AM', '6/18/22 09:40PM', '6/19/22 04:45AM'])
-TFModel().compare_two_models('2022-6-27_14-51', model_date, 
-    ['6/12/22 03:10AM', '6/17/22 10:20AM', '6/18/22 09:40PM', '6/19/22 04:45AM', '6/27/22 05:25PM', '6/28/22 07:21PM'])
+# model_date = TFModel().build_tf_regression()
+# TFModel().compare_two_models('2022-6-22_15-32', model_date, 
+#     ['6/12/22 03:10AM', '6/17/22 10:20AM', '6/18/22 09:40PM', '6/19/22 04:45AM'])
+# TFModel().compare_two_models('2022-6-27_14-51', model_date, 
+#     ['6/12/22 03:10AM', '6/17/22 10:20AM', '6/18/22 09:40PM', '6/19/22 04:45AM', '6/27/22 05:25PM', '6/28/22 07:21PM'])
 
 # TFModel().compare_two_models('2022-6-11_21-18', '2022-6-12_8-10', '6/12/22 03:10AM')
 # TFModel().compare_two_models('2022-6-18_0-31', '2022-6-19_7-28', '6/17/22 10:20AM')
