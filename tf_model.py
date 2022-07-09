@@ -276,6 +276,8 @@ class TFModel(NightscoutMlBase):
             row.pop('smbToGive')
             m1_predict = str(round(m1.predict([row])[0][0],3))
             m2_predict = str(round(m2.predict([row])[0][0],3))
-            model_info += f" ------ PREDICTIONS: {row_date} - model 1: {m1_predict} - model 2: {m2_predict}\n"
-            model_info += f" ------ ROW INFO:    smbToGive: {smb_to_give} bg: {row['bg'].values[0]} delta: {row['delta'].values[0]} shortAvgDelta: {row['shortAvgDelta'].values[0]} \n\n"
+            model_info += f" ------ PREDICTIONS: {row_date} "
+            model_info += f"({smb_to_give}u, {row['bg'].values[0]}mg/dL, delta: {row['delta'].values[0]}, shortAvgDelta: {row['shortAvgDelta'].values[0]})"
+            model_info += f" - model 1: {m1_predict} - model 2: {m2_predict}\n"
+        
         open('models/tf_model_results.txt', "a").write(model_info)

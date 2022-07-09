@@ -11,25 +11,30 @@ import numpy as np
 import tensorflow as tf
 import pandas as pd
 
+# PullNotes().pull_old_meal_notes() # NS Notes doesn't have carb entry notes from AAPS
+# select * from userEntry where note is not null and note != '' and note not like '%Additional Carbs Required%' and source not in ('ConfigBuilder', 'Automation', 'Aaps', 'Food') limit 10
+# Notes on AAPS - notes is not null and source in ('CarbsDialog', 'Exercise', 'Insulin Dialog', 'Note', 'Question', 'Wizard Dialog') and note not in ('low treatment', 'more aggressive', 'less aggressive')
 
 # GenerateSimpleData().generate_data(500)
 
-start_date_time = '6/29/22 03:10PM'
+start_date_time = '7/7/22 09:51AM'
 notes_file = PullNotes().pull_notes_to_csv(start_date_time)
 PullNotes().add_adjustment_flags('data/aiSMB_records.csv', notes_file)
 AdjustSmbs().adjust_smbs(start_date_time)
 
 # model_date = TFModel().build_tf_regression()
 # TFModel().compare_two_models('2022-6-22_15-32', model_date, 
-#     ['6/12/22 03:10AM', '6/17/22 10:20AM', '6/18/22 09:40PM', '6/19/22 04:45AM'])
-# TFModel().compare_two_models('2022-6-27_14-51', model_date, 
-#     ['6/12/22 03:10AM', '6/17/22 10:20AM', '6/18/22 09:40PM', '6/19/22 04:45AM', '6/27/22 05:25PM', '6/28/22 07:21PM'])
+#     ['6/12/22 03:10AM', '6/17/22 10:20AM', '6/18/22 09:40PM', '6/19/22 04:45AM', '6/27/22 05:25PM', '6/28/22 07:21PM', '7/2/22 02:26AM', '7/6/22 03:11AM', '7/7/22 09:51AM'])
+# TFModel().compare_two_models('2022-7-6_13-24', model_date, 
+#     ['6/12/22 03:10AM', '6/17/22 10:20AM', '6/18/22 09:40PM', '6/19/22 04:45AM', '6/27/22 05:25PM', '6/28/22 07:21PM', '7/2/22 02:26AM', '7/6/22 03:11AM', '7/7/22 09:51AM'])
 
 # TFModel().compare_two_models('2022-6-11_21-18', '2022-6-12_8-10', '6/12/22 03:10AM')
 # TFModel().compare_two_models('2022-6-18_0-31', '2022-6-19_7-28', '6/17/22 10:20AM')
 
 # LstmModel().build_lstm_model() # currently only gets .08 loss - so worse than NN
 # tensorboard --logdir logs/
+
+
 
 # modelMAE = tf.keras.models.load_model('models/backup/tf_model_2022-6-7_21-23')
 # modelMSE = tf.keras.models.load_model('models/backup/tf_model_2022-6-7_13-4')
@@ -63,18 +68,21 @@ AdjustSmbs().adjust_smbs(start_date_time)
 
 
 # Notes:
-# TODO: update & leverage more TDD values
-# TODO: split data into methods
+# TODO: Populate meal tags for past meals
+# TODO: Re-train/test with meal tags & w & w/o engineered features
+# TODO: retest LSTM w/ more training
+# TODO: refactor Android code to be cleaner
 # TODO: get exercise/step count data from fit API
 ## https://github.com/android/fit-samples/blob/main/StepCounterKotlin/app/src/main/java/com/google/android/gms/fit/samples/stepcounterkotlin/MainActivity.kt
 ## credentials id - 564617406014-8kkm14657o81ancp2okpo9oga0078v2j.apps.googleusercontent.com
-# TODO: meal tags
 # TODO: extended high, low earlier today
 # TODO: sensor age, site age, site placement
 # TODO: measure & optimize model for battery/app
     # https://www.tensorflow.org/model_optimization/guide/quantization/post_training
     # converter.optimizations = [tf.lite.Optimize.DEFAULT]
+# TODO: update & leverage more TDD values
 
+# DONE: log meal tags in Android
 # DONE: build LSTM model - Loss was not better than regular NN - but did better w/ more epochs, may be better w/ more data
 # https://machinelearningmastery.com/time-series-prediction-lstm-recurrent-neural-networks-python-keras/
 # https://www.youtube.com/watch?v=yWkpRdpOiPY

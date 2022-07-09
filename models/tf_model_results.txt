@@ -1362,3 +1362,355 @@ NOTES:
  ------ PREDICTIONS: 6/28/22 07:21PM - model 1: 0.062 - model 2: 0.134
  ------ ROW INFO:    smbToGive: 0.4 bg: 121 delta: 0 shortAvgDelta: -1.17 
 
+
+
+------------
+Model 2022-7-2_8-52
+5 Layers:
+    - Layer 0  - normalization_86
+    - Layer 1  - dense_282 (30)
+    - Layer 2  - dense_283 (6)
+    - Layer 3  - dense_284 (3)
+    - Layer 4  - dense_285 (1)
+Model Loss & Accuracy: 0.06289 - 0.33695 
+Number of Epochs: 10 
+Columns (38): ['hourOfDay', 'hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'targetBg', 'iob', 'cob', 'lastCarbAgeMin', 'futureCarbs', 'delta', 'shortAvgDelta', 'longAvgDelta', 'accelerating_up', 'deccelerating_up', 'accelerating_down', 'deccelerating_down', 'stable', 'tdd7Days', 'tdd7DaysPerHour', 'tddDaily', 'tddDailyPerHour', 'tdd24Hrs', 'tdd24HrsPerHour', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'sleep', 'sedentary', 'smbToGive'] 
+Training Data Size: 10595 
+Learning Rate: 0.01 
+Loss function: mean_absolute_error 
+Activation: prelu 
+    low: 0.0    low_w_iob: 0.0    normal_w_iob: 0.0    normal_wo_iob: 0.022
+    high_bg: 0.657    high_cob: 0.306    high_both: 0.838    high_both_and_rising 1.023
+    low_rising  : 0.282    normal_rising  : 0.474    high_rising  : 0.73
+    low_dropping: 0.0    normal_dropping: 0.0    high_dropping: 0.0
+
+Took 00:04:45 to train
+NOTES: 
+ ---- Model Comparison ----
+ ---- MODELS: model 1: 2022-6-22_15-32 - model 2: 2022-7-2_8-52
+ ---- EVAL LOSS:   model 1: 0.059434 - model 2: 0.053856 => -0.00558 getting better 
+
+ ------ PREDICTIONS: 6/12/22 03:10AM - model 1: 0.403 - model 2: 0.462
+ ------ ROW INFO:    smbToGive: 0.6 bg: 158 delta: 5 shortAvgDelta: 4.89 
+
+ ------ PREDICTIONS: 6/17/22 10:20AM - model 1: 0.026 - model 2: 0.113
+ ------ ROW INFO:    smbToGive: 0.0 bg: 153 delta: 1 shortAvgDelta: 2.39 
+
+ ------ PREDICTIONS: 6/18/22 09:40PM - model 1: 0.827 - model 2: 0.866
+ ------ ROW INFO:    smbToGive: 0.7 bg: 225 delta: 13 shortAvgDelta: 11.5 
+
+ ------ PREDICTIONS: 6/19/22 04:45AM - model 1: 0.408 - model 2: 0.388
+ ------ ROW INFO:    smbToGive: 0.4 bg: 213 delta: 5 shortAvgDelta: 4.5 
+
+ ------ PREDICTIONS: 6/27/22 05:25PM - model 1: 0.602 - model 2: 0.623
+ ------ ROW INFO:    smbToGive: 1.75 bg: 93 delta: 7 shortAvgDelta: 6.39 
+
+ ------ PREDICTIONS: 6/28/22 07:21PM - model 1: 0.048 - model 2: 0.085
+ ------ ROW INFO:    smbToGive: 0.4 bg: 121 delta: 0 shortAvgDelta: -1.17 
+
+ ------ PREDICTIONS: 7/2/22 02:26AM - model 1: 0.068 - model 2: 0.048
+ ------ ROW INFO:    smbToGive: 0.1 bg: 120 delta: 1 shortAvgDelta: 0.61 
+
+ ---- Model Comparison ----
+ ---- MODELS: model 1: 2022-6-27_14-51 - model 2: 2022-7-2_8-52
+ ---- EVAL LOSS:   model 1: 0.057261 - model 2: 0.053856 => -0.0034 getting better 
+
+ ------ PREDICTIONS: 6/12/22 03:10AM - model 1: 0.395 - model 2: 0.462
+ ------ ROW INFO:    smbToGive: 0.6 bg: 158 delta: 5 shortAvgDelta: 4.89 
+
+ ------ PREDICTIONS: 6/17/22 10:20AM - model 1: 0.033 - model 2: 0.113
+ ------ ROW INFO:    smbToGive: 0.0 bg: 153 delta: 1 shortAvgDelta: 2.39 
+
+ ------ PREDICTIONS: 6/18/22 09:40PM - model 1: 0.803 - model 2: 0.866
+ ------ ROW INFO:    smbToGive: 0.7 bg: 225 delta: 13 shortAvgDelta: 11.5 
+
+ ------ PREDICTIONS: 6/19/22 04:45AM - model 1: 0.43 - model 2: 0.388
+ ------ ROW INFO:    smbToGive: 0.4 bg: 213 delta: 5 shortAvgDelta: 4.5 
+
+ ------ PREDICTIONS: 6/27/22 05:25PM - model 1: 0.556 - model 2: 0.623
+ ------ ROW INFO:    smbToGive: 1.75 bg: 93 delta: 7 shortAvgDelta: 6.39 
+
+ ------ PREDICTIONS: 6/28/22 07:21PM - model 1: 0.062 - model 2: 0.085
+ ------ ROW INFO:    smbToGive: 0.4 bg: 121 delta: 0 shortAvgDelta: -1.17 
+
+ ------ PREDICTIONS: 7/2/22 02:26AM - model 1: 0.032 - model 2: 0.048
+ ------ ROW INFO:    smbToGive: 0.1 bg: 120 delta: 1 shortAvgDelta: 0.61 
+
+
+
+------------
+Model 2022-7-5_10-35
+4 Layers:
+    - Layer 0  - normalization_96
+    - Layer 1  - dense_312 (35)
+    - Layer 2  - dense_313 (3)
+    - Layer 3  - dense_314 (1)
+Model Loss & Accuracy: 0.06123 - 0.34701 
+Number of Epochs: 10 
+Columns (38): ['hourOfDay', 'hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'targetBg', 'iob', 'cob', 'lastCarbAgeMin', 'futureCarbs', 'delta', 'shortAvgDelta', 'longAvgDelta', 'accelerating_up', 'deccelerating_up', 'accelerating_down', 'deccelerating_down', 'stable', 'tdd7Days', 'tdd7DaysPerHour', 'tddDaily', 'tddDailyPerHour', 'tdd24Hrs', 'tdd24HrsPerHour', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'sleep', 'sedentary', 'smbToGive'] 
+Training Data Size: 11456 
+Learning Rate: 0.01 
+Loss function: mean_absolute_error 
+Activation: prelu 
+    low: -0.001    low_w_iob: -0.001    normal_w_iob: 0.04    normal_wo_iob: 0.073
+    high_bg: 0.666    high_cob: 0.353    high_both: 0.829    high_both_and_rising 0.992
+    low_rising  : 0.372    normal_rising  : 0.52    high_rising  : 0.712
+    low_dropping: -0.002    normal_dropping: -0.001    high_dropping: -0.0
+
+Took 00:07:44 to train
+NOTES: 
+ ---- Model Comparison ----
+ ---- MODELS: model 1: 2022-6-22_15-32 - model 2: 2022-7-5_10-35
+ ---- EVAL LOSS:   model 1: 0.060578 - model 2: 0.053761 => -0.00682 getting better 
+
+ ------ PREDICTIONS: 6/12/22 03:10AM - model 1: 0.403 - model 2: 0.276
+ ------ ROW INFO:    smbToGive: 0.6 bg: 158 delta: 5 shortAvgDelta: 4.89 
+
+ ------ PREDICTIONS: 6/17/22 10:20AM - model 1: 0.026 - model 2: 0.064
+ ------ ROW INFO:    smbToGive: 0.0 bg: 153 delta: 1 shortAvgDelta: 2.39 
+
+ ------ PREDICTIONS: 6/18/22 09:40PM - model 1: 0.827 - model 2: 0.675
+ ------ ROW INFO:    smbToGive: 0.7 bg: 225 delta: 13 shortAvgDelta: 11.5 
+
+ ------ PREDICTIONS: 6/19/22 04:45AM - model 1: 0.408 - model 2: 0.39
+ ------ ROW INFO:    smbToGive: 0.4 bg: 213 delta: 5 shortAvgDelta: 4.5 
+
+ ------ PREDICTIONS: 6/27/22 05:25PM - model 1: 0.602 - model 2: 0.922
+ ------ ROW INFO:    smbToGive: 1.75 bg: 93 delta: 7 shortAvgDelta: 6.39 
+
+ ------ PREDICTIONS: 6/28/22 07:21PM - model 1: 0.048 - model 2: 0.139
+ ------ ROW INFO:    smbToGive: 0.4 bg: 121 delta: 0 shortAvgDelta: -1.17 
+
+ ------ PREDICTIONS: 7/2/22 02:26AM - model 1: 0.068 - model 2: 0.076
+ ------ ROW INFO:    smbToGive: 0.1 bg: 120 delta: 1 shortAvgDelta: 0.61 
+
+ ---- Model Comparison ----
+ ---- MODELS: model 1: 2022-7-2_8-52 - model 2: 2022-7-5_10-35
+ ---- EVAL LOSS:   model 1: 0.054413 - model 2: 0.053761 => -0.00065 getting better 
+
+ ------ PREDICTIONS: 6/12/22 03:10AM - model 1: 0.462 - model 2: 0.276
+ ------ ROW INFO:    smbToGive: 0.6 bg: 158 delta: 5 shortAvgDelta: 4.89 
+
+ ------ PREDICTIONS: 6/17/22 10:20AM - model 1: 0.113 - model 2: 0.064
+ ------ ROW INFO:    smbToGive: 0.0 bg: 153 delta: 1 shortAvgDelta: 2.39 
+
+ ------ PREDICTIONS: 6/18/22 09:40PM - model 1: 0.866 - model 2: 0.675
+ ------ ROW INFO:    smbToGive: 0.7 bg: 225 delta: 13 shortAvgDelta: 11.5 
+
+ ------ PREDICTIONS: 6/19/22 04:45AM - model 1: 0.388 - model 2: 0.39
+ ------ ROW INFO:    smbToGive: 0.4 bg: 213 delta: 5 shortAvgDelta: 4.5 
+
+ ------ PREDICTIONS: 6/27/22 05:25PM - model 1: 0.623 - model 2: 0.922
+ ------ ROW INFO:    smbToGive: 1.75 bg: 93 delta: 7 shortAvgDelta: 6.39 
+
+ ------ PREDICTIONS: 6/28/22 07:21PM - model 1: 0.085 - model 2: 0.139
+ ------ ROW INFO:    smbToGive: 0.4 bg: 121 delta: 0 shortAvgDelta: -1.17 
+
+ ------ PREDICTIONS: 7/2/22 02:26AM - model 1: 0.048 - model 2: 0.076
+ ------ ROW INFO:    smbToGive: 0.1 bg: 120 delta: 1 shortAvgDelta: 0.61 
+
+
+
+------------
+Model 2022-7-6_12-8
+6 Layers:
+    - Layer 0  - normalization_89
+    - Layer 1  - dense_295 (30)
+    - Layer 2  - dense_296 (6)
+    - Layer 3  - dense_297 (6)
+    - Layer 4  - dense_298 (6)
+    - Layer 5  - dense_299 (1)
+Model Loss & Accuracy: 0.06209 - 0.34208 
+Number of Epochs: 10 
+Columns (38): ['hourOfDay', 'hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'targetBg', 'iob', 'cob', 'lastCarbAgeMin', 'futureCarbs', 'delta', 'shortAvgDelta', 'longAvgDelta', 'accelerating_up', 'deccelerating_up', 'accelerating_down', 'deccelerating_down', 'stable', 'tdd7Days', 'tdd7DaysPerHour', 'tddDaily', 'tddDailyPerHour', 'tdd24Hrs', 'tdd24HrsPerHour', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'sleep', 'sedentary', 'smbToGive'] 
+Training Data Size: 11810 
+Learning Rate: 0.01 
+Loss function: mean_absolute_error 
+Activation: prelu 
+    low: 0.001    low_w_iob: 0.001    normal_w_iob: 0.002    normal_wo_iob: 0.033
+    high_bg: 0.611    high_cob: 0.276    high_both: 0.81    high_both_and_rising 0.953
+    low_rising  : 0.306    normal_rising  : 0.445    high_rising  : 0.711
+    low_dropping: 0.001    normal_dropping: 0.001    high_dropping: 0.068
+
+Took 00:08:02 to train
+NOTES: 
+ ---- Model Comparison ----
+ ---- MODELS: model 1: 2022-6-22_15-32 - model 2: 2022-7-6_12-8
+ ---- EVAL LOSS:   model 1: 0.062006 - model 2: 0.056034 => -0.00597 getting better 
+
+ ------ PREDICTIONS: 6/12/22 03:10AM - model 1: 0.403 - model 2: 0.37
+ ------ ROW INFO:    smbToGive: 0.6 bg: 158 delta: 5 shortAvgDelta: 4.89 
+
+ ------ PREDICTIONS: 6/17/22 10:20AM - model 1: 0.026 - model 2: 0.086
+ ------ ROW INFO:    smbToGive: 0.0 bg: 153 delta: 1 shortAvgDelta: 2.39 
+
+ ------ PREDICTIONS: 6/18/22 09:40PM - model 1: 0.827 - model 2: 0.72
+ ------ ROW INFO:    smbToGive: 0.7 bg: 225 delta: 13 shortAvgDelta: 11.5 
+
+ ------ PREDICTIONS: 6/19/22 04:45AM - model 1: 0.408 - model 2: 0.427
+ ------ ROW INFO:    smbToGive: 0.4 bg: 213 delta: 5 shortAvgDelta: 4.5 
+
+ ------ PREDICTIONS: 6/27/22 05:25PM - model 1: 0.602 - model 2: 0.54
+ ------ ROW INFO:    smbToGive: 1.75 bg: 93 delta: 7 shortAvgDelta: 6.39 
+
+ ------ PREDICTIONS: 6/28/22 07:21PM - model 1: 0.048 - model 2: 0.118
+ ------ ROW INFO:    smbToGive: 0.4 bg: 121 delta: 0 shortAvgDelta: -1.17 
+
+ ------ PREDICTIONS: 7/2/22 02:26AM - model 1: 0.068 - model 2: 0.055
+ ------ ROW INFO:    smbToGive: 0.1 bg: 120 delta: 1 shortAvgDelta: 0.61 
+
+ ---- Model Comparison ----
+ ---- MODELS: model 1: 2022-7-5_10-35 - model 2: 2022-7-6_12-8
+ ---- EVAL LOSS:   model 1: 0.056326 - model 2: 0.056034 => -0.00029 getting better 
+
+ ------ PREDICTIONS: 6/12/22 03:10AM - model 1: 0.276 - model 2: 0.37
+ ------ ROW INFO:    smbToGive: 0.6 bg: 158 delta: 5 shortAvgDelta: 4.89 
+
+ ------ PREDICTIONS: 6/17/22 10:20AM - model 1: 0.064 - model 2: 0.086
+ ------ ROW INFO:    smbToGive: 0.0 bg: 153 delta: 1 shortAvgDelta: 2.39 
+
+ ------ PREDICTIONS: 6/18/22 09:40PM - model 1: 0.675 - model 2: 0.72
+ ------ ROW INFO:    smbToGive: 0.7 bg: 225 delta: 13 shortAvgDelta: 11.5 
+
+ ------ PREDICTIONS: 6/19/22 04:45AM - model 1: 0.39 - model 2: 0.427
+ ------ ROW INFO:    smbToGive: 0.4 bg: 213 delta: 5 shortAvgDelta: 4.5 
+
+ ------ PREDICTIONS: 6/27/22 05:25PM - model 1: 0.922 - model 2: 0.54
+ ------ ROW INFO:    smbToGive: 1.75 bg: 93 delta: 7 shortAvgDelta: 6.39 
+
+ ------ PREDICTIONS: 6/28/22 07:21PM - model 1: 0.139 - model 2: 0.118
+ ------ ROW INFO:    smbToGive: 0.4 bg: 121 delta: 0 shortAvgDelta: -1.17 
+
+ ------ PREDICTIONS: 7/2/22 02:26AM - model 1: 0.076 - model 2: 0.055
+ ------ ROW INFO:    smbToGive: 0.1 bg: 120 delta: 1 shortAvgDelta: 0.61 
+
+
+
+------------
+Model 2022-7-6_13-24
+6 Layers:
+    - Layer 0  - normalization_69
+    - Layer 1  - dense_226 (25)
+    - Layer 2  - dense_227 (6)
+    - Layer 3  - dense_228 (3)
+    - Layer 4  - dense_229 (3)
+    - Layer 5  - dense_230 (1)
+Model Loss & Accuracy: 0.06158 - 0.34378 
+Number of Epochs: 10 
+Columns (38): ['hourOfDay', 'hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'targetBg', 'iob', 'cob', 'lastCarbAgeMin', 'futureCarbs', 'delta', 'shortAvgDelta', 'longAvgDelta', 'accelerating_up', 'deccelerating_up', 'accelerating_down', 'deccelerating_down', 'stable', 'tdd7Days', 'tdd7DaysPerHour', 'tddDaily', 'tddDailyPerHour', 'tdd24Hrs', 'tdd24HrsPerHour', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'sleep', 'sedentary', 'smbToGive'] 
+Training Data Size: 11810 
+Learning Rate: 0.01 
+Loss function: mean_absolute_error 
+Activation: prelu 
+    low: -0.0    low_w_iob: -0.0    normal_w_iob: 0.01    normal_wo_iob: 0.107
+    high_bg: 0.983    high_cob: 0.319    high_both: 1.162    high_both_and_rising 1.347
+    low_rising  : 0.503    normal_rising  : 0.649    high_rising  : 0.985
+    low_dropping: -0.0    normal_dropping: -0.0    high_dropping: -0.0
+
+Took 00:07:41 to train
+NOTES: 
+ ---- Model Comparison ----
+ ---- MODELS: model 1: 2022-6-22_15-32 - model 2: 2022-7-6_13-24
+ ---- EVAL LOSS:   model 1: 0.06257 - model 2: 0.056465 => -0.0061 getting better 
+
+ ------ PREDICTIONS: 6/12/22 03:10AM (0.6u, 158mg/dl, delta: +5, shortAvgDelta: +4.89) - model 1: 0.403 - model 2: 0.469
+ ------ ROW INFO:    smbToGive: 0.6 bg: 158 delta: 5 shortAvgDelta: 4.89 
+
+ ------ PREDICTIONS: 6/17/22 10:20AM - model 1: 0.026 - model 2: 0.102
+ ------ ROW INFO:    smbToGive: 0.0 bg: 153 delta: 1 shortAvgDelta: 2.39 
+
+ ------ PREDICTIONS: 6/18/22 09:40PM - model 1: 0.827 - model 2: 0.712
+ ------ ROW INFO:    smbToGive: 0.7 bg: 225 delta: 13 shortAvgDelta: 11.5 
+
+ ------ PREDICTIONS: 6/19/22 04:45AM - model 1: 0.408 - model 2: 0.46
+ ------ ROW INFO:    smbToGive: 0.4 bg: 213 delta: 5 shortAvgDelta: 4.5 
+
+ ------ PREDICTIONS: 6/27/22 05:25PM - model 1: 0.602 - model 2: 0.835
+ ------ ROW INFO:    smbToGive: 1.75 bg: 93 delta: 7 shortAvgDelta: 6.39 
+
+ ------ PREDICTIONS: 6/28/22 07:21PM - model 1: 0.048 - model 2: 0.124
+ ------ ROW INFO:    smbToGive: 0.4 bg: 121 delta: 0 shortAvgDelta: -1.17 
+
+ ------ PREDICTIONS: 7/2/22 02:26AM - model 1: 0.068 - model 2: 0.093
+ ------ ROW INFO:    smbToGive: 0.1 bg: 120 delta: 1 shortAvgDelta: 0.61 
+
+ ------ PREDICTIONS: 7/6/22 03:11AM - model 1: 0.213 - model 2: 0.342
+ ------ ROW INFO:    smbToGive: 0.4 bg: 230 delta: 1 shortAvgDelta: 0.11 
+
+ ---- Model Comparison ----
+ ---- MODELS: model 1: 2022-7-5_10-35 - model 2: 2022-7-6_13-24
+ ---- EVAL LOSS:   model 1: 0.056748 - model 2: 0.056465 => -0.00028 getting better 
+
+ ------ PREDICTIONS: 6/12/22 03:10AM - model 1: 0.276 - model 2: 0.469
+ ------ ROW INFO:    smbToGive: 0.6 bg: 158 delta: 5 shortAvgDelta: 4.89 
+
+ ------ PREDICTIONS: 6/17/22 10:20AM - model 1: 0.064 - model 2: 0.102
+ ------ ROW INFO:    smbToGive: 0.0 bg: 153 delta: 1 shortAvgDelta: 2.39 
+
+ ------ PREDICTIONS: 6/18/22 09:40PM - model 1: 0.675 - model 2: 0.712
+ ------ ROW INFO:    smbToGive: 0.7 bg: 225 delta: 13 shortAvgDelta: 11.5 
+
+ ------ PREDICTIONS: 6/19/22 04:45AM - model 1: 0.39 - model 2: 0.46
+ ------ ROW INFO:    smbToGive: 0.4 bg: 213 delta: 5 shortAvgDelta: 4.5 
+
+ ------ PREDICTIONS: 6/27/22 05:25PM - model 1: 0.922 - model 2: 0.835
+ ------ ROW INFO:    smbToGive: 1.75 bg: 93 delta: 7 shortAvgDelta: 6.39 
+
+ ------ PREDICTIONS: 6/28/22 07:21PM - model 1: 0.139 - model 2: 0.124
+ ------ ROW INFO:    smbToGive: 0.4 bg: 121 delta: 0 shortAvgDelta: -1.17 
+
+ ------ PREDICTIONS: 7/2/22 02:26AM - model 1: 0.076 - model 2: 0.093
+ ------ ROW INFO:    smbToGive: 0.1 bg: 120 delta: 1 shortAvgDelta: 0.61 
+
+ ------ PREDICTIONS: 7/6/22 03:11AM - model 1: 0.269 - model 2: 0.342
+ ------ ROW INFO:    smbToGive: 0.4 bg: 230 delta: 1 shortAvgDelta: 0.11 
+
+
+
+------------
+Model 2022-7-7_10-12
+4 Layers:
+    - Layer 0  - normalization_84
+    - Layer 1  - dense_276 (30)
+    - Layer 2  - dense_277 (6)
+    - Layer 3  - dense_278 (1)
+Model Loss & Accuracy: 0.06342 - 0.33842 
+Number of Epochs: 10 
+Columns (38): ['hourOfDay', 'hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'targetBg', 'iob', 'cob', 'lastCarbAgeMin', 'futureCarbs', 'delta', 'shortAvgDelta', 'longAvgDelta', 'accelerating_up', 'deccelerating_up', 'accelerating_down', 'deccelerating_down', 'stable', 'tdd7Days', 'tdd7DaysPerHour', 'tddDaily', 'tddDailyPerHour', 'tdd24Hrs', 'tdd24HrsPerHour', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'sleep', 'sedentary', 'smbToGive'] 
+Training Data Size: 12117 
+Learning Rate: 0.01 
+Loss function: mean_absolute_error 
+Activation: prelu 
+    low: 0.001    low_w_iob: 0.001    normal_w_iob: 0.001    normal_wo_iob: 0.026
+    high_bg: 0.634    high_cob: 0.217    high_both: 0.881    high_both_and_rising 1.089
+    low_rising  : 0.491    normal_rising  : 0.613    high_rising  : 0.778
+    low_dropping: 0.001    normal_dropping: 0.001    high_dropping: 0.001
+
+Took 00:08:01 to train
+NOTES: 
+ ---- Model Comparison ----
+ ---- MODELS: model 1: 2022-6-22_15-32 - model 2: 2022-7-7_10-12
+ ---- EVAL LOSS:   model 1: 0.06363 - model 2: 0.055393 => -0.00824 getting better 
+
+ ------ PREDICTIONS: 6/12/22 03:10AM (0.6u, 158mg/dL, delta: 5, shortAvgDelta: 4.89) - model 1: 0.403 - model 2: 0.394
+ ------ PREDICTIONS: 6/17/22 10:20AM (0.0u, 153mg/dL, delta: 1, shortAvgDelta: 2.39) - model 1: 0.026 - model 2: 0.162
+ ------ PREDICTIONS: 6/18/22 09:40PM (0.7u, 225mg/dL, delta: 13, shortAvgDelta: 11.5) - model 1: 0.827 - model 2: 0.838
+ ------ PREDICTIONS: 6/19/22 04:45AM (0.4u, 213mg/dL, delta: 5, shortAvgDelta: 4.5) - model 1: 0.408 - model 2: 0.438
+ ------ PREDICTIONS: 6/27/22 05:25PM (1.75u, 93mg/dL, delta: 7, shortAvgDelta: 6.39) - model 1: 0.602 - model 2: 0.993
+ ------ PREDICTIONS: 6/28/22 07:21PM (0.4u, 121mg/dL, delta: 0, shortAvgDelta: -1.17) - model 1: 0.048 - model 2: 0.15
+ ------ PREDICTIONS: 7/2/22 02:26AM (0.1u, 120mg/dL, delta: 1, shortAvgDelta: 0.61) - model 1: 0.068 - model 2: 0.071
+ ------ PREDICTIONS: 7/6/22 03:11AM (0.4u, 230mg/dL, delta: 1, shortAvgDelta: 0.11) - model 1: 0.213 - model 2: 0.323
+ ------ PREDICTIONS: 7/7/22 09:51AM (0.35u, 190mg/dL, delta: 3, shortAvgDelta: 2.22) - model 1: 0.271 - model 2: 0.283
+ ---- Model Comparison ----
+ ---- MODELS: model 1: 2022-7-6_13-24 - model 2: 2022-7-7_10-12
+ ---- EVAL LOSS:   model 1: 0.056915 - model 2: 0.055393 => -0.00152 getting better 
+
+ ------ PREDICTIONS: 6/12/22 03:10AM (0.6u, 158mg/dL, delta: 5, shortAvgDelta: 4.89) - model 1: 0.469 - model 2: 0.394
+ ------ PREDICTIONS: 6/17/22 10:20AM (0.0u, 153mg/dL, delta: 1, shortAvgDelta: 2.39) - model 1: 0.102 - model 2: 0.162
+ ------ PREDICTIONS: 6/18/22 09:40PM (0.7u, 225mg/dL, delta: 13, shortAvgDelta: 11.5) - model 1: 0.712 - model 2: 0.838
+ ------ PREDICTIONS: 6/19/22 04:45AM (0.4u, 213mg/dL, delta: 5, shortAvgDelta: 4.5) - model 1: 0.46 - model 2: 0.438
+ ------ PREDICTIONS: 6/27/22 05:25PM (1.75u, 93mg/dL, delta: 7, shortAvgDelta: 6.39) - model 1: 0.835 - model 2: 0.993
+ ------ PREDICTIONS: 6/28/22 07:21PM (0.4u, 121mg/dL, delta: 0, shortAvgDelta: -1.17) - model 1: 0.124 - model 2: 0.15
+ ------ PREDICTIONS: 7/2/22 02:26AM (0.1u, 120mg/dL, delta: 1, shortAvgDelta: 0.61) - model 1: 0.093 - model 2: 0.071
+ ------ PREDICTIONS: 7/6/22 03:11AM (0.4u, 230mg/dL, delta: 1, shortAvgDelta: 0.11) - model 1: 0.342 - model 2: 0.323
+ ------ PREDICTIONS: 7/7/22 09:51AM (0.35u, 190mg/dL, delta: 3, shortAvgDelta: 2.22) - model 1: 0.245 - model 2: 0.283
