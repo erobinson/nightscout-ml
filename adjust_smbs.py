@@ -50,7 +50,8 @@ class AdjustSmbs(NightscoutMlBase):
 
     def adjust_for_lows(self, index, row, df):
         # if low, calculate insulin suplus (delta/isf) - go back 30+ min & delete
-        if row['bg'] < (row['targetBg']-20) and row['delta'] < 0:
+        min_bg = row['targetBg']-20 if row['targetBg'] >= 95 else 75
+        if row['bg'] < min_bg and row['delta'] < 0:
             u_to_remove = self.u_to_adjust_based_on_delta(row)
             self.remove_prior_insulin(index, row, df, u_to_remove)
         
@@ -81,8 +82,10 @@ class AdjustSmbs(NightscoutMlBase):
             upcoming_low = self.check_for_upcoming_low(i, df_last_hour)
             # don't add if old date
             out_dated = self.str_to_time(recent_row['dateStr']) < min_date
+            # don't add if dropping fast
+            dropping_fast = recent_row['delta'] < -5
 
-            if not more_carbs_added_later and not upcoming_low and not out_dated:
+            if not more_carbs_added_later and not upcoming_low and not out_dated and not dropping_fast:
                 current_smb = recent_row['smbToGive']
                 if u_to_add + current_smb < self.max_smb:
                     df.at[i, 'smbToGive'] = current_smb + u_to_add
