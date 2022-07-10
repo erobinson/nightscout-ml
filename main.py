@@ -11,16 +11,13 @@ import numpy as np
 import tensorflow as tf
 import pandas as pd
 
-# PullNotes().pull_old_meal_notes() # NS Notes doesn't have carb entry notes from AAPS
-# select * from userEntry where note is not null and note != '' and note not like '%Additional Carbs Required%' and source not in ('ConfigBuilder', 'Automation', 'Aaps', 'Food') limit 10
-# Notes on AAPS - notes is not null and source in ('CarbsDialog', 'Exercise', 'Insulin Dialog', 'Note', 'Question', 'Wizard Dialog') and note not in ('low treatment', 'more aggressive', 'less aggressive')
 
-# GenerateSimpleData().generate_data(500)
 
-start_date_time = '7/7/22 09:51AM'
-notes_file = PullNotes().pull_notes_to_csv(start_date_time)
-PullNotes().add_adjustment_flags('data/aiSMB_records.csv', notes_file)
-AdjustSmbs().adjust_smbs(start_date_time)
+
+# start_date_time = '7/7/22 09:51AM'
+# notes_file = PullNotes().pull_notes_to_csv(start_date_time)
+# PullNotes().add_adjustment_flags('data/aiSMB_records.csv', notes_file)
+# AdjustSmbs().adjust_smbs(start_date_time)
 
 # model_date = TFModel().build_tf_regression()
 # TFModel().compare_two_models('2022-6-22_15-32', model_date, 
@@ -36,39 +33,7 @@ AdjustSmbs().adjust_smbs(start_date_time)
 
 
 
-# modelMAE = tf.keras.models.load_model('models/backup/tf_model_2022-6-7_21-23')
-# modelMSE = tf.keras.models.load_model('models/backup/tf_model_2022-6-7_13-4')
-# bg = 120
-# cob = 60
-# last_cob_min = 5
-# delta = 4
-# shortDelta = 1
-# longDelta = 1
-# stable = 1
-# accelerating_up = 0
-# deccelerating_up = 0
-# accelerating_down = 0
-# deccelerating_down = 0
-# values = [11,0,0,0, 1,0,0, 0,0,0, 
-#                     bg,100,1,cob,last_cob_min,0,delta,shortDelta,longDelta,
-#                     accelerating_up, deccelerating_up, accelerating_down, deccelerating_down, stable, 
-#                     33,33,1,33, 
-#                     0,0,0, 0,0,
-#                     0,1]
-# maeVal = modelMAE.predict([values])[0][0]
-# mseVal = modelMSE.predict([values])[0][0]
-# print(f"MAE: {maeVal}  MSE: {mseVal}")
-
-# "hourOfDay","hour0_2","hour3_5","hour6_8", "hour9_11","hour12_14","hour15_17", "hour18_20","hour21_23","weekend",
-# "bg","targetBg","iob","cob","lastCarbAgeMin","futureCarbs","delta","shortAvgDelta","longAvgDelta",
-# "accelerating_up","deccelerating_up","accelerating_down","deccelerating_down","stable",
-# "tdd7Days","tddDaily","tddPerHour","tdd24Hrs",
-# "recentSteps5Minutes","recentSteps10Minutes","recentSteps15Minutes", "recentSteps30Minutes","recentSteps60Minutes",
-# "sleep","sedintary",
-
-
 # Notes:
-# TODO: Populate meal tags for past meals
 # TODO: Re-train/test with meal tags & w & w/o engineered features
 # TODO: retest LSTM w/ more training
 # TODO: refactor Android code to be cleaner
@@ -82,6 +47,14 @@ AdjustSmbs().adjust_smbs(start_date_time)
     # converter.optimizations = [tf.lite.Optimize.DEFAULT]
 # TODO: update & leverage more TDD values
 
+
+# PullNotes().pull_old_meal_notes() # NS Notes doesn't have carb entry notes from AAPS
+# select * from userEntry where note is not null and note != '' and note not like '%Additional Carbs Required%' and source not in ('ConfigBuilder', 'Automation', 'Aaps', 'Food') limit 10
+# Notes on AAPS - notes is not null and source in ('CarbsDialog', 'Exercise', 'Insulin Dialog', 'Note', 'Question', 'Wizard Dialog') and note not in ('low treatment', 'more aggressive', 'less aggressive')
+
+# GenerateSimpleData().generate_data(500)
+
+# DONE: Populate meal tags for past meals - PullNotes().temp_add_tags()
 # DONE: log meal tags in Android
 # DONE: build LSTM model - Loss was not better than regular NN - but did better w/ more epochs, may be better w/ more data
 # https://machinelearningmastery.com/time-series-prediction-lstm-recurrent-neural-networks-python-keras/
