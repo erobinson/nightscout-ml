@@ -67,11 +67,11 @@ class TFModel(NightscoutMlBase):
         learning_rates = [.01]
 
         for dropout_rate_l1 in range(0, 6, 8):
-            for num_hidden_nodes_l1 in range(10, 36, 5):
+            for num_hidden_nodes_l1 in range(10, 36, 8):
                 for dropout_rate_l2 in range(0, 6, 8):
-                    for num_hidden_nodes_l2 in range(0, 8, 3):
+                    for num_hidden_nodes_l2 in range(0, 8, 5):
                         for num_hidden_nodes_l3 in range(0, 8, 3):
-                            for num_hidden_nodes_l4 in range(0, 4, 3):
+                            for num_hidden_nodes_l4 in range(0, 4, 5):
                                 for num_epochs in range(10, 11, 3):
                                     for loss_function in loss_functions:
                                         for last_activation in last_activation_functions:

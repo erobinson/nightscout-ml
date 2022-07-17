@@ -48,7 +48,10 @@ class PullNotes(NightscoutMlBase):
 
         for index, row in notes_pd.iterrows():
             note_date = self.str_to_time(row['dateStr'])
-            column = 'low_treatment' if 'low' in row['note'].lower() else 'more_aggressive'
+            lower = 'low treatment' in row['note'].lower() or \
+                    'too aggressive' in row['note'].lower() or \
+                    'less aggressive' in row['note'].lower()
+            column = 'low_treatment' if lower else 'more_aggressive'
             self.apply_adjustment_flags_to_row(aismb_df, note_date, column)
 
         aismb_df.to_csv(aismb_records_file_str, index=False)
@@ -57,7 +60,7 @@ class PullNotes(NightscoutMlBase):
         # search for multiple lines to find an existing matching timestamp
         row_to_update_index = self.find_row_index_for_date(aismb_df, note_date)
         if row_to_update_index is not None and row_to_update_index != -1:
-            aismb_df.loc[aismb_df.iloc[row_to_update_index], column] = 1
+            aismb_df.loc[row_to_update_index, column] = 1
         # for offset in range(10):
         #     note_date_plus_offset = note_date + timedelta(minutes=offset)
         #     note_date_str = self.time_to_str(note_date_plus_offset)

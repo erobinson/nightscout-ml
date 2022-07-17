@@ -14,7 +14,7 @@ import pandas as pd
 
 
 
-# start_date_time = '7/7/22 09:51AM'
+# start_date_time = '7/9/22 10:16PM'
 # notes_file = PullNotes().pull_notes_to_csv(start_date_time)
 # PullNotes().add_adjustment_flags('data/aiSMB_records.csv', notes_file)
 # AdjustSmbs().adjust_smbs(start_date_time)
@@ -22,7 +22,7 @@ import pandas as pd
 # model_date = TFModel().build_tf_regression()
 # TFModel().compare_two_models('2022-6-22_15-32', model_date, 
 #     ['6/12/22 03:10AM', '6/17/22 10:20AM', '6/18/22 09:40PM', '6/19/22 04:45AM', '6/27/22 05:25PM', '6/28/22 07:21PM', '7/2/22 02:26AM', '7/6/22 03:11AM', '7/7/22 09:51AM'])
-# TFModel().compare_two_models('2022-7-6_13-24', model_date, 
+# TFModel().compare_two_models('2022-7-7_10-12', model_date, 
 #     ['6/12/22 03:10AM', '6/17/22 10:20AM', '6/18/22 09:40PM', '6/19/22 04:45AM', '6/27/22 05:25PM', '6/28/22 07:21PM', '7/2/22 02:26AM', '7/6/22 03:11AM', '7/7/22 09:51AM'])
 
 # TFModel().compare_two_models('2022-6-11_21-18', '2022-6-12_8-10', '6/12/22 03:10AM')
@@ -34,9 +34,9 @@ import pandas as pd
 
 
 # Notes:
-# TODO: Re-train/test with meal tags & w & w/o engineered features
+# TODO: Re-train/test with meal tags & w & w/o engineered features - HPARAMS for columns
 # TODO: retest LSTM w/ more training
-# TODO: refactor Android code to be cleaner
+# TODO: refactor Android code to be cleaner - split factors into methods
 # TODO: get exercise/step count data from fit API
 ## https://github.com/android/fit-samples/blob/main/StepCounterKotlin/app/src/main/java/com/google/android/gms/fit/samples/stepcounterkotlin/MainActivity.kt
 ## credentials id - 564617406014-8kkm14657o81ancp2okpo9oga0078v2j.apps.googleusercontent.com
@@ -45,7 +45,7 @@ import pandas as pd
 # TODO: measure & optimize model for battery/app
     # https://www.tensorflow.org/model_optimization/guide/quantization/post_training
     # converter.optimizations = [tf.lite.Optimize.DEFAULT]
-# TODO: update & leverage more TDD values
+# TODO: update & leverage more TDD values - added 2 days - possibly add recent hours
 
 
 # PullNotes().pull_old_meal_notes() # NS Notes doesn't have carb entry notes from AAPS

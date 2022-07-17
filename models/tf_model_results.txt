@@ -1687,7 +1687,7 @@ Activation: prelu
     low_dropping: 0.001    normal_dropping: 0.001    high_dropping: 0.001
 
 Took 00:08:01 to train
-NOTES: 
+NOTES: So so - too aggressive when better sensitiviy, not aggressive enough on slow weekend
  ---- Model Comparison ----
  ---- MODELS: model 1: 2022-6-22_15-32 - model 2: 2022-7-7_10-12
  ---- EVAL LOSS:   model 1: 0.06363 - model 2: 0.055393 => -0.00824 getting better 
@@ -1714,3 +1714,56 @@ NOTES:
  ------ PREDICTIONS: 7/2/22 02:26AM (0.1u, 120mg/dL, delta: 1, shortAvgDelta: 0.61) - model 1: 0.093 - model 2: 0.071
  ------ PREDICTIONS: 7/6/22 03:11AM (0.4u, 230mg/dL, delta: 1, shortAvgDelta: 0.11) - model 1: 0.342 - model 2: 0.323
  ------ PREDICTIONS: 7/7/22 09:51AM (0.35u, 190mg/dL, delta: 3, shortAvgDelta: 2.22) - model 1: 0.245 - model 2: 0.283
+
+
+
+
+
+------------
+Model 2022-7-16_23-5
+5 Layers:
+    - Layer 0  - normalization_22
+    - Layer 1  - dense_60 (34)
+    - Layer 2  - dense_61 (5)
+    - Layer 3  - dense_62 (3)
+    - Layer 4  - dense_63 (1)
+Model Loss & Accuracy: 0.05905 - 0.34323 
+Number of Epochs: 10 
+Columns (38): ['hourOfDay', 'hour0_2', 'hour3_5', 'hour6_8', 'hour9_11', 'hour12_14', 'hour15_17', 'hour18_20', 'hour21_23', 'weekend', 'bg', 'targetBg', 'iob', 'cob', 'lastCarbAgeMin', 'futureCarbs', 'delta', 'shortAvgDelta', 'longAvgDelta', 'accelerating_up', 'deccelerating_up', 'accelerating_down', 'deccelerating_down', 'stable', 'tdd7Days', 'tdd7DaysPerHour', 'tddDaily', 'tddDailyPerHour', 'tdd24Hrs', 'tdd24HrsPerHour', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'sleep', 'sedentary', 'smbToGive'] 
+Training Data Size: 14991 
+Learning Rate: 0.01 
+Loss function: mean_absolute_error 
+Activation: prelu 
+    low: 0.003    low_w_iob: 0.003    normal_w_iob: 0.075    normal_wo_iob: 0.131
+    high_bg: 0.642    high_cob: 0.413    high_both: 0.798    high_both_and_rising 0.981
+    low_rising  : 0.474    normal_rising  : 0.56    high_rising  : 0.767
+    low_dropping: 0.003    normal_dropping: 0.003    high_dropping: 0.003
+
+Took 00:01:37 to train
+NOTES: 
+ ---- Model Comparison ----
+ ---- MODELS: model 1: 2022-6-22_15-32 - model 2: 2022-7-16_23-5
+ ---- EVAL LOSS:   model 1: 0.064277 - model 2: 0.053945 => -0.01033 getting better 
+
+ ------ PREDICTIONS: 6/12/22 03:10AM (0.6u, 158mg/dL, delta: 5, shortAvgDelta: 4.89) - model 1: 0.403 - model 2: 0.379
+ ------ PREDICTIONS: 6/17/22 10:20AM (0.0u, 153mg/dL, delta: 1, shortAvgDelta: 2.39) - model 1: 0.026 - model 2: 0.159
+ ------ PREDICTIONS: 6/18/22 09:40PM (0.7u, 225mg/dL, delta: 13, shortAvgDelta: 11.5) - model 1: 0.827 - model 2: 0.774
+ ------ PREDICTIONS: 6/19/22 04:45AM (0.4u, 213mg/dL, delta: 5, shortAvgDelta: 4.5) - model 1: 0.408 - model 2: 0.476
+ ------ PREDICTIONS: 6/27/22 05:25PM (1.75u, 93mg/dL, delta: 7, shortAvgDelta: 6.39) - model 1: 0.602 - model 2: 0.804
+ ------ PREDICTIONS: 6/28/22 07:21PM (0.4u, 121mg/dL, delta: 0, shortAvgDelta: -1.17) - model 1: 0.048 - model 2: 0.122
+ ------ PREDICTIONS: 7/2/22 02:26AM (0.1u, 120mg/dL, delta: 1, shortAvgDelta: 0.61) - model 1: 0.068 - model 2: 0.075
+ ------ PREDICTIONS: 7/6/22 03:11AM (0.4u, 230mg/dL, delta: 1, shortAvgDelta: 0.11) - model 1: 0.213 - model 2: 0.369
+ ------ PREDICTIONS: 7/7/22 09:51AM (0.25u, 190mg/dL, delta: 3, shortAvgDelta: 2.22) - model 1: 0.271 - model 2: 0.274
+ ---- Model Comparison ----
+ ---- MODELS: model 1: 2022-7-7_10-12 - model 2: 2022-7-16_23-5
+ ---- EVAL LOSS:   model 1: 0.054783 - model 2: 0.053945 => -0.00084 getting better 
+
+ ------ PREDICTIONS: 6/12/22 03:10AM (0.6u, 158mg/dL, delta: 5, shortAvgDelta: 4.89) - model 1: 0.394 - model 2: 0.379
+ ------ PREDICTIONS: 6/17/22 10:20AM (0.0u, 153mg/dL, delta: 1, shortAvgDelta: 2.39) - model 1: 0.162 - model 2: 0.159
+ ------ PREDICTIONS: 6/18/22 09:40PM (0.7u, 225mg/dL, delta: 13, shortAvgDelta: 11.5) - model 1: 0.838 - model 2: 0.774
+ ------ PREDICTIONS: 6/19/22 04:45AM (0.4u, 213mg/dL, delta: 5, shortAvgDelta: 4.5) - model 1: 0.438 - model 2: 0.476
+ ------ PREDICTIONS: 6/27/22 05:25PM (1.75u, 93mg/dL, delta: 7, shortAvgDelta: 6.39) - model 1: 0.993 - model 2: 0.804
+ ------ PREDICTIONS: 6/28/22 07:21PM (0.4u, 121mg/dL, delta: 0, shortAvgDelta: -1.17) - model 1: 0.15 - model 2: 0.122
+ ------ PREDICTIONS: 7/2/22 02:26AM (0.1u, 120mg/dL, delta: 1, shortAvgDelta: 0.61) - model 1: 0.071 - model 2: 0.075
+ ------ PREDICTIONS: 7/6/22 03:11AM (0.4u, 230mg/dL, delta: 1, shortAvgDelta: 0.11) - model 1: 0.323 - model 2: 0.369
+ ------ PREDICTIONS: 7/7/22 09:51AM (0.25u, 190mg/dL, delta: 3, shortAvgDelta: 2.22) - model 1: 0.283 - model 2: 0.274
