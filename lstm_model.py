@@ -26,8 +26,6 @@ class LstmModel(NightscoutMlBase):
                     "sleep","sedentary",
                     "smbToGive"]
 
-    log_folder = 'logs'
-
     # HP_WINDOW_LEN = hp.HParam('window_len', hp.Discrete([6, 12, 18, 24]))
     HP_WINDOW_LEN = hp.HParam('window_len', hp.Discrete([6]))
     HP_NUM_NODES_L1 = hp.HParam('num_nodes_l1', hp.Discrete([37, 100]))
@@ -47,12 +45,6 @@ class LstmModel(NightscoutMlBase):
 
         df = pd.read_excel('data.xlsx','training_data')
         df = self.normalize(df)
-
-        # print(df.describe().transpose())
-
-        
-
-        # self.load_tensorboard()
 
         with tf.summary.create_file_writer(f'{self.log_folder}/hparam_tuning').as_default():
             hp.hparams_config(
@@ -207,11 +199,6 @@ class LstmModel(NightscoutMlBase):
         assert len(a) == len(b)
         p = np.random.permutation(len(b))
         return a[p], b[p]
-
-    def clear_log_folder(self):
-        if os.path.exists(self.log_folder):
-            shutil.rmtree(self.log_folder)
-        os.mkdir(self.log_folder)
 
     def load_tensorboard(self):
         tracking_address = self.log_folder # the path of your log file.

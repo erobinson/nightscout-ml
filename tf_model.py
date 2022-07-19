@@ -7,6 +7,8 @@ from datetime import datetime
 from tensorflow.keras import layers
 from tensorflow.keras.layers import PReLU
 import time
+from tensorboard.plugins.hparams import api as hp
+from tensorboard import program
 
 
 class TFModel(NightscoutMlBase):
@@ -14,27 +16,53 @@ class TFModel(NightscoutMlBase):
     now = datetime.now()
     date_str = "{}-{}-{}_{}-{}".format(now.year, now.month, now.day, now.hour, now.minute)
 
-    current_cols = [
-                    "hourOfDay","hour0_2","hour3_5","hour6_8","hour9_11","hour12_14","hour15_17","hour18_20","hour21_23","weekend",
+    hour_breakdowns = ["hour0_2","hour3_5","hour6_8","hour9_11","hour12_14","hour15_17","hour18_20","hour21_23"]
+    accellerating = ["accelerating_up","deccelerating_up","accelerating_down","deccelerating_down","stable"]
+    recent_steps = ["recentSteps5Minutes","recentSteps10Minutes","recentSteps15Minutes","recentSteps30Minutes","recentSteps60Minutes"]
+    sleep_seated = ["sleep","sedentary"]
+    tdd = ["tdd7Days","tddDaily","tdd24Hrs"]
+    tddPerHour = ["tdd7DaysPerHour","tddDailyPerHour","tdd24HrsPerHour"]
+    base_cols = ["hourOfDay","weekend",
                     "bg","targetBg","iob","cob","lastCarbAgeMin","futureCarbs","delta","shortAvgDelta","longAvgDelta",
-                    "accelerating_up","deccelerating_up","accelerating_down","deccelerating_down","stable",
-                    "tdd7Days","tdd7DaysPerHour","tddDaily","tddDailyPerHour","tdd24Hrs","tdd24HrsPerHour",
-                    "recentSteps5Minutes","recentSteps10Minutes","recentSteps15Minutes","recentSteps30Minutes","recentSteps60Minutes",
-                    "sleep","sedentary",
                     "smbToGive"]
 
-    def build_tf_regression(self):
-        # https://www.tensorflow.org/tutorials/keras/regression#regression_with_a_deep_neural_network_dnn
-        # df = pd.read_csv('aiSMB_records_adjusted.csv')
-        df = pd.read_excel('data.xlsx','training_data')
- 
-        # df_gen = pd.read_csv(self.data_folder+'/simple_data_generated.csv')
-        # df = pd.concat([df, df_gen])
-        # df = df_gen
+    col_map = {
+        'base': base_cols,
+        # 'base_tags': base_cols,
+        'base_tdd': base_cols+tdd,
+        'base_tddPerhour': base_cols+tddPerHour,
+        'base_tdd_tddPerHour': base_cols+tdd+tddPerHour,
+        'base_recentSteps': base_cols+recent_steps,
+        'base_sleepSeated': base_cols+sleep_seated,
+        'base_recentSteps_sleepSeated': base_cols+recent_steps+sleep_seated,
+        'base_accellerating': base_cols+accellerating,
+        'base_hour_breakdowns': base_cols+hour_breakdowns
+    }
 
-        
-        df = df[self.current_cols]
-        
+    HP_COLS = hp.HParam('cols', hp.Discrete([col_map.keys()]))
+
+    # 9 * 4 * 3 * 3 * 2 * 1 * 1 * 1
+    HP_NUM_NODES_L1 = hp.HParam('num_nodes_l1', hp.Discrete([10, 30, 60, 90])) 
+    HP_NUM_NODES_L2 = hp.HParam('num_nodes_l2', hp.Discrete([0, 5, 10]))
+    HP_NUM_NODES_L3 = hp.HParam('num_nodes_l3', hp.Discrete([0, 5, 10]))
+    HP_NUM_NODES_L4 = hp.HParam('num_nodes_l4', hp.Discrete([0, 5]))
+    HP_NUM_EPOCHS = hp.HParam('num_epochs', hp.Discrete([10]))
+    HP_LEARNING_RATE = hp.HParam('learning_rate', hp.Discrete([.01]))
+    HP_LAST_ACTIVATION = hp.HParam('last_activation', hp.Discrete(['prelu']))
+    METRIC_LOSS = 'loss'
+
+    def build_tf_regression(self):
+        df = pd.read_excel('data.xlsx','training_data')
+        self.clear_log_folder()
+
+        with tf.summary.create_file_writer(f'{self.log_folder}/hparam_tuning').as_default():
+            hp.hparams_config(
+                hparams=[self.HP_COLS, self.HP_NUM_NODES_L1, self.HP_NUM_NODES_L2, self.HP_NUM_NODES_L3, self.HP_NUM_NODES_L4, 
+                self.HP_NUM_EPOCHS, self.HP_LEARNING_RATE, self.HP_LAST_ACTIVATION],
+                metrics=[hp.Metric(self.METRIC_LOSS, display_name='loss')],
+            )
+
+        # df = self.convert_tags_to_cols(df)
         train_dataset = df.sample(frac=0.8, random_state=0)
         test_dataset = df.drop(train_dataset.index)
 
@@ -45,13 +73,109 @@ class TFModel(NightscoutMlBase):
         test_labels = test_features.pop('smbToGive')
 
         best_loss = 1
-        best_accuracy = 0
         best_model = 1
         best_epochs = 0
         best_last_activation = ''
         best_learning_rate = .1
-        best_loss_function = ''
+        best_cols = ''
 
+        start = time.time()
+        
+        session_num = 0
+
+        for cols_name in self.HP_COLS.domain.values:
+            iteration_train_features = train_features[self.col_map[cols_name]]
+            iteration_test_features = test_features[self.col_map[cols_name]]
+            for num_nodes_l1 in self.HP_NUM_NODES_L1.domain.values:
+                for num_nodes_l2 in self.HP_NUM_NODES_L2.domain.values:
+                    for num_nodes_l3 in self.HP_NUM_NODES_L3.domain.values:
+                        for num_nodes_l4 in self.HP_NUM_NODES_L4.domain.values:
+                            for num_epochs in self.HP_NUM_EPOCHS.domain.values:
+                                for learn_rate in self.HP_LEARNING_RATE.domain.values:
+                                    for last_activation in self.HP_LAST_ACTIVATION.domain.values:
+                                        hparams = {
+                                            self.HP_COLS: cols_name,
+                                            self.HP_NUM_NODES_L1: num_nodes_l1,
+                                            self.HP_NUM_NODES_L2: num_nodes_l2,
+                                            self.HP_NUM_NODES_L3: num_nodes_l3,
+                                            self.HP_NUM_NODES_L4: num_nodes_l4,
+                                            self.HP_NUM_EPOCHS: num_epochs,
+                                            self.HP_LEARNING_RATE: learn_rate,
+                                            self.HP_LAST_ACTIVATION: last_activation
+                                        }
+                                        run_name = f"run-{cols_name}-{session_num}"
+                                        print(f"--- Starting trail {run_name}")
+                                        print({h.name: hparams[h] for h in hparams})
+                                        model, loss = self.build_model('logs/hparam_tuning/' + run_name, hparams, iteration_train_features, train_labels, iteration_test_features, test_labels)
+                                        session_num += 1
+                                        if loss < best_loss:
+                                            best_loss = loss
+                                            best_model = model
+                                            best_epochs = num_epochs
+                                            best_learning_rate = learn_rate
+                                            best_last_activation = last_activation
+                                            best_cols = cols_name
+        
+        training_time = time.time() - start
+        
+        self.save_model_info_v2(best_model, best_cols, best_loss, best_epochs, len(df), training_time, best_last_activation, best_learning_rate)
+
+        self.save_model(best_model)
+        
+        return self.date_str
+        
+
+        
+
+    def build_model(self, run_dir, hparams, train_features, train_labels, test_features, test_labels):
+        loss = 1
+        model = ''
+        with tf.summary.create_file_writer(run_dir).as_default():
+            hp.hparams(hparams)  # record the values used in this trial
+            model, loss = self.train_test_model(hparams, train_features, train_labels, test_features, test_labels)
+            tf.summary.scalar(self.METRIC_LOSS, loss, step=1)
+        return model, loss
+
+    def train_test_model(self, hparams, train_features, train_labels, test_features, test_labels):
+        normalizer = tf.keras.layers.Normalization(axis=-1)
+        normalizer.adapt(np.array(train_features))
+
+        model = tf.keras.Sequential()
+        model.add(layers.Input(shape=(train_features.shape[1],)))
+        model.add(normalizer)
+        if hparams[self.HP_NUM_NODES_L1] > 0:
+            model.add(layers.Dense(units=hparams[self.HP_NUM_NODES_L1], activation="relu"))
+        if hparams[self.HP_NUM_NODES_L2] > 0:
+            model.add(layers.Dense(units=hparams[self.HP_NUM_NODES_L2], activation="relu"))
+        if hparams[self.HP_NUM_NODES_L3] > 0:
+            model.add(layers.Dense(units=hparams[self.HP_NUM_NODES_L3], activation="relu"))
+        if hparams[self.HP_NUM_NODES_L4] > 0:
+            model.add(layers.Dense(units=hparams[self.HP_NUM_NODES_L4], activation="relu"))
+
+        if hparams[self.HP_LAST_ACTIVATION] == 'prelu':
+            prelu = PReLU()
+            model.add(layers.Dense(units=1, activation=prelu))
+        else:
+            model.add(layers.Dense(units=1, activation=hparams[self.HP_LAST_ACTIVATION]))
+
+        model.compile(
+            optimizer=tf.optimizers.Adam(learning_rate=hparams[self.HP_LEARNING_RATE]),
+            loss='mean_absolute_error')
+
+        model.fit(
+            train_features,
+            train_labels,
+            epochs=hparams[self.HP_NUM_EPOCHS],
+            # Suppress logging.
+            verbose=0,
+            # Calculate validation results on 20% of the training data.
+            validation_split = 0.2)
+        
+        loss = model.evaluate(test_features, test_labels)
+        return model, loss
+
+
+    def legacy(self):
         start = time.time()
 
         # loss_functions = ['mean_squared_error', 'mean_absolute_error']
@@ -119,6 +243,9 @@ class TFModel(NightscoutMlBase):
         return self.date_str
 
 
+    def convert_tags_to_cols(self, df):
+        self.col_map['bast_tags'] = ['']
+        return df
 
     def train_model(self, train_features, train_labels, dropout_rate_l1, num_hidden_nodes_l1, dropout_rate_l2, num_hidden_nodes_l2, num_hidden_nodes_l3, num_hidden_nodes_l4, num_epochs, last_activation, loss_function, learning_rate):
         normalizer = tf.keras.layers.Normalization(axis=-1)
@@ -162,15 +289,7 @@ class TFModel(NightscoutMlBase):
         return model
 
     def save_model_info(self, model, best_loss, best_accuracy, num_epochs, data_row_count, training_time, best_last_activation, best_learning_rate, best_loss_function):
-        model_info = "\n\n------------\n"
-        model_info += f"Model {self.date_str}\n"
-        model_info += f"{len(model.layers)} Layers:\n"
-        for i in range (len(model.layers)):
-            layer = model.layers[i]
-            layer_info = f"    - Layer {i}  - {layer.name}"
-            layer_info += f" ({layer.units})" if 'dense' in layer.name else ""
-            layer_info += f" ({layer.rate})" if 'dropout' in layer.name else ""
-            model_info += layer_info + "\n"
+        model_info = self.get_basic_info(model)
 
         model_info += f"Model Loss & Accuracy: {str(round(best_loss, 5))} - {str(round(best_accuracy, 5))} \n"
         model_info += f"Number of Epochs: {num_epochs} \n"
@@ -183,6 +302,33 @@ class TFModel(NightscoutMlBase):
         model_info += f"Took {time.strftime('%H:%M:%S', time.gmtime(training_time))} to train\n"
         model_info += "NOTES: \n"
         open('models/tf_model_results.txt', "a").write(model_info)
+
+    def get_basic_info(self, model):
+        model_info = "\n\n------------\n"
+        model_info += f"Model {self.date_str}\n"
+        model_info += f"{len(model.layers)} Layers:\n"
+        for i in range (len(model.layers)):
+            layer = model.layers[i]
+            layer_info = f"    - Layer {i}  - {layer.name}"
+            layer_info += f" ({layer.units})" if 'dense' in layer.name else ""
+            layer_info += f" ({layer.rate})" if 'dropout' in layer.name else ""
+            model_info += layer_info + "\n"
+        return model_info
+
+    def save_model_info_v2(self, model, cols, best_loss, num_epochs, data_row_count, training_time, best_last_activation, best_learning_rate):
+        model_info = self.get_basic_info(model)
+
+        model_info += f"Model Loss & Accuracy: {str(round(best_loss, 5))}\n"
+        model_info += f"Number of Epochs: {num_epochs} \n"
+        model_info += f"Columns ({len(cols)}): {cols} - {self.col_map[cols]} \n"
+        model_info += f"Training Data Size: {data_row_count} \n"
+        model_info += f"Learning Rate: {best_learning_rate} \n"
+        model_info += f"Activation: {best_last_activation} \n" if best_last_activation is not None else "Activation: None\n"
+        # model_info += self.basic_predictions(model) + "\n"
+        model_info += f"Took {time.strftime('%H:%M:%S', time.gmtime(training_time))} to train\n"
+        model_info += "NOTES: \n"
+        open('models/tf_model_results.txt', "a").write(model_info)
+
 
 
     def model_meets_min_requirements(self, model):
