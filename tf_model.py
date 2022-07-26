@@ -23,12 +23,14 @@ class TFModel(NightscoutMlBase):
     tdd = ["tdd7Days","tddDaily","tdd24Hrs"]
     tddPerHour = ["tdd7DaysPerHour","tddDailyPerHour","tdd24HrsPerHour"]
     base_cols = ["hourOfDay","weekend",
-                    "bg","targetBg","iob","cob","lastCarbAgeMin","futureCarbs","delta","shortAvgDelta","longAvgDelta",
-                    "smbToGive"]
+                    "bg","targetBg","iob","cob","lastCarbAgeMin","futureCarbs",
+                    "delta","shortAvgDelta","longAvgDelta"]
+    cob_delta = ['cobDelta']
 
     col_map = {
         'base': base_cols,
-        # 'base_tags': base_cols,
+        # 'base_cobDelta': base_cols+cob_delta
+        'base_tags': base_cols,
         'base_tdd': base_cols+tdd,
         'base_tddPerhour': base_cols+tddPerHour,
         'base_tdd_tddPerHour': base_cols+tdd+tddPerHour,
@@ -39,13 +41,12 @@ class TFModel(NightscoutMlBase):
         'base_hour_breakdowns': base_cols+hour_breakdowns
     }
 
-    HP_COLS = hp.HParam('cols', hp.Discrete([col_map.keys()]))
+    HP_COLS = hp.HParam('cols', hp.Discrete(list(col_map.keys())))
 
-    # 9 * 4 * 3 * 3 * 2 * 1 * 1 * 1
-    HP_NUM_NODES_L1 = hp.HParam('num_nodes_l1', hp.Discrete([10, 30, 60, 90])) 
-    HP_NUM_NODES_L2 = hp.HParam('num_nodes_l2', hp.Discrete([0, 5, 10]))
-    HP_NUM_NODES_L3 = hp.HParam('num_nodes_l3', hp.Discrete([0, 5, 10]))
-    HP_NUM_NODES_L4 = hp.HParam('num_nodes_l4', hp.Discrete([0, 5]))
+    HP_NUM_NODES_L1 = hp.HParam('num_nodes_l1', hp.Discrete([50, 100, 150])) 
+    HP_NUM_NODES_L2 = hp.HParam('num_nodes_l2', hp.Discrete([0, 10]))
+    HP_NUM_NODES_L3 = hp.HParam('num_nodes_l3', hp.Discrete([10]))
+    HP_NUM_NODES_L4 = hp.HParam('num_nodes_l4', hp.Discrete([10]))
     HP_NUM_EPOCHS = hp.HParam('num_epochs', hp.Discrete([10]))
     HP_LEARNING_RATE = hp.HParam('learning_rate', hp.Discrete([.01]))
     HP_LAST_ACTIVATION = hp.HParam('last_activation', hp.Discrete(['prelu']))
@@ -125,8 +126,6 @@ class TFModel(NightscoutMlBase):
         return self.date_str
         
 
-        
-
     def build_model(self, run_dir, hparams, train_features, train_labels, test_features, test_labels):
         loss = 1
         model = ''
@@ -147,9 +146,9 @@ class TFModel(NightscoutMlBase):
             model.add(layers.Dense(units=hparams[self.HP_NUM_NODES_L1], activation="relu"))
         if hparams[self.HP_NUM_NODES_L2] > 0:
             model.add(layers.Dense(units=hparams[self.HP_NUM_NODES_L2], activation="relu"))
-        if hparams[self.HP_NUM_NODES_L3] > 0:
+        if hparams[self.HP_NUM_NODES_L3] > 0 and hparams[self.HP_NUM_NODES_L2] > 0:
             model.add(layers.Dense(units=hparams[self.HP_NUM_NODES_L3], activation="relu"))
-        if hparams[self.HP_NUM_NODES_L4] > 0:
+        if hparams[self.HP_NUM_NODES_L4] > 0 and hparams[self.HP_NUM_NODES_L3] > 0 and hparams[self.HP_NUM_NODES_L2] > 0:
             model.add(layers.Dense(units=hparams[self.HP_NUM_NODES_L4], activation="relu"))
 
         if hparams[self.HP_LAST_ACTIVATION] == 'prelu':
@@ -175,133 +174,9 @@ class TFModel(NightscoutMlBase):
         return model, loss
 
 
-    def legacy(self):
-        start = time.time()
-
-        # loss_functions = ['mean_squared_error', 'mean_absolute_error']
-        loss_functions = ['mean_absolute_error']
-        # mean squared error produces a lower loss, 
-        # but is too aggressive which leads to a rollercoaster
-        # loss_functions = ['mean_squared_error']
-        # last_activation_functions = [None, 'relu', 'prelu']
-        # last_activation_functions = ['relu', 'prelu']
-        last_activation_functions = ['prelu']
-        # learning_rates = [.01, .05, .1, .2]
-        # tried .001 -> .2 and .01 seems to consistently work the best
-        learning_rates = [.01]
-
-        for dropout_rate_l1 in range(0, 6, 8):
-            for num_hidden_nodes_l1 in range(10, 36, 8):
-                for dropout_rate_l2 in range(0, 6, 8):
-                    for num_hidden_nodes_l2 in range(0, 8, 5):
-                        for num_hidden_nodes_l3 in range(0, 8, 3):
-                            for num_hidden_nodes_l4 in range(0, 4, 5):
-                                for num_epochs in range(10, 11, 3):
-                                    for loss_function in loss_functions:
-                                        for last_activation in last_activation_functions:
-                                            for learning_rate in learning_rates:
-                                                model = self.train_model(train_features, train_labels, dropout_rate_l1/10, num_hidden_nodes_l1, dropout_rate_l2/10, num_hidden_nodes_l2, num_hidden_nodes_l3, num_hidden_nodes_l4, num_epochs, last_activation, loss_function, learning_rate)
-                                                results = model.evaluate(test_features, test_labels)
-                                                meets_min_requirements = self.model_meets_min_requirements(model)
-                                                if meets_min_requirements and results[0] < best_loss:
-                                                    best_model = model
-                                                    best_loss = results[0]
-                                                    best_accuracy = results[1]
-                                                    best_epochs = num_epochs
-                                                    best_last_activation = last_activation
-                                                    best_learning_rate = learning_rate
-                                                    best_loss_function = loss_function
-
-
-        # model = self.train_model(train_features, train_labels, 0, 0, 0, 0, 0, 1)
-        # results = model.evaluate(test_features, test_labels)
-        # best_model = model
-        # best_loss = results[0]
-        # best_accuracy = results[1]
-        # best_epochs = 10
-
-        # for i in range(10):
-        #     learning_rate = .01
-        #     model = self.train_model(train_features, train_labels, 0, 10, 0, 3, 0, 10, 'relu', 'mean_squared_error', learning_rate)
-        #     results = model.evaluate(test_features, test_labels)
-        #     meets_min_requirements = self.model_meets_min_requirements(model)
-        #     if meets_min_requirements and results[0] < best_loss:
-        #         best_model = model
-        #         best_loss = results[0]
-        #         best_accuracy = results[1]
-        #         best_epochs = 10
-        #         best_last_activation = 'relu'
-        #         best_learning_rate = learning_rate
-        #         best_loss_function = 'mean_squared_error'
-
-        training_time = time.time() - start
-        
-        self.save_model_info(best_model, best_loss, best_accuracy, best_epochs, len(df), training_time, best_last_activation, best_learning_rate, best_loss_function)
-
-        self.save_model(best_model)
-        
-        return self.date_str
-
-
     def convert_tags_to_cols(self, df):
         self.col_map['bast_tags'] = ['']
         return df
-
-    def train_model(self, train_features, train_labels, dropout_rate_l1, num_hidden_nodes_l1, dropout_rate_l2, num_hidden_nodes_l2, num_hidden_nodes_l3, num_hidden_nodes_l4, num_epochs, last_activation, loss_function, learning_rate):
-        normalizer = tf.keras.layers.Normalization(axis=-1)
-        normalizer.adapt(np.array(train_features))
-
-        model = tf.keras.Sequential()
-        model.add(layers.Input(shape=(train_features.shape[1],)))
-        model.add(normalizer)
-        if dropout_rate_l1 > 0:
-            model.add(layers.Dropout(dropout_rate_l1))
-        if num_hidden_nodes_l1 > 0:
-            model.add(layers.Dense(units=num_hidden_nodes_l1, activation="relu"))
-        if dropout_rate_l2 > 0:
-            model.add(layers.Dropout(dropout_rate_l2))
-        if num_hidden_nodes_l2 > 0 and num_hidden_nodes_l1 > 0:
-            model.add(layers.Dense(units=num_hidden_nodes_l2, activation="relu"))
-        if num_hidden_nodes_l3 > 0 and num_hidden_nodes_l2 > 0 and num_hidden_nodes_l1 > 0:
-            model.add(layers.Dense(units=num_hidden_nodes_l3, activation="relu"))
-        if num_hidden_nodes_l4 > 0 and num_hidden_nodes_l3 > 0 and num_hidden_nodes_l2 > 0 and num_hidden_nodes_l1 > 0:
-            model.add(layers.Dense(units=num_hidden_nodes_l3, activation="relu"))
-
-        if last_activation == 'prelu':
-            prelu = PReLU()
-            model.add(layers.Dense(units=1, activation=prelu))
-        else:
-            model.add(layers.Dense(units=1, activation=last_activation))
-
-        model.compile(
-            optimizer=tf.optimizers.Adam(learning_rate=learning_rate),
-            loss=loss_function,
-            metrics=["accuracy"])
-
-        model.fit(
-            train_features,
-            train_labels,
-            epochs=num_epochs,
-            # Suppress logging.
-            verbose=0,
-            # Calculate validation results on 20% of the training data.
-            validation_split = 0.2)
-        return model
-
-    def save_model_info(self, model, best_loss, best_accuracy, num_epochs, data_row_count, training_time, best_last_activation, best_learning_rate, best_loss_function):
-        model_info = self.get_basic_info(model)
-
-        model_info += f"Model Loss & Accuracy: {str(round(best_loss, 5))} - {str(round(best_accuracy, 5))} \n"
-        model_info += f"Number of Epochs: {num_epochs} \n"
-        model_info += f"Columns ({len(self.current_cols)}): {self.current_cols} \n"
-        model_info += f"Training Data Size: {data_row_count} \n"
-        model_info += f"Learning Rate: {best_learning_rate} \n"
-        model_info += f"Loss function: {best_loss_function} \n"
-        model_info += f"Activation: {best_last_activation} \n" if best_last_activation is not None else "Activation: None\n"
-        model_info += self.basic_predictions(model) + "\n"
-        model_info += f"Took {time.strftime('%H:%M:%S', time.gmtime(training_time))} to train\n"
-        model_info += "NOTES: \n"
-        open('models/tf_model_results.txt', "a").write(model_info)
 
     def get_basic_info(self, model):
         model_info = "\n\n------------\n"
@@ -427,3 +302,154 @@ class TFModel(NightscoutMlBase):
             model_info += f" - model 1: {m1_predict} - model 2: {m2_predict}\n"
         
         open('models/tf_model_results.txt', "a").write(model_info)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#  LEGACY
+
+
+
+
+
+
+
+
+
+    def legacy(self):
+        start = time.time()
+
+        # loss_functions = ['mean_squared_error', 'mean_absolute_error']
+        loss_functions = ['mean_absolute_error']
+        # mean squared error produces a lower loss, 
+        # but is too aggressive which leads to a rollercoaster
+        # loss_functions = ['mean_squared_error']
+        # last_activation_functions = [None, 'relu', 'prelu']
+        # last_activation_functions = ['relu', 'prelu']
+        last_activation_functions = ['prelu']
+        # learning_rates = [.01, .05, .1, .2]
+        # tried .001 -> .2 and .01 seems to consistently work the best
+        learning_rates = [.01]
+
+        for dropout_rate_l1 in range(0, 6, 8):
+            for num_hidden_nodes_l1 in range(10, 36, 8):
+                for dropout_rate_l2 in range(0, 6, 8):
+                    for num_hidden_nodes_l2 in range(0, 8, 5):
+                        for num_hidden_nodes_l3 in range(0, 8, 3):
+                            for num_hidden_nodes_l4 in range(0, 4, 5):
+                                for num_epochs in range(10, 11, 3):
+                                    for loss_function in loss_functions:
+                                        for last_activation in last_activation_functions:
+                                            for learning_rate in learning_rates:
+                                                model = self.train_model(train_features, train_labels, dropout_rate_l1/10, num_hidden_nodes_l1, dropout_rate_l2/10, num_hidden_nodes_l2, num_hidden_nodes_l3, num_hidden_nodes_l4, num_epochs, last_activation, loss_function, learning_rate)
+                                                results = model.evaluate(test_features, test_labels)
+                                                meets_min_requirements = self.model_meets_min_requirements(model)
+                                                if meets_min_requirements and results[0] < best_loss:
+                                                    best_model = model
+                                                    best_loss = results[0]
+                                                    best_accuracy = results[1]
+                                                    best_epochs = num_epochs
+                                                    best_last_activation = last_activation
+                                                    best_learning_rate = learning_rate
+                                                    best_loss_function = loss_function
+
+
+        # model = self.train_model(train_features, train_labels, 0, 0, 0, 0, 0, 1)
+        # results = model.evaluate(test_features, test_labels)
+        # best_model = model
+        # best_loss = results[0]
+        # best_accuracy = results[1]
+        # best_epochs = 10
+
+        # for i in range(10):
+        #     learning_rate = .01
+        #     model = self.train_model(train_features, train_labels, 0, 10, 0, 3, 0, 10, 'relu', 'mean_squared_error', learning_rate)
+        #     results = model.evaluate(test_features, test_labels)
+        #     meets_min_requirements = self.model_meets_min_requirements(model)
+        #     if meets_min_requirements and results[0] < best_loss:
+        #         best_model = model
+        #         best_loss = results[0]
+        #         best_accuracy = results[1]
+        #         best_epochs = 10
+        #         best_last_activation = 'relu'
+        #         best_learning_rate = learning_rate
+        #         best_loss_function = 'mean_squared_error'
+
+        training_time = time.time() - start
+        
+        self.save_model_info(best_model, best_loss, best_accuracy, best_epochs, len(df), training_time, best_last_activation, best_learning_rate, best_loss_function)
+
+        self.save_model(best_model)
+        
+        return self.date_str
+
+
+
+    def save_model_info(self, model, best_loss, best_accuracy, num_epochs, data_row_count, training_time, best_last_activation, best_learning_rate, best_loss_function):
+        model_info = self.get_basic_info(model)
+
+        model_info += f"Model Loss & Accuracy: {str(round(best_loss, 5))} - {str(round(best_accuracy, 5))} \n"
+        model_info += f"Number of Epochs: {num_epochs} \n"
+        model_info += f"Columns ({len(self.current_cols)}): {self.current_cols} \n"
+        model_info += f"Training Data Size: {data_row_count} \n"
+        model_info += f"Learning Rate: {best_learning_rate} \n"
+        model_info += f"Loss function: {best_loss_function} \n"
+        model_info += f"Activation: {best_last_activation} \n" if best_last_activation is not None else "Activation: None\n"
+        model_info += self.basic_predictions(model) + "\n"
+        model_info += f"Took {time.strftime('%H:%M:%S', time.gmtime(training_time))} to train\n"
+        model_info += "NOTES: \n"
+        open('models/tf_model_results.txt', "a").write(model_info)
+
+    def train_model(self, train_features, train_labels, dropout_rate_l1, num_hidden_nodes_l1, dropout_rate_l2, num_hidden_nodes_l2, num_hidden_nodes_l3, num_hidden_nodes_l4, num_epochs, last_activation, loss_function, learning_rate):
+        normalizer = tf.keras.layers.Normalization(axis=-1)
+        normalizer.adapt(np.array(train_features))
+
+        model = tf.keras.Sequential()
+        model.add(layers.Input(shape=(train_features.shape[1],)))
+        model.add(normalizer)
+        if dropout_rate_l1 > 0:
+            model.add(layers.Dropout(dropout_rate_l1))
+        if num_hidden_nodes_l1 > 0:
+            model.add(layers.Dense(units=num_hidden_nodes_l1, activation="relu"))
+        if dropout_rate_l2 > 0:
+            model.add(layers.Dropout(dropout_rate_l2))
+        if num_hidden_nodes_l2 > 0 and num_hidden_nodes_l1 > 0:
+            model.add(layers.Dense(units=num_hidden_nodes_l2, activation="relu"))
+        if num_hidden_nodes_l3 > 0 and num_hidden_nodes_l2 > 0 and num_hidden_nodes_l1 > 0:
+            model.add(layers.Dense(units=num_hidden_nodes_l3, activation="relu"))
+        if num_hidden_nodes_l4 > 0 and num_hidden_nodes_l3 > 0 and num_hidden_nodes_l2 > 0 and num_hidden_nodes_l1 > 0:
+            model.add(layers.Dense(units=num_hidden_nodes_l3, activation="relu"))
+
+        if last_activation == 'prelu':
+            prelu = PReLU()
+            model.add(layers.Dense(units=1, activation=prelu))
+        else:
+            model.add(layers.Dense(units=1, activation=last_activation))
+
+        model.compile(
+            optimizer=tf.optimizers.Adam(learning_rate=learning_rate),
+            loss=loss_function,
+            metrics=["accuracy"])
+
+        model.fit(
+            train_features,
+            train_labels,
+            epochs=num_epochs,
+            # Suppress logging.
+            verbose=0,
+            # Calculate validation results on 20% of the training data.
+            validation_split = 0.2)
+        return model
