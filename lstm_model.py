@@ -18,28 +18,26 @@ import shutil
 
 class LstmModel(NightscoutMlBase):
     current_cols = [
-                    "hourOfDay","hour0_2","hour3_5","hour6_8","hour9_11","hour12_14","hour15_17","hour18_20","hour21_23","weekend",
-                    "bg","targetBg","iob","cob","lastCarbAgeMin","futureCarbs","delta","shortAvgDelta","longAvgDelta",
-                    "accelerating_up","deccelerating_up","accelerating_down","deccelerating_down","stable",
-                    "tdd7Days","tdd7DaysPerHour","tddDaily","tddDailyPerHour","tdd24Hrs","tdd24HrsPerHour",
+                    "hourOfDay","weekend",
+                    "bg","targetBg","iob","cob","cobDelta","lastCarbAgeMin","futureCarbs","delta","shortAvgDelta","longAvgDelta",
+                    "tdd7DaysPerHour","tddDailyPerHour","tdd24HrsPerHour",
                     "recentSteps5Minutes","recentSteps10Minutes","recentSteps15Minutes","recentSteps30Minutes","recentSteps60Minutes",
-                    "sleep","sedentary",
                     "smbToGive"]
 
-    log_folder = 'logs'
-
-    # HP_WINDOW_LEN = hp.HParam('window_len', hp.Discrete([6, 12, 18, 24]))
-    HP_WINDOW_LEN = hp.HParam('window_len', hp.Discrete([6]))
-    HP_NUM_NODES_L1 = hp.HParam('num_nodes_l1', hp.Discrete([37, 100]))
+    HP_WINDOW_LEN = hp.HParam('window_len', hp.Discrete([6, 12, 18]))
+    # HP_WINDOW_LEN = hp.HParam('window_len', hp.Discrete([12]))
+    HP_NUM_NODES_L1 = hp.HParam('num_nodes_l1', hp.Discrete([20, 30]))
     # HP_NUM_NODES_L2 = hp.HParam('num_nodes_l2', hp.Discrete([0, 6, 25]))
-    HP_NUM_NODES_L2 = hp.HParam('num_nodes_l2', hp.Discrete([0]))
-    HP_NUM_NODES_L3 = hp.HParam('num_nodes_l3', hp.Discrete([0, 5, 10]))
+    HP_NUM_NODES_L2 = hp.HParam('num_nodes_l2', hp.Discrete([10]))
+    HP_NUM_NODES_L3 = hp.HParam('num_nodes_l3', hp.Discrete([0,5]))
     # HP_NUM_EPOCHS = hp.HParam('num_epochs', hp.Discrete([10, 20, 30])) # 30 was consistently better
     # HP_NUM_EPOCHS = hp.HParam('num_epochs', hp.Discrete([10, 20, 30, 40])) # 40 was consistently better
     # HP_NUM_EPOCHS = hp.HParam('num_epochs', hp.Discrete([40, 60, 80])) # 80 consitently the best
-    HP_NUM_EPOCHS = hp.HParam('num_epochs', hp.Discrete([80, 100, 150]))
+    # HP_NUM_EPOCHS = hp.HParam('num_epochs', hp.Discrete([80, 100, 150]))
+    HP_NUM_EPOCHS = hp.HParam('num_epochs', hp.Discrete([25]))
     # HP_SPLIT_END = hp.HParam('split_end', hp.Discrete([1, 0])) # testing with a random sample of the data was consistently better
     HP_SPLIT_END = hp.HParam('split_end', hp.Discrete([0]))
+    HP_LEARN_RATE = hp.HParam('learn_rate', hp.Discrete([.001, .0005]))
     METRIC_LOSS = 'loss'
 
     def build_lstm_model(self):
@@ -48,15 +46,9 @@ class LstmModel(NightscoutMlBase):
         df = pd.read_excel('data.xlsx','training_data')
         df = self.normalize(df)
 
-        # print(df.describe().transpose())
-
-        
-
-        # self.load_tensorboard()
-
         with tf.summary.create_file_writer(f'{self.log_folder}/hparam_tuning').as_default():
             hp.hparams_config(
-                hparams=[self.HP_WINDOW_LEN, self.HP_SPLIT_END, self.HP_NUM_NODES_L1, self.HP_NUM_NODES_L2, self.HP_NUM_NODES_L3, self.HP_NUM_EPOCHS],
+                hparams=[self.HP_WINDOW_LEN, self.HP_SPLIT_END, self.HP_NUM_NODES_L1, self.HP_NUM_NODES_L2, self.HP_NUM_NODES_L3, self.HP_NUM_EPOCHS, self.HP_LEARN_RATE],
                 metrics=[hp.Metric(self.METRIC_LOSS, display_name='loss')],
             )
 
@@ -71,19 +63,21 @@ class LstmModel(NightscoutMlBase):
                     for num_nodes_l2 in self.HP_NUM_NODES_L2.domain.values:
                         for num_nodes_l3 in self.HP_NUM_NODES_L3.domain.values:
                             for num_epochs in self.HP_NUM_EPOCHS.domain.values:
-                                hparams = {
-                                    self.HP_WINDOW_LEN: window_len,
-                                    self.HP_SPLIT_END: split_end,
-                                    self.HP_NUM_NODES_L1: num_nodes_l1,
-                                    self.HP_NUM_NODES_L2: num_nodes_l2,
-                                    self.HP_NUM_NODES_L3: num_nodes_l3,
-                                    self.HP_NUM_EPOCHS: num_epochs
-                                }
-                                run_name = "run-%d" % session_num
-                                print('--- Starting trial: %s' % run_name)
-                                print({h.name: hparams[h] for h in hparams})
-                                self.run('logs/hparam_tuning/' + run_name, hparams, train_features, train_labels, test_features, test_labels)
-                                session_num += 1
+                                for learn_rate in self.HP_LEARN_RATE.domain.values:
+                                    hparams = {
+                                        self.HP_WINDOW_LEN: window_len,
+                                        self.HP_SPLIT_END: split_end,
+                                        self.HP_NUM_NODES_L1: num_nodes_l1,
+                                        self.HP_NUM_NODES_L2: num_nodes_l2,
+                                        self.HP_NUM_NODES_L3: num_nodes_l3,
+                                        self.HP_NUM_EPOCHS: num_epochs,
+                                        self.HP_LEARN_RATE: learn_rate
+                                    }
+                                    run_name = f"run-win{window_len}-epoch{num_epochs}-rate{learn_rate}-{session_num}"
+                                    print('--- Starting trial: %s' % run_name)
+                                    print({h.name: hparams[h] for h in hparams})
+                                    self.run('logs/hparam_tuning/' + run_name, hparams, train_features, train_labels, test_features, test_labels)
+                                    session_num += 1
 
 
         # loss = model.evaluate(test_features, test_labels)
@@ -118,7 +112,7 @@ class LstmModel(NightscoutMlBase):
         model.add(Dense(1, activation='relu'))
 
         model.compile(
-            optimizer='adam',
+            optimizer=tf.optimizers.Adam(learning_rate=hparams[self.HP_LEARN_RATE]),
             loss='mean_absolute_error')
         
         model.fit(
@@ -126,6 +120,7 @@ class LstmModel(NightscoutMlBase):
             train_labels,
             epochs=hparams[self.HP_NUM_EPOCHS],
             verbose=0,
+            validation_split = 0.2
             # callbacks=[
             #     tf.keras.callbacks.TensorBoard(self.log_folder),  # log metrics
             #     hp.KerasCallback(self.log_folder, hparams),  # log hparams
@@ -207,11 +202,6 @@ class LstmModel(NightscoutMlBase):
         assert len(a) == len(b)
         p = np.random.permutation(len(b))
         return a[p], b[p]
-
-    def clear_log_folder(self):
-        if os.path.exists(self.log_folder):
-            shutil.rmtree(self.log_folder)
-        os.mkdir(self.log_folder)
 
     def load_tensorboard(self):
         tracking_address = self.log_folder # the path of your log file.

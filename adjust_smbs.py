@@ -9,6 +9,8 @@ class AdjustSmbs(NightscoutMlBase):
     no_insulin_when_dropping_threshold = 100
     base_isf = 100
     max_smb = 2
+    correct_x_above_target = 10
+    correct_x_below_target = 20
 
     def adjust_smbs(self, start_date_time_str):
         # df = pd.read_csv('adjustment_test.csv')
@@ -50,7 +52,7 @@ class AdjustSmbs(NightscoutMlBase):
 
     def adjust_for_lows(self, index, row, df):
         # if low, calculate insulin suplus (delta/isf) - go back 30+ min & delete
-        min_bg = row['targetBg']-20 if row['targetBg'] >= 95 else 75
+        min_bg = row['targetBg']-self.correct_x_below_target if row['targetBg'] >= 95 else 75
         if row['bg'] < min_bg and row['delta'] < 0:
             u_to_remove = self.u_to_adjust_based_on_delta(row)
             self.remove_prior_insulin(index, row, df, u_to_remove)
@@ -62,7 +64,7 @@ class AdjustSmbs(NightscoutMlBase):
 
     def adjust_for_highs(self, index, row, df):
         trending_up_or_stable = row['delta'] > -2 or row['shortAvgDelta'] > -2
-        if row['bg'] > (row['targetBg']+20) and trending_up_or_stable:
+        if row['bg'] > (row['targetBg']+self.correct_x_above_target) and trending_up_or_stable:
             u_to_add = self.u_to_adjust_based_on_delta(row)
             self.add_prior_insulin(index, row, df, u_to_add)
 

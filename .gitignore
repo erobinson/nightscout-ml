@@ -5,3 +5,4 @@ models/model.tflite
 logs
 ~$data.xlsx
 tensor-board-example-logs
+tensorboard-feature-comp-logs
