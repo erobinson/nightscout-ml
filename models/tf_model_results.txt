@@ -1849,3 +1849,41 @@ Learning Rate: 0.01
 Activation: prelu 
 Took 00:01:14 to train
 NOTES: 
+
+
+------------
+Model 2022-7-21_16-21
+6 Layers:
+    - Layer 0  - normalization_5
+    - Layer 1  - dense_16 (150)
+    - Layer 2  - dense_17 (10)
+    - Layer 3  - dense_18 (10)
+    - Layer 4  - dense_19 (10)
+    - Layer 5  - dense_20 (1)
+Model Loss & Accuracy: 0.07019
+Number of Epochs: 10 
+Columns (4): base - ['hourOfDay', 'weekend', 'bg', 'targetBg', 'iob', 'cob', 'lastCarbAgeMin', 'futureCarbs', 'delta', 'shortAvgDelta', 'longAvgDelta'] 
+Training Data Size: 14991 
+Learning Rate: 0.01 
+Activation: prelu 
+Took 00:01:17 to train
+NOTES: 
+
+
+------------
+Model 2022-7-21_16-26
+6 Layers:
+    - Layer 0  - normalization_1
+    - Layer 1  - dense_2 (50)
+    - Layer 2  - dense_3 (10)
+    - Layer 3  - dense_4 (10)
+    - Layer 4  - dense_5 (10)
+    - Layer 5  - dense_6 (1)
+Model Loss & Accuracy: 0.06826
+Number of Epochs: 10 
+Columns (4): base - ['hourOfDay', 'weekend', 'bg', 'targetBg', 'iob', 'cob', 'lastCarbAgeMin', 'futureCarbs', 'delta', 'shortAvgDelta', 'longAvgDelta'] 
+Training Data Size: 14991 
+Learning Rate: 0.01 
+Activation: prelu 
+Took 00:01:14 to train
+NOTES: 

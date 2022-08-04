@@ -29,16 +29,17 @@ class TFModel(NightscoutMlBase):
 
     col_map = {
         'base': base_cols,
-        # 'base_cobDelta': base_cols+cob_delta
-        'base_tags': base_cols,
-        'base_tdd': base_cols+tdd,
-        'base_tddPerhour': base_cols+tddPerHour,
-        'base_tdd_tddPerHour': base_cols+tdd+tddPerHour,
-        'base_recentSteps': base_cols+recent_steps,
-        'base_sleepSeated': base_cols+sleep_seated,
-        'base_recentSteps_sleepSeated': base_cols+recent_steps+sleep_seated,
-        'base_accellerating': base_cols+accellerating,
-        'base_hour_breakdowns': base_cols+hour_breakdowns
+        # 'base_cobDelta': base_cols+cob_delta, # helps a little
+        'best_cols': base_cols+tddPerHour+cob_delta+recent_steps+accellerating
+        # 'base_tddPerhour': base_cols+tddPerHour, # helpful
+        # 'base_recentSteps': base_cols+recent_steps, # helpful
+        # 'base_accellerating': base_cols+accellerating, # helpful, but could probably refine
+        
+        # 'base_tdd': base_cols+tdd, # helps, but tddPerHour values are more effective
+        # 'base_tdd_tddPerHour': base_cols+tdd+tddPerHour, # not more helpful than tddPerHour
+        # 'base_recentSteps_sleepSeated': base_cols+recent_steps+sleep_seated, # no major diff, steps is fine
+        # 'base_sleepSeated': base_cols+sleep_seated, # no major diff thus drop
+        # 'base_hour_breakdowns': base_cols+hour_breakdowns # not helpful thus drop
     }
 
     HP_COLS = hp.HParam('cols', hp.Discrete(list(col_map.keys())))
