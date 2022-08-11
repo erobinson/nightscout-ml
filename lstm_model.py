@@ -19,17 +19,21 @@ import shutil
 class LstmModel(NightscoutMlBase):
     current_cols = [
                     "hourOfDay","weekend",
-                    "bg","targetBg","iob","cob","cobDelta","lastCarbAgeMin","futureCarbs","delta","shortAvgDelta","longAvgDelta",
+                    "bg","targetBg","iob","cob","lastCarbAgeMin",
                     "tdd7DaysPerHour","tddDailyPerHour","tdd24HrsPerHour",
-                    "recentSteps5Minutes","recentSteps10Minutes","recentSteps15Minutes","recentSteps30Minutes","recentSteps60Minutes",
+                    "recentSteps5Minutes","recentSteps10Minutes","recentSteps15Minutes",
+                    "smbGiven",
                     "smbToGive"]
+    # current_cols = current_cols + ["recentSteps30Minutes","recentSteps60Minutes"]
+    # current_cols = current_cols + ["cobDelta","futureCarbs","delta","shortAvgDelta","longAvgDelta"]
 
     HP_WINDOW_LEN = hp.HParam('window_len', hp.Discrete([6, 12, 18]))
     # HP_WINDOW_LEN = hp.HParam('window_len', hp.Discrete([12]))
-    HP_NUM_NODES_L1 = hp.HParam('num_nodes_l1', hp.Discrete([20, 30]))
+    # HP_NUM_NODES_L1 = hp.HParam('num_nodes_l1', hp.Discrete([20, 30]))
+    HP_NUM_NODES_L1 = hp.HParam('num_nodes_l1', hp.Discrete([10, 50, 100]))
     # HP_NUM_NODES_L2 = hp.HParam('num_nodes_l2', hp.Discrete([0, 6, 25]))
     HP_NUM_NODES_L2 = hp.HParam('num_nodes_l2', hp.Discrete([10]))
-    HP_NUM_NODES_L3 = hp.HParam('num_nodes_l3', hp.Discrete([0,5]))
+    HP_NUM_NODES_L3 = hp.HParam('num_nodes_l3', hp.Discrete([0, 5]))
     # HP_NUM_EPOCHS = hp.HParam('num_epochs', hp.Discrete([10, 20, 30])) # 30 was consistently better
     # HP_NUM_EPOCHS = hp.HParam('num_epochs', hp.Discrete([10, 20, 30, 40])) # 40 was consistently better
     # HP_NUM_EPOCHS = hp.HParam('num_epochs', hp.Discrete([40, 60, 80])) # 80 consitently the best
@@ -178,24 +182,26 @@ class LstmModel(NightscoutMlBase):
 
         df['cob'] = df['cob'] / 200
         df['lastCarbAgeMin'] = df['lastCarbAgeMin'] / 10000
-        df['futureCarbs'] = df['futureCarbs'] / 200
-        df['delta'] = df['delta'] + 50
-        df['delta'] = df['delta'] / 100
-        df['shortAvgDelta'] = df['shortAvgDelta'] + 50
-        df['shortAvgDelta'] = df['shortAvgDelta'] / 100
-        df['longAvgDelta'] = df['longAvgDelta'] + 50
-        df['longAvgDelta'] = df['longAvgDelta'] / 100
-        df['tdd7Days'] = df['tdd7Days'] / 100
+        # df['futureCarbs'] = df['futureCarbs'] / 200
+        # df['delta'] = df['delta'] + 50
+        # df['delta'] = df['delta'] / 100
+        # df['shortAvgDelta'] = df['shortAvgDelta'] + 50
+        # df['shortAvgDelta'] = df['shortAvgDelta'] / 100
+        # df['longAvgDelta'] = df['longAvgDelta'] + 50
+        # df['longAvgDelta'] = df['longAvgDelta'] / 100
+        # df['tdd7Days'] = df['tdd7Days'] / 100
         df['tdd7DaysPerHour'] = df['tdd7DaysPerHour'] / 5
-        df['tddDaily'] = df['tddDaily'] / 100
+        # df['tddDaily'] = df['tddDaily'] / 100
         df['tddDailyPerHour'] = df['tddDailyPerHour'] / 5
-        df['tdd24Hrs'] = df['tdd24Hrs'] / 100
+        # df['tdd24Hrs'] = df['tdd24Hrs'] / 100
         df['tdd24HrsPerHour'] = df['tdd24HrsPerHour'] / 5
+
         df['recentSteps5Minutes'] = df['recentSteps5Minutes'] / 2000
         df['recentSteps10Minutes'] = df['recentSteps10Minutes'] / 2000
         df['recentSteps15Minutes'] = df['recentSteps15Minutes'] / 2000
-        df['recentSteps30Minutes'] = df['recentSteps30Minutes'] / 20000
-        df['recentSteps60Minutes'] = df['recentSteps60Minutes'] / 40000
+        # df['recentSteps30Minutes'] = df['recentSteps30Minutes'] / 20000
+        # df['recentSteps60Minutes'] = df['recentSteps60Minutes'] / 40000
+        df['smbGiven'] = df["smbGiven"] / 5
         return df
 
     def shuffle_in_unison(self, a, b):
