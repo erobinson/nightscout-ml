@@ -1,4 +1,4 @@
-from sklearn import metrics
+# from sklearn import metrics
 from nightscout_ml_base import NightscoutMlBase
 import pandas as pd
 import numpy as np
@@ -8,29 +8,38 @@ from tensorflow.keras import layers
 from tensorflow.keras.layers import PReLU
 import time
 from tensorboard.plugins.hparams import api as hp
-from tensorboard import program
+# from tensorboard import program
 
 
 class TFModel(NightscoutMlBase):
 
     now = datetime.now()
     date_str = "{}-{}-{}_{}-{}".format(now.year, now.month, now.day, now.hour, now.minute)
+    time_ranges = ['0to60minAgo', '60to120minAgo', '120to180minAgo', '180to240minAgo']
 
     hour_breakdowns = ["hour0_2","hour3_5","hour6_8","hour9_11","hour12_14","hour15_17","hour18_20","hour21_23"]
     accellerating = ["accelerating_up","deccelerating_up","accelerating_down","deccelerating_down","stable"]
     recent_steps = ["recentSteps5Minutes","recentSteps10Minutes","recentSteps15Minutes","recentSteps30Minutes","recentSteps60Minutes"]
     sleep_seated = ["sleep","sedentary"]
     tdd = ["tdd7Days","tddDaily","tdd24Hrs"]
-    tddPerHour = ["tdd7DaysPerHour","tddDailyPerHour","tdd24HrsPerHour"]
+    tddPerHour = ["tdd7DaysPerHour","tdd2DaysPerHour","tddDailyPerHour","tdd24HrsPerHour"]
     base_cols = ["hourOfDay","weekend",
                     "bg","targetBg","iob","cob","lastCarbAgeMin","futureCarbs",
                     "delta","shortAvgDelta","longAvgDelta"]
     cob_delta = ['cobDelta']
+    gi_tags = ['giFast', 'giMedium', 'giSlow']
+    prior_bgs_to_add = 36
 
     col_map = {
-        'base': base_cols,
+        'best_cols': base_cols+tddPerHour+cob_delta+recent_steps,
+        'best_cols_cob_delta': base_cols+tddPerHour+cob_delta+recent_steps+cob_delta,
+        'best_cols_plus_glycemic_index': base_cols+tddPerHour+gi_tags,
+        'best_cols_plus_prior_bgs_and_smbs': base_cols+tddPerHour
+        # 'best_cols_w_accell': base_cols+tddPerHour+cob_delta+recent_steps+accellerating,
+        ### meal tags didn't improve model accuracy sadly :(
+        # 'best_cols_plus_tags': base_cols+tddPerHour+cob_delta+recent_steps
+        # 'base': base_cols,
         # 'base_cobDelta': base_cols+cob_delta, # helps a little
-        'best_cols': base_cols+tddPerHour+cob_delta+recent_steps+accellerating
         # 'base_tddPerhour': base_cols+tddPerHour, # helpful
         # 'base_recentSteps': base_cols+recent_steps, # helpful
         # 'base_accellerating': base_cols+accellerating, # helpful, but could probably refine
@@ -44,16 +53,17 @@ class TFModel(NightscoutMlBase):
 
     HP_COLS = hp.HParam('cols', hp.Discrete(list(col_map.keys())))
 
-    HP_NUM_NODES_L1 = hp.HParam('num_nodes_l1', hp.Discrete([50, 100, 150])) 
-    HP_NUM_NODES_L2 = hp.HParam('num_nodes_l2', hp.Discrete([0, 10]))
-    HP_NUM_NODES_L3 = hp.HParam('num_nodes_l3', hp.Discrete([10]))
-    HP_NUM_NODES_L4 = hp.HParam('num_nodes_l4', hp.Discrete([10]))
+    HP_NUM_NODES_L1 = hp.HParam('num_nodes_l1', hp.Discrete([10, 50, 100, 200, 300])) 
+    HP_NUM_NODES_L2 = hp.HParam('num_nodes_l2', hp.Discrete([0, 10, 50]))
+    HP_NUM_NODES_L3 = hp.HParam('num_nodes_l3', hp.Discrete([0, 10]))
+    HP_NUM_NODES_L4 = hp.HParam('num_nodes_l4', hp.Discrete([0, 10]))
     HP_NUM_EPOCHS = hp.HParam('num_epochs', hp.Discrete([10]))
     HP_LEARNING_RATE = hp.HParam('learning_rate', hp.Discrete([.01]))
     HP_LAST_ACTIVATION = hp.HParam('last_activation', hp.Discrete(['prelu']))
     METRIC_LOSS = 'loss'
 
     def build_tf_regression(self):
+        start = time.time()
         df = pd.read_excel('data.xlsx','training_data')
         self.clear_log_folder()
 
@@ -64,7 +74,7 @@ class TFModel(NightscoutMlBase):
                 metrics=[hp.Metric(self.METRIC_LOSS, display_name='loss')],
             )
 
-        # df = self.convert_tags_to_cols(df)
+        df, vocabulary = self.convert_tags_to_cols(df)
         train_dataset = df.sample(frac=0.8, random_state=0)
         test_dataset = df.drop(train_dataset.index)
 
@@ -81,13 +91,22 @@ class TFModel(NightscoutMlBase):
         best_learning_rate = .1
         best_cols = ''
 
-        start = time.time()
+        
         
         session_num = 0
 
         for cols_name in self.HP_COLS.domain.values:
-            iteration_train_features = train_features[self.col_map[cols_name]]
-            iteration_test_features = test_features[self.col_map[cols_name]]
+            columns = self.col_map[cols_name]
+            if 'plus_tags' in cols_name:
+                for time_range in self.time_ranges:
+                    for word in vocabulary:
+                        columns.append(word+'_'+time_range)
+            if 'prior_bgs_and_smbs' in cols_name:
+                for offset in range(0, self.prior_bgs_to_add):
+                    print("todo")
+
+            iteration_train_features = train_features[columns]
+            iteration_test_features = test_features[columns]
             for num_nodes_l1 in self.HP_NUM_NODES_L1.domain.values:
                 for num_nodes_l2 in self.HP_NUM_NODES_L2.domain.values:
                     for num_nodes_l3 in self.HP_NUM_NODES_L3.domain.values:
@@ -120,7 +139,7 @@ class TFModel(NightscoutMlBase):
         
         training_time = time.time() - start
         
-        self.save_model_info_v2(best_model, best_cols, best_loss, best_epochs, len(df), training_time, best_last_activation, best_learning_rate)
+        self.save_model_info_v2(best_model, best_cols, best_loss, best_epochs, len(df), training_time, best_last_activation, best_learning_rate, vocabulary)
 
         self.save_model(best_model)
         
@@ -176,8 +195,35 @@ class TFModel(NightscoutMlBase):
 
 
     def convert_tags_to_cols(self, df):
-        self.col_map['bast_tags'] = ['']
-        return df
+        vocabulary = self.get_vocabulary_from_tags(df)
+        
+        # fill in NaN values with empty strings to support setting tags
+        for range in self.time_ranges:
+            df['tags'+range] = df['tags'+range].fillna('')
+
+        for word in vocabulary:
+            for range in self.time_ranges:
+                col_name = word+'_'+range
+                df[col_name] = df['tags'+range].str.contains(word)
+                df[col_name] = df[col_name].astype(int)
+        return df, vocabulary
+    
+    def get_vocabulary_from_tags(self, df):
+        # get list of unique words
+        words = list(df['tags0to60minAgo'].str.split(' ', expand=True).stack().unique())
+        stop_words = ['for', 'a', 'an', 'and', 'of', 'with', '']
+        
+        # vocaublary = [word.lower() for word in vocaublary]
+        vocabulary = []
+        for word in words:
+            word = word.lower()
+            word = word[:-2] if word.endswith("es") else word
+            word = word[:-1] if word.endswith("s") else word
+            if word not in stop_words and word not in vocabulary:
+                vocabulary.append(word)
+        # strip commas, strip stop words (and, a) - android strips a/an/and
+        # stem words if need be
+        return vocabulary
 
     def get_basic_info(self, model):
         model_info = "\n\n------------\n"
@@ -191,12 +237,13 @@ class TFModel(NightscoutMlBase):
             model_info += layer_info + "\n"
         return model_info
 
-    def save_model_info_v2(self, model, cols, best_loss, num_epochs, data_row_count, training_time, best_last_activation, best_learning_rate):
+    def save_model_info_v2(self, model, cols, best_loss, num_epochs, data_row_count, training_time, best_last_activation, best_learning_rate, vocabulary):
         model_info = self.get_basic_info(model)
 
         model_info += f"Model Loss & Accuracy: {str(round(best_loss, 5))}\n"
         model_info += f"Number of Epochs: {num_epochs} \n"
         model_info += f"Columns ({len(cols)}): {cols} - {self.col_map[cols]} \n"
+        model_info += f"Vocabulary ({len(vocabulary)}) {vocabulary}\n"
         model_info += f"Training Data Size: {data_row_count} \n"
         model_info += f"Learning Rate: {best_learning_rate} \n"
         model_info += f"Activation: {best_last_activation} \n" if best_last_activation is not None else "Activation: None\n"
@@ -206,11 +253,6 @@ class TFModel(NightscoutMlBase):
         open('models/tf_model_results.txt', "a").write(model_info)
 
 
-
-    def model_meets_min_requirements(self, model):
-        high_rising_and_no_iob = self.basic_predict(model, 160, 0, 0, 8)
-        low_dropping = self.basic_predict(model, 70, 3, 0, -10)
-        return .5 < float(high_rising_and_no_iob) and .024 > float(low_dropping)
 
     def basic_predictions(self, model):
         if len(self.current_cols) != 38:
@@ -327,7 +369,10 @@ class TFModel(NightscoutMlBase):
 
 
 
-
+    def model_meets_min_requirements(self, model):
+        high_rising_and_no_iob = self.basic_predict(model, 160, 0, 0, 8)
+        low_dropping = self.basic_predict(model, 70, 3, 0, -10)
+        return .5 < float(high_rising_and_no_iob) and .024 > float(low_dropping)
 
 
     def legacy(self):

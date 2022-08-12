@@ -1887,3 +1887,118 @@ Learning Rate: 0.01
 Activation: prelu 
 Took 00:01:14 to train
 NOTES: 
+
+
+------------
+Model 2022-8-3_23-20
+6 Layers:
+    - Layer 0  - normalization_10
+    - Layer 1  - dense_32 (150)
+    - Layer 2  - dense_33 (10)
+    - Layer 3  - dense_34 (10)
+    - Layer 4  - dense_35 (10)
+    - Layer 5  - dense_36 (1)
+Model Loss & Accuracy: 0.06456
+Number of Epochs: 10 
+Columns (9): best_cols - ['hourOfDay', 'weekend', 'bg', 'targetBg', 'iob', 'cob', 'lastCarbAgeMin', 'futureCarbs', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7DaysPerHour', 'tddDailyPerHour', 'tdd24HrsPerHour', 'cobDelta', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'accelerating_up', 'deccelerating_up', 'accelerating_down', 'deccelerating_down', 'stable'] 
+Training Data Size: 14991 
+Learning Rate: 0.01 
+Activation: prelu 
+Took 00:21:35 to train
+NOTES: 
+
+
+------------
+Model 2022-8-4_10-33
+6 Layers:
+    - Layer 0  - normalization_4
+    - Layer 1  - dense_20 (100)
+    - Layer 2  - dense_21 (10)
+    - Layer 3  - dense_22 (10)
+    - Layer 4  - dense_23 (10)
+    - Layer 5  - dense_24 (1)
+Model Loss & Accuracy: 0.05742
+Number of Epochs: 10 
+Columns (9): best_cols - ['hourOfDay', 'weekend', 'bg', 'targetBg', 'iob', 'cob', 'lastCarbAgeMin', 'futureCarbs', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7DaysPerHour', 'tddDailyPerHour', 'tdd24HrsPerHour', 'cobDelta', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'accelerating_up', 'deccelerating_up', 'accelerating_down', 'deccelerating_down', 'stable'] 
+Training Data Size: 20448 
+Learning Rate: 0.01 
+Activation: prelu 
+Took 00:04:09 to train
+NOTES: 
+
+
+------------
+Model 2022-8-4_13-58
+6 Layers:
+    - Layer 0  - normalization_9
+    - Layer 1  - dense_45 (150)
+    - Layer 2  - dense_46 (10)
+    - Layer 3  - dense_47 (10)
+    - Layer 4  - dense_48 (10)
+    - Layer 5  - dense_49 (1)
+Model Loss & Accuracy: 0.05965
+Number of Epochs: 10 
+Columns (9): best_cols - ['hourOfDay', 'weekend', 'bg', 'targetBg', 'iob', 'cob', 'lastCarbAgeMin', 'futureCarbs', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7DaysPerHour', 'tddDailyPerHour', 'tdd24HrsPerHour', 'cobDelta', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'accelerating_up', 'deccelerating_up', 'accelerating_down', 'deccelerating_down', 'stable'] 
+Training Data Size: 20448 
+Learning Rate: 0.01 
+Activation: relu 
+Took 00:03:59 to train
+NOTES: 
+
+
+------------
+Model 2022-8-4_14-25
+6 Layers:
+    - Layer 0  - normalization_9
+    - Layer 1  - dense_45 (300)
+    - Layer 2  - dense_46 (50)
+    - Layer 3  - dense_47 (10)
+    - Layer 4  - dense_48 (10)
+    - Layer 5  - dense_49 (1)
+Model Loss & Accuracy: 0.05876
+Number of Epochs: 10 
+Columns (9): best_cols - ['hourOfDay', 'weekend', 'bg', 'targetBg', 'iob', 'cob', 'lastCarbAgeMin', 'futureCarbs', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7DaysPerHour', 'tdd2DaysPerHour', 'tddDailyPerHour', 'tdd24HrsPerHour', 'cobDelta', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes', 'cobDelta'] 
+Vocabulary ['rice', 'sweet', 'potato', 'vegetabl', 'breakfast', 'dinner', 'naan', 'couscou', 'bagel', 'apple', 'home', 'made', 'flatbread', 'pump', 'unreachable', 'salad', 'bread', 'muffin', 'time', 'beef', 'bhan', 'mi', 'bowl', 'inhaler', 'pasta', 'chip', 'chocolate', 'cooki', 'pizza', 'egg', 'toast', 'banana', '2', 'pretzel', 'stick', 'biscuit', 'sausage', 'falafel', 'hummu', 'end', 'walk', 'poptart', 'beer', 'prebolu', 'override', 'carrot', 'salmon', 'post', 'exercise', 'lunch', 'tt', 'tofu', 'avocado', 'vegetable', 'fritter', 'popcorn', 'chicken', 'cereal', 'sandwich', 'ice', 'cream', 'burger', 'fri', 'corn', 'missed', 'bg', 'reading', 'candy', 'nutella', 'cookie', 'ravioli', 'peanut', 'butter', 'garlic', 'homemade', 'donut', 'nap', 'fake', 'mashed', 'bean', 'guacamole', 'farmer', 'market', 'sauce', 'pea', 'lasanga', 'wine', 'snack', 'cake', 'pulled', 'pork', 'cupcake', 'impossible', 'pod', 'change', 'spice', 'meat', 'risotto']
+Training Data Size: 20448 
+Learning Rate: 0.01 
+Activation: prelu 
+Took 00:04:54 to train
+NOTES: 
+
+
+------------
+Model 2022-8-4_14-49
+4 Layers:
+    - Layer 0  - normalization_40
+    - Layer 1  - dense_122 (200)
+    - Layer 2  - dense_123 (10)
+    - Layer 3  - dense_124 (1)
+Model Loss & Accuracy: 0.05806
+Number of Epochs: 10 
+Columns (9): best_cols - ['hourOfDay', 'weekend', 'bg', 'targetBg', 'iob', 'cob', 'lastCarbAgeMin', 'futureCarbs', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7DaysPerHour', 'tdd2DaysPerHour', 'tddDailyPerHour', 'tdd24HrsPerHour', 'cobDelta', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes'] 
+Vocabulary (98) ['rice', 'sweet', 'potato', 'vegetabl', 'breakfast', 'dinner', 'naan', 'couscou', 'bagel', 'apple', 'home', 'made', 'flatbread', 'pump', 'unreachable', 'salad', 'bread', 'muffin', 'time', 'beef', 'bhan', 'mi', 'bowl', 'inhaler', 'pasta', 'chip', 'chocolate', 'cooki', 'pizza', 'egg', 'toast', 'banana', '2', 'pretzel', 'stick', 'biscuit', 'sausage', 'falafel', 'hummu', 'end', 'walk', 'poptart', 'beer', 'prebolu', 'override', 'carrot', 'salmon', 'post', 'exercise', 'lunch', 'tt', 'tofu', 'avocado', 'vegetable', 'fritter', 'popcorn', 'chicken', 'cereal', 'sandwich', 'ice', 'cream', 'burger', 'fri', 'corn', 'missed', 'bg', 'reading', 'candy', 'nutella', 'cookie', 'ravioli', 'peanut', 'butter', 'garlic', 'homemade', 'donut', 'nap', 'fake', 'mashed', 'bean', 'guacamole', 'farmer', 'market', 'sauce', 'pea', 'lasanga', 'wine', 'snack', 'cake', 'pulled', 'pork', 'cupcake', 'impossible', 'pod', 'change', 'spice', 'meat', 'risotto']
+Training Data Size: 20448 
+Learning Rate: 0.01 
+Activation: prelu 
+Took 00:16:27 to train
+NOTES: 
+
+
+------------
+Model 2022-8-4_15-11
+6 Layers:
+    - Layer 0  - normalization_47
+    - Layer 1  - dense_147 (200)
+    - Layer 2  - dense_148 (50)
+    - Layer 3  - dense_149 (10)
+    - Layer 4  - dense_150 (10)
+    - Layer 5  - dense_151 (1)
+Model Loss & Accuracy: 0.05823
+Number of Epochs: 10 
+Columns (9): best_cols - ['hourOfDay', 'weekend', 'bg', 'targetBg', 'iob', 'cob', 'lastCarbAgeMin', 'futureCarbs', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7DaysPerHour', 'tdd2DaysPerHour', 'tddDailyPerHour', 'tdd24HrsPerHour', 'cobDelta', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes'] 
+Vocabulary (98) ['rice', 'sweet', 'potato', 'vegetabl', 'breakfast', 'dinner', 'naan', 'couscou', 'bagel', 'apple', 'home', 'made', 'flatbread', 'pump', 'unreachable', 'salad', 'bread', 'muffin', 'time', 'beef', 'bhan', 'mi', 'bowl', 'inhaler', 'pasta', 'chip', 'chocolate', 'cooki', 'pizza', 'egg', 'toast', 'banana', '2', 'pretzel', 'stick', 'biscuit', 'sausage', 'falafel', 'hummu', 'end', 'walk', 'poptart', 'beer', 'prebolu', 'override', 'carrot', 'salmon', 'post', 'exercise', 'lunch', 'tt', 'tofu', 'avocado', 'vegetable', 'fritter', 'popcorn', 'chicken', 'cereal', 'sandwich', 'ice', 'cream', 'burger', 'fri', 'corn', 'missed', 'bg', 'reading', 'candy', 'nutella', 'cookie', 'ravioli', 'peanut', 'butter', 'garlic', 'homemade', 'donut', 'nap', 'fake', 'mashed', 'bean', 'guacamole', 'farmer', 'market', 'sauce', 'pea', 'lasanga', 'wine', 'snack', 'cake', 'pulled', 'pork', 'cupcake', 'impossible', 'pod', 'change', 'spice', 'meat', 'risotto']
+Training Data Size: 20448 
+Learning Rate: 0.01 
+Activation: prelu 
+Took 00:15:48 to train
+NOTES: 

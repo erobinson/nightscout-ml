@@ -14,12 +14,12 @@ import pandas as pd
 
 
 
-# start_date_time = '7/9/22 10:16PM'
+# start_date_time = '7/16/22 09:56PM'
 # notes_file = PullNotes().pull_notes_to_csv(start_date_time)
 # PullNotes().add_adjustment_flags('data/aiSMB_records.csv', notes_file)
 # AdjustSmbs().adjust_smbs(start_date_time)
 
-model_date = TFModel().build_tf_regression()
+# model_date = TFModel().build_tf_regression()
 # TFModel().compare_two_models('2022-6-22_15-32', model_date, 
 #     ['6/12/22 03:10AM', '6/17/22 10:20AM', '6/18/22 09:40PM', '6/19/22 04:45AM', '6/27/22 05:25PM', '6/28/22 07:21PM', '7/2/22 02:26AM', '7/6/22 03:11AM', '7/7/22 09:51AM'])
 # TFModel().compare_two_models('2022-7-7_10-12', model_date, 
@@ -28,15 +28,17 @@ model_date = TFModel().build_tf_regression()
 # TFModel().compare_two_models('2022-6-11_21-18', '2022-6-12_8-10', '6/12/22 03:10AM')
 # TFModel().compare_two_models('2022-6-18_0-31', '2022-6-19_7-28', '6/17/22 10:20AM')
 
-# LstmModel().build_lstm_model() # currently only gets .08 loss - so worse than NN
+LstmModel().build_lstm_model() # currently only gets .08 loss - so worse than NN
 # tensorboard --logdir logs/
 
 
 
 
 # Notes:
+# TODO: test w/ bgs & boluses from the last 2 hours
+# TODO: test LSTM w/ simplified columns
+# TODO: convert tags to fast/medium/slow acting carbs
 # TODO: Add carb delta, last meal
-# TODO: train w/ meal tags
 # TODO: update & leverage more TDD values - added 2 days - possibly add recent hours
 # TODO: refactor Android code to be cleaner - split factors into methods
 # TODO: get exercise/step count data from fit API
@@ -48,6 +50,9 @@ model_date = TFModel().build_tf_regression()
     # https://www.tensorflow.org/model_optimization/guide/quantization/post_training
     # converter.optimizations = [tf.lite.Optimize.DEFAULT]
 # TODO: retest LSTM w/ more training
+
+# DONE: train w/ meal tags
+# surprisingly it did consistently worse :(
 
 
 # PullNotes().pull_old_meal_notes() # NS Notes doesn't have carb entry notes from AAPS
@@ -61,7 +66,7 @@ model_date = TFModel().build_tf_regression()
     # TDD per hour is the best, can probably include other TDDs - major impact
     # TDD - can drop other TDD values - only have normalized to per/hour
     # recent steps - maybe get heart rate for better data - minor impact
-    # recent steps - probably fine w/ just steps
+    # recent steps - probably fine w/ just steps and dropping sleep/sedentary
     # accellerating does appear to help - could probably refine calcs
     # drop hour breakdowns - no major impact
 
