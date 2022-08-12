@@ -31,13 +31,16 @@ class TFModel(NightscoutMlBase):
     prior_bgs_to_add = 36
 
     col_map = {
-        'best_cols': base_cols+tddPerHour+cob_delta+recent_steps,
-        'best_cols_cob_delta': base_cols+tddPerHour+cob_delta+recent_steps+cob_delta,
-        'best_cols_plus_glycemic_index': base_cols+tddPerHour+gi_tags,
-        'best_cols_plus_prior_bgs_and_smbs': base_cols+tddPerHour
+        'best_cols': base_cols+tddPerHour+recent_steps,
+        # 'best_cols_cob_delta': base_cols+tddPerHour+cob_delta+recent_steps+cob_delta,
+        # 'best_cols_plus_glycemic_index': base_cols+tddPerHour+recent_steps+gi_tags,
+        # 'best_cols_plus_fast_med_slow': base_cols+tddPerHour+recent_steps+['fastCarbs','mediumCarbs','slowCarbs']
+        # 'best_cols_plus_prior_bgs_and_smbs': base_cols+tddPerHour
         # 'best_cols_w_accell': base_cols+tddPerHour+cob_delta+recent_steps+accellerating,
+        
         ### meal tags didn't improve model accuracy sadly :(
         # 'best_cols_plus_tags': base_cols+tddPerHour+cob_delta+recent_steps
+
         # 'base': base_cols,
         # 'base_cobDelta': base_cols+cob_delta, # helps a little
         # 'base_tddPerhour': base_cols+tddPerHour, # helpful
@@ -53,11 +56,11 @@ class TFModel(NightscoutMlBase):
 
     HP_COLS = hp.HParam('cols', hp.Discrete(list(col_map.keys())))
 
-    HP_NUM_NODES_L1 = hp.HParam('num_nodes_l1', hp.Discrete([10, 50, 100, 200, 300])) 
-    HP_NUM_NODES_L2 = hp.HParam('num_nodes_l2', hp.Discrete([0, 10, 50]))
-    HP_NUM_NODES_L3 = hp.HParam('num_nodes_l3', hp.Discrete([0, 10]))
-    HP_NUM_NODES_L4 = hp.HParam('num_nodes_l4', hp.Discrete([0, 10]))
-    HP_NUM_EPOCHS = hp.HParam('num_epochs', hp.Discrete([10]))
+    HP_NUM_NODES_L1 = hp.HParam('num_nodes_l1', hp.Discrete([20])) 
+    HP_NUM_NODES_L2 = hp.HParam('num_nodes_l2', hp.Discrete([10]))
+    HP_NUM_NODES_L3 = hp.HParam('num_nodes_l3', hp.Discrete([0]))
+    HP_NUM_NODES_L4 = hp.HParam('num_nodes_l4', hp.Discrete([0]))
+    HP_NUM_EPOCHS = hp.HParam('num_epochs', hp.Discrete([5, 10, 20]))
     HP_LEARNING_RATE = hp.HParam('learning_rate', hp.Discrete([.01]))
     HP_LAST_ACTIVATION = hp.HParam('last_activation', hp.Discrete(['prelu']))
     METRIC_LOSS = 'loss'
@@ -65,6 +68,7 @@ class TFModel(NightscoutMlBase):
     def build_tf_regression(self):
         start = time.time()
         df = pd.read_excel('data.xlsx','training_data')
+        df = df[9566:]
         self.clear_log_folder()
 
         with tf.summary.create_file_writer(f'{self.log_folder}/hparam_tuning').as_default():
@@ -74,7 +78,12 @@ class TFModel(NightscoutMlBase):
                 metrics=[hp.Metric(self.METRIC_LOSS, display_name='loss')],
             )
 
-        df, vocabulary = self.convert_tags_to_cols(df)
+        if 'best_cols_plus_glycemic_index' in self.col_map.keys() or 'best_cols_plus_tags' in self.col_map.keys():
+            df, vocabulary = self.convert_tags_to_cols(df)
+            if 'best_cols_plus_glycemic_index' in self.col_map.keys():
+                df = self.add_glycemic_index_cols(df)
+        else:
+            vocabulary = ['not using tags']
         train_dataset = df.sample(frac=0.8, random_state=0)
         test_dataset = df.drop(train_dataset.index)
 
@@ -100,10 +109,12 @@ class TFModel(NightscoutMlBase):
             if 'plus_tags' in cols_name:
                 for time_range in self.time_ranges:
                     for word in vocabulary:
-                        columns.append(word+'_'+time_range)
+                        columns.append(f"{word}_{time_range}")
             if 'prior_bgs_and_smbs' in cols_name:
                 for offset in range(0, self.prior_bgs_to_add):
-                    print("todo")
+                    offset_in_5_min = (offset+1) * 5
+                    columns.append(f"{offset_in_5_min}_min_prior_bg")
+                    columns.append(f"{offset_in_5_min}_min_prior_smb")
 
             iteration_train_features = train_features[columns]
             iteration_test_features = test_features[columns]
@@ -193,6 +204,32 @@ class TFModel(NightscoutMlBase):
         loss = model.evaluate(test_features, test_labels)
         return model, loss
 
+    def add_glycemic_index_cols(self, df):
+        # load vocabulary map from csv
+        df_gi = pd.read_csv('glycemic_index.csv')
+        for index, row in df_gi.iterrows():
+            tag = row['tag']
+            gi = row['index']
+            
+            # if 0-60 min contains fast acting carb word, then set fast GI to 1
+            if gi == 'fast':
+                df['giFast'] = df['tags0to60minAgo'].str.contains(tag)
+                df['giFast'] = df['giFast'].astype(int)
+            
+            # if 0-60 or 60-120 contains medium acting carb word, then set medium GI col to 1
+            if gi == 'medium':
+                df['giMedium'] = df['tags0to60minAgo'].str.contains(tag)
+                df['giMedium'] = df['tags60to120minAgo'].str.contains(tag)
+                df['giMedium'] = df['giMedium'].astype(int)
+            
+            # if tags contain slow acting word, set slow GI column to 1
+            if gi == 'slow':
+                df['giSlow'] = df['tags60to120minAgo'].str.contains(tag)
+                df['giSlow'] = df['tags120to180minAgo'].str.contains(tag)
+                df['giSlow'] = df['tags180to240minAgo'].str.contains(tag)
+                df['giSlow'] = df['giSlow'].astype(int)
+            
+        return df
 
     def convert_tags_to_cols(self, df):
         vocabulary = self.get_vocabulary_from_tags(df)

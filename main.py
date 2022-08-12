@@ -19,7 +19,7 @@ import pandas as pd
 # PullNotes().add_adjustment_flags('data/aiSMB_records.csv', notes_file)
 # AdjustSmbs().adjust_smbs(start_date_time)
 
-# model_date = TFModel().build_tf_regression()
+model_date = TFModel().build_tf_regression()
 # TFModel().compare_two_models('2022-6-22_15-32', model_date, 
 #     ['6/12/22 03:10AM', '6/17/22 10:20AM', '6/18/22 09:40PM', '6/19/22 04:45AM', '6/27/22 05:25PM', '6/28/22 07:21PM', '7/2/22 02:26AM', '7/6/22 03:11AM', '7/7/22 09:51AM'])
 # TFModel().compare_two_models('2022-7-7_10-12', model_date, 
@@ -28,7 +28,7 @@ import pandas as pd
 # TFModel().compare_two_models('2022-6-11_21-18', '2022-6-12_8-10', '6/12/22 03:10AM')
 # TFModel().compare_two_models('2022-6-18_0-31', '2022-6-19_7-28', '6/17/22 10:20AM')
 
-LstmModel().build_lstm_model() # currently only gets .08 loss - so worse than NN
+# LstmModel().build_lstm_model() # currently only gets .08 loss - so worse than NN
 # tensorboard --logdir logs/
 
 
