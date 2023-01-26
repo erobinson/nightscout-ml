@@ -2113,3 +2113,21 @@ Learning Rate: 0.01
 Activation: prelu 
 Took 00:00:27 to train
 NOTES: 
+
+
+------------
+Model 2022-8-16_11-54
+4 Layers:
+    - Layer 0  - normalization_2
+    - Layer 1  - dense_6 (20)
+    - Layer 2  - dense_7 (10)
+    - Layer 3  - dense_8 (1)
+Model Loss & Accuracy: 0.05283
+Number of Epochs: 20 
+Columns (9): best_cols - ['hourOfDay', 'weekend', 'bg', 'targetBg', 'iob', 'cob', 'lastCarbAgeMin', 'futureCarbs', 'delta', 'shortAvgDelta', 'longAvgDelta', 'tdd7DaysPerHour', 'tdd2DaysPerHour', 'tddDailyPerHour', 'tdd24HrsPerHour', 'recentSteps5Minutes', 'recentSteps10Minutes', 'recentSteps15Minutes', 'recentSteps30Minutes', 'recentSteps60Minutes'] 
+Vocabulary (1) ['not using tags']
+Training Data Size: 14230 
+Learning Rate: 0.01 
+Activation: prelu 
+Took 00:00:33 to train
+NOTES: 

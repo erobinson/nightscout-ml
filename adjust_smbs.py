@@ -9,6 +9,7 @@ class AdjustSmbs(NightscoutMlBase):
     no_insulin_when_dropping_threshold = 100
     base_isf = 100
     max_smb = 2
+    max_u_can_add = .15
     correct_x_above_target = 10
     correct_x_below_target = 20
 
@@ -90,11 +91,18 @@ class AdjustSmbs(NightscoutMlBase):
             if not more_carbs_added_later and not upcoming_low and not out_dated and not dropping_fast:
                 current_smb = recent_row['smbToGive']
                 if u_to_add + current_smb < self.max_smb:
-                    df.at[i, 'smbToGive'] = current_smb + u_to_add
-                    return
-                if u_to_add < self.max_smb:
-                    df.at[i, 'smbToGive'] = 2
+                    if u_to_add > self.max_u_can_add:
+                        df.at[i, 'smbToGive'] = current_smb + self.max_u_can_add
+                        u_to_add -= self.max_u_can_add
+                    else:
+                        df.at[i, 'smbToGive'] = current_smb + u_to_add
+                        u_to_add = 0
+                else:
+                    df.at[i, 'smbToGive'] = self.max_smb
                     u_to_add -= self.max_smb - current_smb
+
+            if u_to_add <= 0:
+                return
 
     def more_carbs_added_later(self, current_cob, recent_index, df_last_hour, index):
         for i in range(recent_index, index):

@@ -14,7 +14,7 @@ import pandas as pd
 
 
 
-# start_date_time = '7/16/22 09:56PM'
+# start_date_time = '8/13/22 07:16AM'
 # notes_file = PullNotes().pull_notes_to_csv(start_date_time)
 # PullNotes().add_adjustment_flags('data/aiSMB_records.csv', notes_file)
 # AdjustSmbs().adjust_smbs(start_date_time)
