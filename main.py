@@ -14,7 +14,7 @@ import pandas as pd
 
 
 
-# start_date_time = '7/9/22 10:16PM'
+# start_date_time = '8/13/22 07:16AM'
 # notes_file = PullNotes().pull_notes_to_csv(start_date_time)
 # PullNotes().add_adjustment_flags('data/aiSMB_records.csv', notes_file)
 # AdjustSmbs().adjust_smbs(start_date_time)
@@ -35,8 +35,10 @@ model_date = TFModel().build_tf_regression()
 
 
 # Notes:
+# TODO: test w/ bgs & boluses from the last 2 hours
+# TODO: test LSTM w/ simplified columns
+# TODO: convert tags to fast/medium/slow acting carbs
 # TODO: Add carb delta, last meal
-# TODO: train w/ meal tags
 # TODO: update & leverage more TDD values - added 2 days - possibly add recent hours
 # TODO: refactor Android code to be cleaner - split factors into methods
 # TODO: get exercise/step count data from fit API
@@ -48,6 +50,9 @@ model_date = TFModel().build_tf_regression()
     # https://www.tensorflow.org/model_optimization/guide/quantization/post_training
     # converter.optimizations = [tf.lite.Optimize.DEFAULT]
 # TODO: retest LSTM w/ more training
+
+# DONE: train w/ meal tags
+# surprisingly it did consistently worse :(
 
 
 # PullNotes().pull_old_meal_notes() # NS Notes doesn't have carb entry notes from AAPS
@@ -61,7 +66,7 @@ model_date = TFModel().build_tf_regression()
     # TDD per hour is the best, can probably include other TDDs - major impact
     # TDD - can drop other TDD values - only have normalized to per/hour
     # recent steps - maybe get heart rate for better data - minor impact
-    # recent steps - probably fine w/ just steps
+    # recent steps - probably fine w/ just steps and dropping sleep/sedentary
     # accellerating does appear to help - could probably refine calcs
     # drop hour breakdowns - no major impact
 
